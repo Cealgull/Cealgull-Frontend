@@ -19,10 +19,6 @@ const NavbarIcon = StyleSheet.create({
   },
 });
 
-const handlePublishPress = () => {
-  Alert.alert("Publish");
-};
-
 export const NavMyIcon = () => {
   const navigation = useNavigation<PersonViewNavigationProps["navigation"]>();
   return (
