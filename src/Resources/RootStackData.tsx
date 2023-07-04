@@ -1,29 +1,29 @@
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 
-export type RootStackParamList = {
+export type RootTabParamList = {
   Home: undefined;
   Person: undefined;
   Publish: undefined;
   Topic: undefined;
 };
 
-export type HomeViewNavigationProps = NativeStackScreenProps<
-  RootStackParamList,
+export type HomeViewNavigationProps = BottomTabScreenProps<
+  RootTabParamList,
   "Home"
 >;
 
-export type PersonViewNavigationProps = NativeStackScreenProps<
-  RootStackParamList,
+export type PersonViewNavigationProps = BottomTabScreenProps<
+  RootTabParamList,
   "Person"
 >;
 
-export type PublishViewNavigationProps = NativeStackScreenProps<
-  RootStackParamList,
+export type PublishViewNavigationProps = BottomTabScreenProps<
+  RootTabParamList,
   "Publish"
 >;
 
-export type TopicViewNavigationProps = NativeStackScreenProps<
-  RootStackParamList,
+export type TopicViewNavigationProps = BottomTabScreenProps<
+  RootTabParamList,
   "Topic"
 >;
 
@@ -34,7 +34,7 @@ export interface HomeViewInterface {
 
 export interface PersonViewInterface {
   route: PersonViewNavigationProps["route"];
-  navigation: HomeViewNavigationProps["navigation"];
+  navigation: PersonViewNavigationProps["navigation"];
 }
 
 export interface PublishViewInterface {

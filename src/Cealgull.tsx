@@ -2,39 +2,28 @@ import { HomeView } from "@src/View/HomeView";
 import { PersonView } from "@src/View/PersonView";
 import { PublishView } from "./View/PublishView";
 import { TopicView } from "./View/TopicView";
-import { RootStackParamList } from "@src/Resources/RootStackData";
+import { RootTabParamList } from "@src/Resources/RootStackData";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
-const Stack = createStackNavigator<RootStackParamList>();
+const Tab = createBottomTabNavigator<RootTabParamList>();
 
 export default function Cealgull() {
   return (
     <SafeAreaProvider>
       <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen
-            name="Home"
-            options={{ headerShown: false }}
-            component={HomeView}
-          ></Stack.Screen>
-          <Stack.Screen
-            name="Person"
-            options={{ headerShown: false }}
-            component={PersonView}
-          ></Stack.Screen>
-          <Stack.Screen
-            name="Publish"
-            options={{ headerShown: false }}
-            component={PublishView}
-          ></Stack.Screen>
-          <Stack.Screen
-            name="Topic"
-            options={{ headerShown: false }}
-            component={TopicView}
-          ></Stack.Screen>
-        </Stack.Navigator>
+        <Tab.Navigator
+          screenOptions={{
+            tabBarStyle: { display: "none" },
+            headerShown: false,
+          }}
+        >
+          <Tab.Screen name="Home" component={HomeView}></Tab.Screen>
+          <Tab.Screen name="Person" component={PersonView}></Tab.Screen>
+          <Tab.Screen name="Publish" component={PublishView}></Tab.Screen>
+          <Tab.Screen name="Topic" component={TopicView}></Tab.Screen>
+        </Tab.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>
   );
