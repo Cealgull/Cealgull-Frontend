@@ -1,26 +1,7 @@
-import React from "react";
-import { StyleSheet, View, Text, ScrollView } from "react-native";
-import { Navbar } from "@src/Component/Navbar/Navbar";
-import { HomeViewInterface } from "@src/Resources/RootStackData";
-import {
-  NavMyIcon,
-  NavPublishIcon,
-  NavHomeIcon,
-} from "@src/Component/Navbar/NavIcon";
+import { NavBar } from "@src/Component/NavbarWrapper";
 import { PostCard } from "@src/Component/PostCard/PostCard";
-
-const HomeViewStyle = StyleSheet.create({
-  whole: {
-    flex: 1,
-  },
-  head: {
-    backgroundColor: "rgb(230, 230, 230)",
-    flex: 1,
-  },
-  content: {
-    flex: 8,
-  },
-});
+import { HomeViewInterface } from "@src/Resources/RootStackData";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 
 export const HomeView = ({ route, navigation }: HomeViewInterface) => {
   return (
@@ -37,11 +18,20 @@ export const HomeView = ({ route, navigation }: HomeViewInterface) => {
           </PostCard>
         </ScrollView>
       </View>
-      <Navbar>
-        <NavHomeIcon></NavHomeIcon>
-        <NavPublishIcon></NavPublishIcon>
-        <NavMyIcon></NavMyIcon>
-      </Navbar>
+      <NavBar />
     </View>
   );
 };
+
+const HomeViewStyle = StyleSheet.create({
+  content: {
+    flex: 8,
+  },
+  head: {
+    backgroundColor: "rgb(230, 230, 230)",
+    flex: 1,
+  },
+  whole: {
+    flex: 1,
+  },
+});
