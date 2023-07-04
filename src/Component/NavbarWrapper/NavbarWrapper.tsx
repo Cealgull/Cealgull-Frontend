@@ -24,7 +24,7 @@ const NavbarStyle = StyleSheet.create({
   },
   warpper: {
     backgroundColor: "rgb(230, 230, 230)",
-    flex: 1,
+    height: "10%",
     width: "100%",
   },
 });
