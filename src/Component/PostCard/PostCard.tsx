@@ -39,7 +39,7 @@ const PostCardStyle = StyleSheet.create({
 });
 
 interface PostCardInterface {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   title?: string;
   username: string;
   useravatar: string;

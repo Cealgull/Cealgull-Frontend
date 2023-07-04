@@ -13,6 +13,7 @@ const HomeViewStyle = StyleSheet.create({
     flex: 1,
   },
   head: {
+    backgroundColor: "rgb(230, 230, 230)",
     flex: 1,
   },
   content: {
@@ -23,7 +24,7 @@ const HomeViewStyle = StyleSheet.create({
 export const PersonView = ({ route, navigation }: PersonViewInterface) => {
   return (
     <View style={HomeViewStyle.whole}>
-      <Text style={HomeViewStyle.head}>Header</Text>
+      <Text style={HomeViewStyle.head}>PersonView</Text>
       <Text style={HomeViewStyle.content}>Content</Text>
       <Navbar>
         <NavHomeIcon></NavHomeIcon>
