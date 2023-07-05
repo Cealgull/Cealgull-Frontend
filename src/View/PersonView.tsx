@@ -1,4 +1,4 @@
-import { NavBar } from "@src/Component/NavbarWrapper";
+import { NavBar } from "@src/Component/Navbar";
 import { PersonViewInterface } from "@src/Resources/RootStackData";
 import { StyleSheet, Text, View } from "react-native";
 
