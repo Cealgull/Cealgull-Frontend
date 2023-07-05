@@ -1,8 +1,9 @@
 import React from "react";
 import { Text, View } from "react-native";
-import { TopicViewInterface } from "@src/@types/navigation";
 
-export const TopicView = ({ route, navigation }: TopicViewInterface) => {
+export type TopicViewProps = undefined;
+
+export const TopicView: React.FC = () => {
   return (
     <View>
       <Text>Topic View </Text>

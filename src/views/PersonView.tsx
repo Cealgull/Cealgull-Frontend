@@ -1,8 +1,10 @@
+import React from "react";
 import { NavBar } from "@src/components/NavBar";
-import { PersonViewInterface } from "@src/@types/navigation";
 import { StyleSheet, Text, View } from "react-native";
 
-export const PersonView = ({ route, navigation }: PersonViewInterface) => {
+export type PersonViewProps = undefined;
+
+export const PersonView: React.FC = () => {
   return (
     <View style={HomeViewStyle.whole}>
       <Text style={HomeViewStyle.head}>PersonView</Text>

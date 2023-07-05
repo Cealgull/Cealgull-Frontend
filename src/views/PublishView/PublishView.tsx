@@ -34,6 +34,8 @@ const PublishButton: React.FC<PublishButtonProps> = ({
   );
 };
 
+export type PublishViewProps = undefined;
+
 export default function PublishView() {
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
