@@ -1,5 +1,5 @@
-import { NavBar } from "@src/Component/Navbar";
-import { PublishViewInterface } from "@src/Resources/RootStackData";
+import { NavBar } from "@src/components/NavBar";
+import { PublishViewInterface } from "@src/@types/navigation";
 import { StyleSheet, Text, View } from "react-native";
 
 export const PublishView = ({ route, navigation }: PublishViewInterface) => {

@@ -4,7 +4,7 @@ import {
   HomeViewNavigationProps,
   PersonViewNavigationProps,
   PublishViewNavigationProps,
-} from "@src/Resources/RootStackData";
+} from "@src/@types/navigation/index";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export const NavMyIcon = () => {

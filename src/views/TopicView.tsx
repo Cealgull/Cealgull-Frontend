@@ -1,6 +1,6 @@
 import React from "react";
 import { Text, View } from "react-native";
-import { TopicViewInterface } from "@src/Resources/RootStackData";
+import { TopicViewInterface } from "@src/@types/navigation";
 
 export const TopicView = ({ route, navigation }: TopicViewInterface) => {
   return (

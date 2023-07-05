@@ -1,8 +1,8 @@
-import { HomeView } from "@src/View/HomeView";
-import { PersonView } from "@src/View/PersonView";
-import { PublishView } from "./View/PublishView";
-import { TopicView } from "./View/TopicView";
-import { RootTabParamList } from "@src/Resources/RootStackData";
+import { HomeView } from "@src/views/HomeView";
+import { PersonView } from "@src/views/PersonView";
+import { PublishView } from "@src/views/PublishView";
+import { TopicView } from "@src/views/TopicView";
+import { RootTabParamList } from "@src/@types/navigation";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
