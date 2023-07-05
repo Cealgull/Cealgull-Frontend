@@ -12,7 +12,7 @@ export const HomeView: React.FC = () => {
         <ScrollView>
           <PostCard
             username="User1"
-            useravatar="https://randomuser.me/api/portraits/men/36.jpg"
+            userAvatar="https://randomuser.me/api/portraits/men/36.jpg"
             title="HELLO"
           >
             <Text>HELLO WORLD!</Text>
