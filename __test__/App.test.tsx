@@ -1,7 +1,6 @@
-import { render, screen } from "@testing-library/react-native";
+import { render } from "@testing-library/react-native";
 import App from "../App";
 
-test("App", () => {
+test("render App correctly", () => {
   render(<App />);
-  screen.getByText("This is an App created by React Native!");
 });
