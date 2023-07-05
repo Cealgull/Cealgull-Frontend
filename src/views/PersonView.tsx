@@ -1,5 +1,5 @@
-import { NavBar } from "@src/Component/Navbar";
-import { PersonViewInterface } from "@src/Resources/RootStackData";
+import { NavBar } from "@src/components/NavBar";
+import { PersonViewInterface } from "@src/@types/navigation";
 import { StyleSheet, Text, View } from "react-native";
 
 export const PersonView = ({ route, navigation }: PersonViewInterface) => {

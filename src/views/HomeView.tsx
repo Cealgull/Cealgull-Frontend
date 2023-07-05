@@ -1,6 +1,6 @@
-import { NavBar } from "@src/Component/Navbar";
-import { PostCard } from "@src/Component/PostCard/PostCard";
-import { HomeViewInterface } from "@src/Resources/RootStackData";
+import { NavBar } from "@src/components/NavBar";
+import { PostCard } from "@src/components/PostCard/PostCard";
+import { HomeViewInterface } from "@src/@types/navigation";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 
 export const HomeView = ({ route, navigation }: HomeViewInterface) => {

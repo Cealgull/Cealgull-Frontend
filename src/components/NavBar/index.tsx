@@ -1,5 +1,5 @@
-import { NavbarWrapper } from "./NavbarWrapper";
-import { NavMyIcon, NavHomeIcon, NavPublishIcon } from "./NavIcon";
+import { NavbarWrapper } from "./NavBarWrapper";
+import { NavMyIcon, NavHomeIcon, NavPublishIcon } from "./NavItems";
 
 export const NavBar = () => {
   return (
