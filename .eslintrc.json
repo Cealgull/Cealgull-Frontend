@@ -32,6 +32,14 @@
     "testing-library"
   ],
   "rules": {
+    "@typescript-eslint/no-unused-vars": [
+      "warn",
+      {
+        "argsIgnorePattern": "^_$",
+        "varsIgnorePattern": "^_$",
+        "caughtErrorsIgnorePattern": "^_$"
+      }
+    ],
     "react-native/sort-styles": "warn",
     "react-native/no-unused-styles": "warn",
     "react-native/no-single-element-style-arrays": "error",
