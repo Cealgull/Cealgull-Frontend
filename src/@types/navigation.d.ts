@@ -1,48 +1,18 @@
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 
-export type RootTabParamList = {
-  Home: undefined;
-  Person: undefined;
-  Publish: undefined;
-  Topic: undefined;
+import { HomeViewProps } from "@src/views/HomeView";
+import { PersonViewProps } from "@src/views/PersonView";
+import { PublishViewProps } from "@src/views/PublishView";
+import { TopicViewProps } from "@src/views/TopicView";
+
+type RootTabParamList = {
+  Home: HomeViewProps;
+  Person: PersonViewProps;
+  Publish: PublishViewProps;
+  Topic: TopicViewProps;
 };
 
-export type HomeViewNavigationProps = BottomTabScreenProps<
-  RootTabParamList,
-  "Home"
->;
+type ScreenList = keyof RootTabParamList;
 
-export type PersonViewNavigationProps = BottomTabScreenProps<
-  RootTabParamList,
-  "Person"
->;
-
-export type PublishViewNavigationProps = BottomTabScreenProps<
-  RootTabParamList,
-  "Publish"
->;
-
-export type TopicViewNavigationProps = BottomTabScreenProps<
-  RootTabParamList,
-  "Topic"
->;
-
-export interface HomeViewInterface {
-  route: HomeViewNavigationProps["route"];
-  navigation: HomeViewNavigationProps["navigation"];
-}
-
-export interface PersonViewInterface {
-  route: PersonViewNavigationProps["route"];
-  navigation: PersonViewNavigationProps["navigation"];
-}
-
-export interface PublishViewInterface {
-  route: PublishViewNavigationProps["route"];
-  navigation: PublishViewNavigationProps["navigation"];
-}
-
-export interface TopicViewInterface {
-  route: TopicViewNavigationProps["route"];
-  navigation: TopicViewNavigationProps["navigation"];
-}
+export type ScreenPropsGeneric<Screen extends ScreenList> =
+  BottomTabScreenProps<RootTabParamList, Screen>;

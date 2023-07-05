@@ -1,9 +1,10 @@
 import { NavBar } from "@src/components/NavBar";
 import { PostCard } from "@src/components/PostCard/PostCard";
-import { HomeViewInterface } from "@src/@types/navigation";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 
-export const HomeView = ({ route, navigation }: HomeViewInterface) => {
+export type HomeViewProps = undefined;
+
+export const HomeView: React.FC = () => {
   return (
     <View style={HomeViewStyle.whole}>
       <Text style={HomeViewStyle.head}>HomeView</Text>
