@@ -3,12 +3,12 @@ import { Avatar } from "@rneui/themed";
 import React from "react";
 
 const PostCardStyle = StyleSheet.create({
-  contentcard: {
+  contentCard: {
     paddingBottom: 10,
     paddingLeft: "5%",
     paddingTop: 10,
   },
-  personcard: {
+  personCard: {
     alignItems: "center",
     borderBottomWidth: 0.5,
     flexDirection: "row",
@@ -16,7 +16,7 @@ const PostCardStyle = StyleSheet.create({
     paddingLeft: "5%",
     paddingTop: 10,
   },
-  personcardname: {
+  personCardName: {
     fontSize: 16,
     fontWeight: "bold",
     paddingLeft: "5%",
@@ -25,7 +25,7 @@ const PostCardStyle = StyleSheet.create({
     borderBottomWidth: 0.5,
     paddingLeft: "5%",
   },
-  titletext: {
+  titleText: {
     fontSize: 18,
     fontWeight: "bold",
   },
@@ -42,25 +42,25 @@ interface PostCardInterface {
   children?: React.ReactNode;
   title?: string;
   username: string;
-  useravatar: string;
+  userAvatar: string;
 }
 
 export const PostCard = ({
   children,
   title,
   username,
-  useravatar,
+  userAvatar,
 }: PostCardInterface) => {
   return (
     <View style={PostCardStyle.whole}>
-      <View style={PostCardStyle.personcard}>
-        <Avatar rounded size={40} source={{ uri: useravatar }} />
-        <Text style={PostCardStyle.personcardname}>{username}</Text>
+      <View style={PostCardStyle.personCard}>
+        <Avatar rounded size={40} source={{ uri: userAvatar }} />
+        <Text style={PostCardStyle.personCardName}>{username}</Text>
       </View>
       <View style={PostCardStyle.titleCard}>
-        {title && <Text style={PostCardStyle.titletext}>{title}</Text>}
+        {title && <Text style={PostCardStyle.titleText}>{title}</Text>}
       </View>
-      <View style={PostCardStyle.contentcard}>{children}</View>
+      <View style={PostCardStyle.contentCard}>{children}</View>
     </View>
   );
 };
