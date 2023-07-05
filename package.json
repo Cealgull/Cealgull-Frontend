@@ -12,7 +12,8 @@
     "test:watch": "jest --watch",
     "test:ci": "jest --coverage",
     "lint": "eslint .",
-    "format": "prettier -w src ./App.tsx"
+    "format": "prettier -w .",
+    "format:check": "prettier --check ."
   },
   "dependencies": {
     "@expo/webpack-config": "^18.0.1",
