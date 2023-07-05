@@ -1,4 +1,4 @@
-import { NavBar } from "@src/Component/NavbarWrapper";
+import { NavBar } from "@src/Component/Navbar";
 import { PostCard } from "@src/Component/PostCard/PostCard";
 import { HomeViewInterface } from "@src/Resources/RootStackData";
 import { ScrollView, StyleSheet, Text, View } from "react-native";

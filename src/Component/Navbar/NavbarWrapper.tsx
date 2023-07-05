@@ -1,5 +1,8 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { Dimensions, StyleSheet, View } from "react-native";
+
+const windowWidth = Dimensions.get("window").width;
+const windowHeight = Dimensions.get("window").height;
 
 interface NavbarInterface {
   children?: React.ReactNode;
@@ -24,7 +27,7 @@ const NavbarStyle = StyleSheet.create({
   },
   warpper: {
     backgroundColor: "rgb(230, 230, 230)",
-    height: "10%",
-    width: "100%",
+    height: windowHeight * 0.1,
+    width: windowWidth,
   },
 });
