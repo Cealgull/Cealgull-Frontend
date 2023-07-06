@@ -1,3 +1,7 @@
+/**
+ * @author Bojun Ren
+ * @data 2023/07/06
+ */
 import { Button, Icon } from "@rneui/themed";
 import HeaderBarWrapper from "@src/components/HeaderBarWrapper";
 import useImagePicker from "@src/services/useImagePicker";
@@ -16,17 +20,26 @@ import ImageList from "./ImageList";
 import MultilineInput, { InputControlProps } from "./MultilineInput";
 
 interface PublishButtonProps {
-  backGroundColor: string;
-  color: string;
+  enabled: boolean;
+  onPress: () => Promise<void>;
 }
 
-const PublishButton: React.FC<PublishButtonProps> = ({
-  backGroundColor,
-  color,
-}) => {
+const PublishButton: React.FC<PublishButtonProps> = ({ enabled, onPress }) => {
+  const [backgroundColor, color] = useMemo(() => {
+    if (enabled) {
+      return ["#0096c7", "#fff"];
+    }
+    return ["rgba(0,0,0,0.1)", "rgba(0,0,0,0.2)"];
+  }, [enabled]);
   return (
     <>
-      <Button buttonStyle={styles.btn} color={backGroundColor}>
+      <Button
+        buttonStyle={styles.btn}
+        color={backgroundColor}
+        onPress={async () => {
+          if (enabled) await onPress();
+        }}
+      >
         <Text style={[styles.btn_text, { color }]}>发布</Text>
         <Icon name="send" type="feather" size={20} color={color} />
       </Button>
@@ -34,9 +47,11 @@ const PublishButton: React.FC<PublishButtonProps> = ({
   );
 };
 
-export type PublishViewProps = undefined;
+export interface PublishViewProps {
+  onClose: () => void;
+}
 
-export default function PublishView() {
+export default function PublishView({ onClose }: PublishViewProps) {
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
   const [imageUriList, setImageUriList] = useState<string[]>([]);
@@ -57,13 +72,6 @@ export default function PublishView() {
     setImageUriList(assets.map((asset) => asset.uri));
   };
 
-  const [iconBackgroundColor, iconColor] = useMemo(() => {
-    if (title.trim().length === 0 || content.trim().length === 0) {
-      return ["rgba(0,0,0,0.1)", "rgba(0,0,0,0.2)"];
-    }
-    return ["#0096c7", "#fff"];
-  }, [title, content]);
-
   const inputProps: InputControlProps = {
     title,
     content,
@@ -75,16 +83,25 @@ export default function PublishView() {
     },
   };
 
+  // TODO publish logic
+  const handlePublish = async () => {
+    onClose();
+  };
+
+  const publishBtnEnabled = useMemo<boolean>(() => {
+    return title.trim().length !== 0 && content.trim().length !== 0;
+  }, [title, content]);
+
   return (
     <>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.container}>
           {/* HeaderBar is inflexible */}
           <HeaderBarWrapper alignMethod="lr">
-            <Icon name="close" type="antdesign" size={30} />
+            <Icon name="close" type="antdesign" size={30} onPress={onClose} />
             <PublishButton
-              color={iconColor}
-              backGroundColor={iconBackgroundColor}
+              enabled={publishBtnEnabled}
+              onPress={handlePublish}
             />
           </HeaderBarWrapper>
           {/* flex: 1 */}
