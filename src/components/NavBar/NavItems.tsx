@@ -1,14 +1,14 @@
 import { useNavigation } from "@react-navigation/native";
 import { Icon } from "@rneui/themed";
 import {
-  HomeViewNavigationProps,
-  PersonViewNavigationProps,
-  PublishViewNavigationProps,
-} from "@src/@types/navigation/index";
+  StackScreenPropsGeneric,
+  TabScreenPropsGeneric,
+} from "@src/@types/navigation";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export const NavMyIcon = () => {
-  const navigation = useNavigation<PersonViewNavigationProps["navigation"]>();
+  const navigation =
+    useNavigation<TabScreenPropsGeneric<"Person">["navigation"]>();
   return (
     <TouchableOpacity
       onPress={() => navigation.navigate("Person")}
@@ -23,10 +23,11 @@ export const NavMyIcon = () => {
 };
 
 export const NavPublishIcon = () => {
-  const navigation = useNavigation<PublishViewNavigationProps["navigation"]>();
+  const navigation =
+    useNavigation<StackScreenPropsGeneric<"Main">["navigation"]>();
   return (
     <View style={NavbarIcon.warpper}>
-      <TouchableOpacity onPress={() => navigation.navigate("Publish")}>
+      <TouchableOpacity onPress={() => navigation.push("Publish")}>
         <Icon reverse color="red" type="antdesign" name="pluscircle" />
       </TouchableOpacity>
 
@@ -36,7 +37,8 @@ export const NavPublishIcon = () => {
 };
 
 export const NavHomeIcon = () => {
-  const navigation = useNavigation<HomeViewNavigationProps["navigation"]>();
+  const navigation =
+    useNavigation<TabScreenPropsGeneric<"Home">["navigation"]>();
   return (
     <TouchableOpacity
       style={NavbarIcon.warpper}

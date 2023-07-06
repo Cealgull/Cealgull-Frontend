@@ -1,6 +1,41 @@
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, Text, TouchableNativeFeedback } from "react-native";
 import { Avatar } from "@rneui/themed";
 import React from "react";
+import { useNavigation } from "@react-navigation/native";
+import { StackScreenPropsGeneric } from "@src/@types/navigation";
+import { TouchableOpacity } from "react-native";
+
+interface PostCardInterface {
+  children?: React.ReactNode;
+  title?: string;
+  username: string;
+  userAvatar: string;
+}
+
+export default function PostCard({
+  children,
+  title,
+  username,
+  userAvatar,
+}: PostCardInterface) {
+  const navigation =
+    useNavigation<StackScreenPropsGeneric<"Main">["navigation"]>();
+
+  return (
+    <TouchableOpacity onPress={() => navigation.push("Topic")}>
+      <View style={PostCardStyle.whole}>
+        <View style={PostCardStyle.personCard}>
+          <Avatar rounded size={40} source={{ uri: userAvatar }} />
+          <Text style={PostCardStyle.personCardName}>{username}</Text>
+        </View>
+        <View style={PostCardStyle.titleCard}>
+          {title && <Text style={PostCardStyle.titleText}>{title}</Text>}
+        </View>
+        <View style={PostCardStyle.contentCard}>{children}</View>
+      </View>
+    </TouchableOpacity>
+  );
+}
 
 const PostCardStyle = StyleSheet.create({
   contentCard: {
@@ -10,7 +45,6 @@ const PostCardStyle = StyleSheet.create({
   },
   personCard: {
     alignItems: "center",
-    borderBottomWidth: 0.5,
     flexDirection: "row",
     paddingBottom: 10,
     paddingLeft: "5%",
@@ -22,7 +56,6 @@ const PostCardStyle = StyleSheet.create({
     paddingLeft: "5%",
   },
   titleCard: {
-    borderBottomWidth: 0.5,
     paddingLeft: "5%",
   },
   titleText: {
@@ -30,37 +63,10 @@ const PostCardStyle = StyleSheet.create({
     fontWeight: "bold",
   },
   whole: {
-    backgroundColor: "lightblue",
+    backgroundColor: "rgb(220,220,220)",
     borderRadius: 10,
     marginLeft: "3%",
     marginTop: "2%",
     width: "94%",
   },
 });
-
-interface PostCardInterface {
-  children?: React.ReactNode;
-  title?: string;
-  username: string;
-  userAvatar: string;
-}
-
-export const PostCard = ({
-  children,
-  title,
-  username,
-  userAvatar,
-}: PostCardInterface) => {
-  return (
-    <View style={PostCardStyle.whole}>
-      <View style={PostCardStyle.personCard}>
-        <Avatar rounded size={40} source={{ uri: userAvatar }} />
-        <Text style={PostCardStyle.personCardName}>{username}</Text>
-      </View>
-      <View style={PostCardStyle.titleCard}>
-        {title && <Text style={PostCardStyle.titleText}>{title}</Text>}
-      </View>
-      <View style={PostCardStyle.contentCard}>{children}</View>
-    </View>
-  );
-};
