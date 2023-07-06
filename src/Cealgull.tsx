@@ -1,6 +1,7 @@
-import { RootTabParamList } from "@src/@types/navigation";
+import { RootTabParamList, RootStackParamList } from "@src/@types/navigation";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { NavigationContainer } from "@react-navigation/native";
+import { TransitionSpecs } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import {
   HomeScreen,
@@ -8,24 +9,41 @@ import {
   PublishScreen,
   TopicScreen,
 } from "./views/BottomTabScreen";
+import { createStackNavigator } from "@react-navigation/stack";
+import { CardStyleInterpolators } from "@react-navigation/stack";
 
 const Tab = createBottomTabNavigator<RootTabParamList>();
+const Stack = createStackNavigator<RootStackParamList>();
+
+const MainScreen = () => {
+  return (
+    <Tab.Navigator
+      screenOptions={{
+        tabBarStyle: { display: "none" },
+        headerShown: false,
+      }}
+    >
+      <Tab.Screen name="Home" component={HomeScreen}></Tab.Screen>
+      <Tab.Screen name="Person" component={PersonScreen}></Tab.Screen>
+    </Tab.Navigator>
+  );
+};
 
 export default function Cealgull() {
   return (
     <SafeAreaProvider>
       <NavigationContainer>
-        <Tab.Navigator
+        <Stack.Navigator
           screenOptions={{
-            tabBarStyle: { display: "none" },
             headerShown: false,
+            gestureDirection: "vertical",
+            cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
           }}
         >
-          <Tab.Screen name="Home" component={HomeScreen}></Tab.Screen>
-          <Tab.Screen name="Person" component={PersonScreen}></Tab.Screen>
-          <Tab.Screen name="Publish" component={PublishScreen}></Tab.Screen>
-          <Tab.Screen name="Topic" component={TopicScreen}></Tab.Screen>
-        </Tab.Navigator>
+          <Stack.Screen name="Main" component={MainScreen}></Stack.Screen>
+          <Stack.Screen name="Publish" component={PublishScreen}></Stack.Screen>
+          <Stack.Screen name="Topic" component={TopicScreen}></Stack.Screen>
+        </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>
   );

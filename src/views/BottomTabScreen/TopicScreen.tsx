@@ -1,8 +1,8 @@
-import type { ScreenPropsGeneric } from "@src/@types/navigation";
+import type { StackScreenPropsGeneric } from "@src/@types/navigation";
 import { TopicView } from "../TopicView";
 
 export default function TopicScreen({
   route: { params },
-}: ScreenPropsGeneric<"Topic">) {
+}: StackScreenPropsGeneric<"Topic">) {
   return <TopicView {...(params ?? {})} />;
 }
