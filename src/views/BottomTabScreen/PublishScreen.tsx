@@ -9,5 +9,7 @@ export default function PublishScreen({
     navigation.pop();
   };
 
-  return <PublishView {...(params ?? {})} />;
+  const props = { ...(params ?? {}), onClose };
+
+  return <PublishView {...props} />;
 }
