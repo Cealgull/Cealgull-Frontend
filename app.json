@@ -28,6 +28,8 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
+      "package": "com.cealgull.cealgull",
+      "permissions": ["android.permission.RECORD_AUDIO"],
       "softwareKeyboardLayoutMode": "pan"
     },
     "web": {
@@ -35,8 +37,14 @@
     },
     "extra": {
       "eas": {
-        "projectId": "99bd98df-7fd1-4353-8ffa-c0ef9544d963"
+        "projectId": "6c7e3214-2981-4ab9-a232-074d56503a45"
       }
+    },
+    "runtimeVersion": {
+      "policy": "sdkVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/6c7e3214-2981-4ab9-a232-074d56503a45"
     }
   }
 }
