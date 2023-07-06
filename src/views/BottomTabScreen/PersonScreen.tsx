@@ -1,8 +1,8 @@
-import type { ScreenPropsGeneric } from "@src/@types/navigation";
+import type { TabScreenPropsGeneric } from "@src/@types/navigation";
 import { PersonView } from "../PersonView";
 
 export default function PersonScreen({
   route: { params },
-}: ScreenPropsGeneric<"Person">) {
+}: TabScreenPropsGeneric<"Person">) {
   return <PersonView {...(params ?? {})} />;
 }
