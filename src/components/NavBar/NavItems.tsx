@@ -28,7 +28,13 @@ export const NavPublishIcon = () => {
   return (
     <View style={NavbarIcon.warpper}>
       <TouchableOpacity onPress={() => navigation.push("Publish")}>
-        <Icon reverse color="red" type="antdesign" name="pluscircle" />
+        <Icon
+          size={26}
+          reverse
+          color="red"
+          type="antdesign"
+          name="pluscircle"
+        />
       </TouchableOpacity>
 
       <Text style={NavbarIcon.text}>新建话题</Text>

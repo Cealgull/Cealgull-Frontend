@@ -1,23 +1,28 @@
 import React from "react";
 import { NavBar } from "@src/components/NavBar";
 import { StyleSheet, Text, View } from "react-native";
+import HeaderBarWrapper from "@src/components/HeaderBarWrapper";
+import { ScrollView } from "react-native-gesture-handler";
 
 export const PersonView: React.FC = () => {
   return (
-    <View style={HomeViewStyle.whole}>
-      <Text style={HomeViewStyle.head}>PersonView</Text>
-      <Text style={HomeViewStyle.content}>Content</Text>
+    <View style={PersonViewStyle.whole}>
+      <View style={{ backgroundColor: "rgb(225,225,225)" }}>
+        <HeaderBarWrapper alignMethod="c">
+          <Text>Person</Text>
+        </HeaderBarWrapper>
+      </View>
+
+      <ScrollView style={PersonViewStyle.content}>
+        <Text>content</Text>
+      </ScrollView>
       <NavBar />
     </View>
   );
 };
 
-const HomeViewStyle = StyleSheet.create({
+const PersonViewStyle = StyleSheet.create({
   content: {
-    flex: 8,
-  },
-  head: {
-    backgroundColor: "rgb(230, 230, 230)",
     flex: 1,
   },
   whole: {

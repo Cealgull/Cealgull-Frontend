@@ -92,9 +92,9 @@ const PostCardStyle = StyleSheet.create({
     marginLeft: 2,
   },
   iconview: {
-    padding: 3,
     alignItems: "center",
     flexDirection: "row",
+    padding: 3,
   },
   replystyle: {
     color: "rgb(100,100,100)",

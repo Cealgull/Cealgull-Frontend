@@ -31,7 +31,6 @@ export default function TopicCard({
   userAvatar,
   username,
   time,
-  Tab,
 }: TopicCardProps) {
   const navigation =
     useNavigation<StackScreenPropsGeneric<"Main">["navigation"]>();
@@ -65,7 +64,7 @@ export default function TopicCard({
           </View>
           <View style={TopicCardStyle.iconview}>
             <Icon size={16} color="#8B8989" type="antdesign" name="dislike2" />
-            <Text style={TopicCardStyle.icontext}>{numericCarry(2144313)}</Text>
+            <Text style={TopicCardStyle.icontext}>{numericCarry(99001)}</Text>
           </View>
           <View style={TopicCardStyle.iconview}>
             <Icon size={16} color="#8B8989" type="antdesign" name="message1" />

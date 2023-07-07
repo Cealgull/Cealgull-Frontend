@@ -2,13 +2,17 @@ import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { PostCard } from "@src/components/PostCard";
 import { ScrollView } from "react-native-gesture-handler";
+import HeaderBarWrapper from "@src/components/HeaderBarWrapper";
 
 export const TopicView: React.FC = () => {
   return (
     <View style={TopicViewStyle.whole}>
-      <View style={TopicViewStyle.header}>
-        <Text>Topic Topic Topic </Text>
+      <View style={{ backgroundColor: "rgb(225,225,225)" }}>
+        <HeaderBarWrapper alignMethod="c">
+          <Text>Topic</Text>
+        </HeaderBarWrapper>
       </View>
+
       <View style={TopicViewStyle.content}>
         <ScrollView>
           <PostCard
@@ -38,9 +42,6 @@ export const TopicView: React.FC = () => {
 
 const TopicViewStyle = StyleSheet.create({
   content: {
-    flex: 9,
-  },
-  header: {
     flex: 1,
   },
   whole: {
