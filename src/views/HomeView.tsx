@@ -1,5 +1,5 @@
 import { NavBar } from "@src/components/NavBar";
-import { PostCard } from "@src/components/PostCard";
+import { TopicCard } from "@src/components/PostCard";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 
 export type HomeViewProps = undefined;
@@ -10,23 +10,22 @@ export const HomeView: React.FC = () => {
       <Text style={HomeViewStyle.head}>HomeView</Text>
       <View style={HomeViewStyle.content}>
         <ScrollView>
-          <PostCard
+          <TopicCard
             username="User1"
             userAvatar="https://randomuser.me/api/portraits/men/36.jpg"
             title="HELLO"
             time="2023/7/6 11:01"
           >
             <Text>HELLO WORLD!</Text>
-          </PostCard>
-          <PostCard
+          </TopicCard>
+          <TopicCard
             username="User1"
             userAvatar="https://randomuser.me/api/portraits/men/36.jpg"
             title="HELLO"
             time="2023/7/6 11:01"
-            reply="2"
           >
             <Text>HELLO WORLD!</Text>
-          </PostCard>
+          </TopicCard>
         </ScrollView>
       </View>
       <NavBar />
@@ -36,6 +35,7 @@ export const HomeView: React.FC = () => {
 
 const HomeViewStyle = StyleSheet.create({
   content: {
+    backgroundColor: "rgb(240,240,240)",
     flex: 8,
   },
   head: {
