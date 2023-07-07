@@ -1,5 +1,6 @@
 import React from "react";
 import { Dimensions, StyleSheet, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -9,8 +10,9 @@ interface NavbarInterface {
 }
 
 export const NavbarWrapper = ({ children }: NavbarInterface) => {
+  const { bottom } = useSafeAreaInsets();
   return (
-    <View style={NavbarStyle.warpper}>
+    <View style={[NavbarStyle.warpper, { paddingBottom: bottom }]}>
       <View style={NavbarStyle.itemview}>{children}</View>
     </View>
   );
@@ -19,15 +21,12 @@ export const NavbarWrapper = ({ children }: NavbarInterface) => {
 const NavbarStyle = StyleSheet.create({
   itemview: {
     alignItems: "center",
-    flex: 1,
     flexDirection: "row",
     justifyContent: "center",
-    maxHeight: "80%",
-    width: "100%",
   },
   warpper: {
-    backgroundColor: "rgb(230, 230, 230)",
-    height: windowHeight * 0.1,
+    backgroundColor: "rgb(225, 225, 225)",
+    height: windowHeight * 0.11,
     width: windowWidth,
   },
 });

@@ -1,13 +1,18 @@
 import { NavBar } from "@src/components/NavBar";
 import { TopicCard } from "@src/components/PostCard";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
+import HeaderBarWrapper from "@src/components/HeaderBarWrapper";
 
 export type HomeViewProps = undefined;
 
 export const HomeView: React.FC = () => {
   return (
     <View style={HomeViewStyle.whole}>
-      <Text style={HomeViewStyle.head}>HomeView</Text>
+      <View style={{ backgroundColor: "rgb(225,225,225)" }}>
+        <HeaderBarWrapper alignMethod="c">
+          <Text>Home</Text>
+        </HeaderBarWrapper>
+      </View>
       <View style={HomeViewStyle.content}>
         <ScrollView>
           <TopicCard
@@ -37,10 +42,6 @@ const HomeViewStyle = StyleSheet.create({
   content: {
     backgroundColor: "rgb(240,240,240)",
     flex: 8,
-  },
-  head: {
-    backgroundColor: "rgb(230, 230, 230)",
-    flex: 1,
   },
   whole: {
     flex: 1,
