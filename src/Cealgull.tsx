@@ -1,7 +1,6 @@
 import { RootTabParamList, RootStackParamList } from "@src/@types/navigation";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { NavigationContainer } from "@react-navigation/native";
-import { TransitionSpecs } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import {
   HomeScreen,
@@ -36,13 +35,25 @@ export default function Cealgull() {
         <Stack.Navigator
           screenOptions={{
             headerShown: false,
-            gestureDirection: "vertical",
-            cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
           }}
         >
           <Stack.Screen name="Main" component={MainScreen}></Stack.Screen>
-          <Stack.Screen name="Publish" component={PublishScreen}></Stack.Screen>
-          <Stack.Screen name="Topic" component={TopicScreen}></Stack.Screen>
+          <Stack.Screen
+            name="Publish"
+            options={{
+              gestureDirection: "vertical",
+              cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
+            }}
+            component={PublishScreen}
+          ></Stack.Screen>
+          <Stack.Screen
+            name="Topic"
+            options={{
+              gestureDirection: "horizontal",
+              cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+            }}
+            component={TopicScreen}
+          ></Stack.Screen>
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>

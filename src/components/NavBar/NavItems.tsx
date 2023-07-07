@@ -16,7 +16,7 @@ export const NavMyIcon = () => {
     >
       <View>
         <Icon type="antdesign" name="user" />
-        <Text style={NavbarIcon.text}>Person</Text>
+        <Text style={[NavbarIcon.text, { marginTop: 5 }]}>个人</Text>
       </View>
     </TouchableOpacity>
   );
@@ -31,7 +31,7 @@ export const NavPublishIcon = () => {
         <Icon reverse color="red" type="antdesign" name="pluscircle" />
       </TouchableOpacity>
 
-      <Text style={NavbarIcon.text}>Publish</Text>
+      <Text style={NavbarIcon.text}>新建话题</Text>
     </View>
   );
 };
@@ -46,7 +46,7 @@ export const NavHomeIcon = () => {
     >
       <View>
         <Icon type="antdesign" name="home" />
-        <Text style={NavbarIcon.text}>Home</Text>
+        <Text style={[NavbarIcon.text, { marginTop: 5 }]}>首页</Text>
       </View>
     </TouchableOpacity>
   );
