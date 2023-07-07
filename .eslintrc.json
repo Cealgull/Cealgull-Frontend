@@ -40,7 +40,6 @@
         "caughtErrorsIgnorePattern": "^_$"
       }
     ],
-    "react-native/sort-styles": "warn",
     "react-native/no-unused-styles": "warn",
     "react-native/no-single-element-style-arrays": "error",
 
