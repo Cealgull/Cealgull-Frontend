@@ -14,6 +14,16 @@ export const HomeView: React.FC = () => {
             username="User1"
             userAvatar="https://randomuser.me/api/portraits/men/36.jpg"
             title="HELLO"
+            time="2023/7/6 11:01"
+          >
+            <Text>HELLO WORLD!</Text>
+          </PostCard>
+          <PostCard
+            username="User1"
+            userAvatar="https://randomuser.me/api/portraits/men/36.jpg"
+            title="HELLO"
+            time="2023/7/6 11:01"
+            reply="2"
           >
             <Text>HELLO WORLD!</Text>
           </PostCard>
