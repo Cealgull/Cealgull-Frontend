@@ -47,7 +47,7 @@ const PublishButton: React.FC<PublishButtonProps> = ({ enabled, onPress }) => {
   );
 };
 
-export interface PublishViewProps {
+interface PublishViewProps {
   onClose: () => void;
 }
 

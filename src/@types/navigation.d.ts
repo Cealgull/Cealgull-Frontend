@@ -1,19 +1,21 @@
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { HomeViewProps } from "@src/views/HomeView";
-import { PersonViewProps } from "@src/views/PersonView";
-import { PublishViewProps } from "@src/views/PublishView";
-import { TopicViewProps } from "@src/views/TopicView";
+import {
+  HomeScreenProps,
+  PersonScreenProps,
+  PublishScreenProps,
+  TopicScreenProps,
+} from "@src/views/BottomTabScreen";
 
 type RootTabParamList = {
-  Home: HomeViewProps;
-  Person: PersonViewProps;
+  Home: HomeScreenProps;
+  Person: PersonScreenProps;
 };
 
 type RootStackParamList = {
   Main: undefined;
-  Publish: PublishViewProps;
-  Topic: TopicViewProps;
+  Publish: PublishScreenProps;
+  Topic: TopicScreenProps;
 };
 
 type TabScreenList = keyof RootTabParamList;

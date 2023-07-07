@@ -2,8 +2,6 @@ import React from "react";
 import { NavBar } from "@src/components/NavBar";
 import { StyleSheet, Text, View } from "react-native";
 
-export type PersonViewProps = undefined;
-
 export const PersonView: React.FC = () => {
   return (
     <View style={HomeViewStyle.whole}>
