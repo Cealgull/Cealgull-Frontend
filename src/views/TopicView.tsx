@@ -1,8 +1,8 @@
+import HeaderBarWrapper from "@src/components/HeaderBarWrapper";
+import { PostCard } from "@src/components/PostCard";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { PostCard } from "@src/components/PostCard";
 import { ScrollView } from "react-native-gesture-handler";
-import HeaderBarWrapper from "@src/components/HeaderBarWrapper";
 
 export const TopicView: React.FC = () => {
   return (

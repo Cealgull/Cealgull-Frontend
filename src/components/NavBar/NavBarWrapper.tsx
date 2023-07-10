@@ -12,7 +12,7 @@ interface NavbarInterface {
 export const NavbarWrapper = ({ children }: NavbarInterface) => {
   const { bottom } = useSafeAreaInsets();
   return (
-    <View style={[NavbarStyle.warpper, { paddingBottom: bottom }]}>
+    <View style={[NavbarStyle.wrapper, { paddingBottom: bottom }]}>
       <View style={NavbarStyle.itemview}>{children}</View>
     </View>
   );
@@ -24,7 +24,7 @@ const NavbarStyle = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
   },
-  warpper: {
+  wrapper: {
     backgroundColor: "rgb(225, 225, 225)",
     height: windowHeight * 0.11,
     width: windowWidth,

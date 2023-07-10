@@ -1,7 +1,7 @@
+import HeaderBarWrapper from "@src/components/HeaderBarWrapper";
 import { NavBar } from "@src/components/NavBar";
 import { TopicCard } from "@src/components/PostCard";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
-import HeaderBarWrapper from "@src/components/HeaderBarWrapper";
 
 export const HomeView: React.FC = () => {
   return (

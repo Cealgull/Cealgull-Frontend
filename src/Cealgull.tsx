@@ -1,15 +1,17 @@
-import { RootTabParamList, RootStackParamList } from "@src/@types/navigation";
-import { SafeAreaProvider } from "react-native-safe-area-context";
-import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { NavigationContainer } from "@react-navigation/native";
+import {
+  CardStyleInterpolators,
+  createStackNavigator,
+} from "@react-navigation/stack";
+import { RootStackParamList, RootTabParamList } from "@src/@types/navigation";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import {
   HomeScreen,
   PersonScreen,
   PublishScreen,
   TopicScreen,
 } from "./views/BottomTabScreen";
-import { createStackNavigator } from "@react-navigation/stack";
-import { CardStyleInterpolators } from "@react-navigation/stack";
 
 const Tab = createBottomTabNavigator<RootTabParamList>();
 const Stack = createStackNavigator<RootStackParamList>();

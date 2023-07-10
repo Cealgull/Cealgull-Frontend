@@ -12,7 +12,7 @@ export const NavMyIcon = () => {
   return (
     <TouchableOpacity
       onPress={() => navigation.navigate("Person")}
-      style={NavbarIcon.warpper}
+      style={NavbarIcon.wrapper}
     >
       <View>
         <Icon type="antdesign" name="user" />
@@ -26,7 +26,7 @@ export const NavPublishIcon = () => {
   const navigation =
     useNavigation<StackScreenPropsGeneric<"Main">["navigation"]>();
   return (
-    <View style={NavbarIcon.warpper}>
+    <View style={NavbarIcon.wrapper}>
       <TouchableOpacity onPress={() => navigation.push("Publish")}>
         <Icon
           size={26}
@@ -47,7 +47,7 @@ export const NavHomeIcon = () => {
     useNavigation<TabScreenPropsGeneric<"Home">["navigation"]>();
   return (
     <TouchableOpacity
-      style={NavbarIcon.warpper}
+      style={NavbarIcon.wrapper}
       onPress={() => navigation.navigate("Home")}
     >
       <View>
@@ -62,7 +62,7 @@ const NavbarIcon = StyleSheet.create({
   text: {
     fontWeight: "bold",
   },
-  warpper: {
+  wrapper: {
     alignItems: "center",
     borderRadius: 10,
     flex: 1,
