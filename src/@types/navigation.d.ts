@@ -5,6 +5,8 @@ import {
   PersonScreenProps,
   PublishScreenProps,
   TopicScreenProps,
+  AccountScreenProps,
+  SettingScreenProps,
 } from "@src/views/BottomTabScreen";
 
 type RootTabParamList = {
@@ -16,6 +18,8 @@ type RootStackParamList = {
   Main: undefined;
   Publish: PublishScreenProps;
   Topic: TopicScreenProps;
+  Account: AccountScreenProps;
+  Setting: SettingScreenProps;
 };
 
 type TabScreenList = keyof RootTabParamList;

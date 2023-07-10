@@ -7,9 +7,11 @@ import {
 import { RootStackParamList, RootTabParamList } from "@src/@types/navigation";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import {
+  AccountScreen,
   HomeScreen,
   PersonScreen,
   PublishScreen,
+  SettingScreen,
   TopicScreen,
 } from "./views/BottomTabScreen";
 
@@ -48,14 +50,9 @@ export default function Cealgull() {
             }}
             component={PublishScreen}
           ></Stack.Screen>
-          <Stack.Screen
-            name="Topic"
-            options={{
-              gestureDirection: "horizontal",
-              cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
-            }}
-            component={TopicScreen}
-          ></Stack.Screen>
+          <Stack.Screen name="Topic" component={TopicScreen}></Stack.Screen>
+          <Stack.Screen name="Setting" component={SettingScreen}></Stack.Screen>
+          <Stack.Screen name="Account" component={AccountScreen}></Stack.Screen>
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>
