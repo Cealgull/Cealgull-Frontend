@@ -1,7 +1,7 @@
-import React from "react";
-import { NavBar } from "@src/components/NavBar";
-import { StyleSheet, Text, View } from "react-native";
 import HeaderBarWrapper from "@src/components/HeaderBarWrapper";
+import { NavBar } from "@src/components/NavBar";
+import React from "react";
+import { StyleSheet, Text, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 
 export type PersonViewProps = undefined;

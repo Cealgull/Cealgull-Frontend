@@ -1,17 +1,17 @@
+import { useNavigation } from "@react-navigation/native";
+import { Icon } from "@rneui/themed";
+import { StackScreenPropsGeneric } from "@src/@types/navigation";
+import { numericCarry } from "@src/utils/numericCarry";
+import React from "react";
 import {
-  View,
+  Dimensions,
   StyleSheet,
   Text,
-  Dimensions,
   TouchableOpacity,
+  View,
 } from "react-native";
-import React from "react";
 import { CardContent } from "./CardContent";
-import { useNavigation } from "@react-navigation/native";
-import { StackScreenPropsGeneric } from "@src/@types/navigation";
 import { TopicTab } from "./TopicTab";
-import { Icon } from "@rneui/themed";
-import { numericCarry } from "@src/utils/numericCarry";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -83,8 +83,7 @@ const TopicCardStyle = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     marginBottom: 5,
-    marginLeft: "5%",
-    marginRight: "5%",
+    marginHorizontal: "5%",
     paddingTop: 5,
   },
   icontext: {
@@ -102,8 +101,7 @@ const TopicCardStyle = StyleSheet.create({
   topCard: {
     borderBottomWidth: 1,
     borderColor: "rgb(230,230,230)",
-    marginLeft: "5%",
-    marginRight: "5%",
+    marginHorizontal: "5%",
     marginTop: 5,
   },
   whole: {

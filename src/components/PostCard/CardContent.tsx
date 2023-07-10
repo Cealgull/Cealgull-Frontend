@@ -1,6 +1,6 @@
-import { View, StyleSheet, Text, Dimensions } from "react-native";
 import { Avatar } from "@rneui/themed";
 import React from "react";
+import { StyleSheet, Text, View } from "react-native";
 
 interface CardContentProps {
   children?: React.ReactNode;

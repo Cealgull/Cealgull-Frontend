@@ -1,9 +1,9 @@
-import { View, StyleSheet, Text, Dimensions } from "react-native";
-import React from "react";
-import { CardContent } from "./CardContent";
-import { numericCarry } from "@src/utils/numericCarry";
 import { Icon } from "@rneui/themed";
+import { numericCarry } from "@src/utils/numericCarry";
+import React from "react";
+import { Dimensions, StyleSheet, Text, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { CardContent } from "./CardContent";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -107,8 +107,7 @@ const PostCardStyle = StyleSheet.create({
     borderColor: "rgb(230,230,230)",
     flexDirection: "row",
     justifyContent: "space-between",
-    marginLeft: "5%",
-    marginRight: "5%",
+    marginHorizontal: "5%",
     marginTop: 5,
   },
   whole: {
