@@ -1,6 +1,6 @@
 import { TabView } from "@rneui/themed";
+import { mnemonicWordLists } from "@src/assets/Mnemonics";
 import shuffle from "@src/utils/shuffle";
-import { wordlists } from "bip39";
 import React, { useCallback, useContext, useMemo } from "react";
 import {
   Alert,
@@ -27,7 +27,7 @@ export default function WordCardList({
    * Therefore a re-sort will trigger.
    */
   const wordList = useMemo<string[]>(() => {
-    const wordListChinese = wordlists["chinese_simplified"];
+    const wordListChinese = mnemonicWordLists["chinese_simplified"];
     shuffle(wordListChinese);
     return wordListChinese.slice(0, 36);
     // eslint-disable-next-line react-hooks/exhaustive-deps

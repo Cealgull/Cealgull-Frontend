@@ -42,7 +42,8 @@ export default function WordSelectView() {
       <View>
         <View style={styles.title_container}>
           <Text style={styles.title}>
-            {`选择最喜欢的 ${selectConfig[index].count} 个字，\n作为助记词的一部分。`}
+            {`选择最喜欢的 ${selectConfig[index].count} 个字，\n` +
+              "作为助记词的一部分。\n选择顺序将被记录。"}
           </Text>
         </View>
         <WordSelectedContext.Provider
@@ -148,7 +149,7 @@ const CompleteDialog: React.FC<CompleteDialogProps> = ({
           titleStyle={{ fontSize: 18, color: "#e63946" }}
         />
         <Dialog.Button
-          title={"确定"}
+          title={"下一步"}
           onPress={onComplete}
           titleStyle={{ fontSize: 18 }}
         />
@@ -206,8 +207,8 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   dialog_mnemonics: {
-    lineHeight: 32,
-    fontSize: 22,
+    lineHeight: 36,
+    fontSize: 24,
     color: "#4361ee",
   },
 });
