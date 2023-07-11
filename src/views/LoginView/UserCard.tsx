@@ -1,8 +1,4 @@
-/**
- * @author Bojun Ren
- * @data 2023/07/07
- */
-import { Avatar, Image } from "@rneui/themed";
+import { Avatar, Icon, Image } from "@rneui/themed";
 import React, { useMemo } from "react";
 import {
   Dimensions,
@@ -12,6 +8,54 @@ import {
   View,
   ViewStyle,
 } from "react-native";
+
+interface UserCardProps {
+  userName: string;
+  email: string;
+  selected: boolean;
+}
+
+export default function UserCard({ userName, email, selected }: UserCardProps) {
+  const checkIconStyle = useMemo<StyleProp<ViewStyle>>(
+    () => [styles.check_container, { opacity: selected ? 100 : 0 }],
+    [selected]
+  );
+
+  return (
+    <View style={styles.card}>
+      <View style={styles.content_container}>
+        <View style={{ flex: 0 }}>
+          <UserCardAvatar alt={userName} />
+        </View>
+        <View style={styles.info_container}>
+          <Text style={[styles.text, styles.text_username]}>{userName}</Text>
+          <Text style={styles.text}>{email}</Text>
+        </View>
+      </View>
+      <View style={checkIconStyle} testID="check_icon">
+        <CheckIcon />
+      </View>
+    </View>
+  );
+}
+
+/**
+ * Placeholder for no user.
+ */
+export function UserAddCard() {
+  return (
+    <View style={styles.card}>
+      <View style={styles.content_container}>
+        <View style={{ flex: 0 }}>
+          <Icon name="adduser" type="antdesign" size={72} />
+        </View>
+        <View style={styles.info_container}>
+          <Text style={{ fontSize: 20 }}>添加用户</Text>
+        </View>
+      </View>
+    </View>
+  );
+}
 
 /**
  * The green check mark icon
@@ -36,36 +80,6 @@ const UserCardAvatar: React.FC<UserCardAvatarProps> = ({
 }) => {
   return <Avatar rounded size={size} source={{ uri }} imageProps={{ alt }} />;
 };
-
-interface UserInfo {
-  userName: string;
-  email: string;
-  selected: boolean;
-}
-
-export default function UserCard({ userName, email, selected }: UserInfo) {
-  const checkIconStyle = useMemo<StyleProp<ViewStyle>>(
-    () => [styles.check_container, { opacity: selected ? 100 : 0 }],
-    [selected]
-  );
-
-  return (
-    <View style={styles.card}>
-      <View style={styles.content_container}>
-        <View style={{ flex: 0 }}>
-          <UserCardAvatar alt={userName} />
-        </View>
-        <View style={styles.info_container}>
-          <Text style={[styles.text, styles.text_username]}>{userName}</Text>
-          <Text style={styles.text}>{email}</Text>
-        </View>
-      </View>
-      <View style={checkIconStyle} testID="check_icon">
-        <CheckIcon />
-      </View>
-    </View>
-  );
-}
 
 const { height: screenHeight, width: screenWidth } = Dimensions.get("screen");
 
