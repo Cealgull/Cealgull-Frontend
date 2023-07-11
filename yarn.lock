@@ -799,6 +799,13 @@
     "@babel/helper-plugin-utils" "^7.22.5"
     "@babel/plugin-syntax-numeric-separator" "^7.10.4"
 
+"@babel/plugin-transform-object-assign@^7.16.7":
+  version "7.22.5"
+  resolved "https://mirrors.huaweicloud.com/repository/npm/@babel/plugin-transform-object-assign/-/plugin-transform-object-assign-7.22.5.tgz#290c1b9555dcea48bb2c29ad94237777600d04f9"
+  integrity sha512-iDhx9ARkXq4vhZ2CYOSnQXkmxkDgosLi3J8Z17mKz7LyzthtkdVchLD7WZ3aXeCuvJDOW3+1I5TpJmwIbF9MKQ==
+  dependencies:
+    "@babel/helper-plugin-utils" "^7.22.5"
+
 "@babel/plugin-transform-object-rest-spread@^7.22.5":
   version "7.22.5"
   resolved "https://mirrors.huaweicloud.com/repository/npm/@babel/plugin-transform-object-rest-spread/-/plugin-transform-object-rest-spread-7.22.5.tgz"
@@ -1109,7 +1116,7 @@
     "@babel/types" "^7.4.4"
     esutils "^2.0.2"
 
-"@babel/preset-typescript@^7.13.0":
+"@babel/preset-typescript@^7.13.0", "@babel/preset-typescript@^7.16.7":
   version "7.22.5"
   resolved "https://mirrors.huaweicloud.com/repository/npm/@babel/preset-typescript/-/preset-typescript-7.22.5.tgz"
   integrity sha512-YbPaal9LxztSGhmndR46FmAbkJ/1fAsw293tSU+I5E5h+cnJ3d4GTwyUgGYmOXJYdGA+uNePle4qbaRzj2NISQ==
@@ -1136,7 +1143,7 @@
   resolved "https://mirrors.huaweicloud.com/repository/npm/@babel/regjsgen/-/regjsgen-0.8.0.tgz"
   integrity sha512-x/rqGMdzj+fWZvCOYForTghzbtqPDZ5gPwaoNGHdgDfF2QA/XZbCBp4Moo5scrkAMPhB7z26XM/AaHuIJdgauA==
 
-"@babel/runtime@^7.0.0", "@babel/runtime@^7.18.6", "@babel/runtime@^7.20.0", "@babel/runtime@^7.8.4":
+"@babel/runtime@^7.0.0", "@babel/runtime@^7.20.0", "@babel/runtime@^7.8.4":
   version "7.22.5"
   resolved "https://mirrors.huaweicloud.com/repository/npm/@babel/runtime/-/runtime-7.22.5.tgz"
   integrity sha512-ecjvYlnAaZ/KVneE/OdKYBYfgXV3Ptu6zQWmgEF7vwKhQnvVS6bjMD2XYgj+SNvQ1GfK/pjgokfPkC/2CO8CuA==
@@ -4550,14 +4557,6 @@ cosmiconfig@^8.0.0:
     parse-json "^5.0.0"
     path-type "^4.0.0"
 
-create-react-class@^15.7.0:
-  version "15.7.0"
-  resolved "https://mirrors.huaweicloud.com/repository/npm/create-react-class/-/create-react-class-15.7.0.tgz"
-  integrity sha512-QZv4sFWG9S5RUvkTYWbflxeZX+JG7Cz0Tn33rQBJ+WFQTqTfUTjMjiv9tnfXazjsO5r0KhPs+AqCjyrQX6h2ng==
-  dependencies:
-    loose-envify "^1.3.1"
-    object-assign "^4.1.1"
-
 create-require@^1.1.0:
   version "1.1.1"
   resolved "https://mirrors.huaweicloud.com/repository/npm/create-require/-/create-require-1.1.1.tgz#c1d7e8f1e5f6cfc9ff65f9cd352d37348756c333"
@@ -4609,13 +4608,6 @@ css-declaration-sorter@^6.3.1:
   version "6.4.0"
   resolved "https://mirrors.huaweicloud.com/repository/npm/css-declaration-sorter/-/css-declaration-sorter-6.4.0.tgz"
   integrity sha512-jDfsatwWMWN0MODAFuHszfjphEXfNw9JUAhmY4pLu3TyTU+ohUpsbVtbU+1MZn4a47D9kqh03i4eyOm+74+zew==
-
-css-in-js-utils@^3.1.0:
-  version "3.1.0"
-  resolved "https://mirrors.huaweicloud.com/repository/npm/css-in-js-utils/-/css-in-js-utils-3.1.0.tgz"
-  integrity sha512-fJAcud6B3rRu+KHYk+Bwf+WFL2MDCJJ1XG9x137tJQ0xYxor7XziQtuGFbWNdqrvF4Tk26O3H73nfVqXt/fW1A==
-  dependencies:
-    hyphenate-style-name "^1.0.3"
 
 css-loader@^6.5.1:
   version "6.8.1"
@@ -5725,11 +5717,6 @@ fast-levenshtein@^2.0.6, fast-levenshtein@~2.0.6:
   resolved "https://mirrors.huaweicloud.com/repository/npm/fast-levenshtein/-/fast-levenshtein-2.0.6.tgz"
   integrity sha512-DCXu6Ifhqcks7TZKY3Hxp3y6qphY5SJZmrWMDrKcERSOXWQdMhU9Ig/PYrzyw/ul9jOIyh0N4M0tbC5hodg8dw==
 
-fast-loops@^1.1.3:
-  version "1.1.3"
-  resolved "https://mirrors.huaweicloud.com/repository/npm/fast-loops/-/fast-loops-1.1.3.tgz"
-  integrity sha512-8EZzEP0eKkEEVX+drtd9mtuQ+/QrlfW/5MlwcwK5Nds6EkZ/tRzEexkzUY2mIssnAyVLT+TKHuRXmFNNXYUd6g==
-
 fast-xml-parser@^4.0.12:
   version "4.2.5"
   resolved "https://mirrors.huaweicloud.com/repository/npm/fast-xml-parser/-/fast-xml-parser-4.2.5.tgz"
@@ -5770,7 +5757,7 @@ fbjs-css-vars@^1.0.0:
   resolved "https://mirrors.huaweicloud.com/repository/npm/fbjs-css-vars/-/fbjs-css-vars-1.0.2.tgz"
   integrity sha512-b2XGFAFdWZWg0phtAWLHCk836A1Xann+I+Dgd3Gk64MHKZO44FfoD1KxyvbSh0qZsIoXQGGlVztIY+oitJPpRQ==
 
-fbjs@^3.0.0, fbjs@^3.0.4:
+fbjs@^3.0.0:
   version "3.0.5"
   resolved "https://mirrors.huaweicloud.com/repository/npm/fbjs/-/fbjs-3.0.5.tgz"
   integrity sha512-ztsSx77JBtkuMrEypfhgc3cI0+0h+svqeie7xHbh1k/IKdcydnvadp/mUaGgjAOXQmQSxsqgaRhS3q9fy+1kxg==
@@ -6579,11 +6566,6 @@ husky@^8.0.3:
   resolved "https://mirrors.huaweicloud.com/repository/npm/husky/-/husky-8.0.3.tgz#4936d7212e46d1dea28fef29bb3a108872cd9184"
   integrity sha512-+dQSyqPh4x1hlO1swXBiNb2HzTDN1I2IGLQx1GrBuiqFJfoMrnZWwVmatvSiO+Iz8fBUnf+lekwNo4c2LlXItg==
 
-hyphenate-style-name@^1.0.3:
-  version "1.0.4"
-  resolved "https://mirrors.huaweicloud.com/repository/npm/hyphenate-style-name/-/hyphenate-style-name-1.0.4.tgz"
-  integrity sha512-ygGZLjmXfPHj+ZWh6LwbC37l43MhfztxetbFCoYTM2VjkIUpeHgSNn7QIyVFj7YQ1Wl9Cbw5sholVJPzWvC2MQ==
-
 iconv-lite@0.4.24:
   version "0.4.24"
   resolved "https://mirrors.huaweicloud.com/repository/npm/iconv-lite/-/iconv-lite-0.4.24.tgz"
@@ -6679,14 +6661,6 @@ ini@^1.3.4, ini@~1.3.0:
   version "1.3.8"
   resolved "https://mirrors.huaweicloud.com/repository/npm/ini/-/ini-1.3.8.tgz"
   integrity sha512-JV/yugV2uzW5iMRSiZAyDtQd+nxtUnjeLt0acNdw98kKLrvuRVyB80tsREOE7yvGVgalhZ6RNXCmEHkUKBKxew==
-
-inline-style-prefixer@^6.0.1:
-  version "6.0.4"
-  resolved "https://mirrors.huaweicloud.com/repository/npm/inline-style-prefixer/-/inline-style-prefixer-6.0.4.tgz"
-  integrity sha512-FwXmZC2zbeeS7NzGjJ6pAiqRhXR0ugUShSNb6GApMl6da0/XGc4MOJsoWAywia52EEWbXNSy0pzkwz/+Y+swSg==
-  dependencies:
-    css-in-js-utils "^3.1.0"
-    fast-loops "^1.1.3"
 
 internal-ip@4.3.0:
   version "4.3.0"
@@ -7927,6 +7901,11 @@ lodash.debounce@^4.0.8:
   resolved "https://mirrors.huaweicloud.com/repository/npm/lodash.debounce/-/lodash.debounce-4.0.8.tgz"
   integrity sha512-FT1yDzDYEoYWhnSGnpE/4Kj1fLZkDFyqRb7fNt6FdYOSxlUWAtp42Eh6Wb0rGIv/m9Bgo7x4GhQbm5Ys4SG5ow==
 
+lodash.isequal@^4.5.0:
+  version "4.5.0"
+  resolved "https://mirrors.huaweicloud.com/repository/npm/lodash.isequal/-/lodash.isequal-4.5.0.tgz#415c4478f2bcc30120c22ce10ed3226f7d3e18e0"
+  integrity sha512-pDo3lu8Jhfjqls6GkMgpahsF9kCyayhgykjyLMNFTKWrpVdAQtYyB4muAMWozBB4ig/dtWAmsMxLEI8wuz+DYQ==
+
 lodash.isfunction@^3.0.9:
   version "3.0.9"
   resolved "https://mirrors.huaweicloud.com/repository/npm/lodash.isfunction/-/lodash.isfunction-3.0.9.tgz#06de25df4db327ac931981d1bdb067e5af68d051"
@@ -8011,7 +7990,7 @@ logkitty@^0.7.1:
     dayjs "^1.8.15"
     yargs "^15.1.0"
 
-loose-envify@^1.0.0, loose-envify@^1.1.0, loose-envify@^1.3.1, loose-envify@^1.4.0:
+loose-envify@^1.0.0, loose-envify@^1.1.0, loose-envify@^1.4.0:
   version "1.4.0"
   resolved "https://mirrors.huaweicloud.com/repository/npm/loose-envify/-/loose-envify-1.4.0.tgz"
   integrity sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==
@@ -8885,11 +8864,6 @@ node-stream-zip@^1.9.1:
   version "1.15.0"
   resolved "https://mirrors.huaweicloud.com/repository/npm/node-stream-zip/-/node-stream-zip-1.15.0.tgz"
   integrity sha512-LN4fydt9TqhZhThkZIVQnF9cwjU3qmUH9h78Mx/K7d3VvfRqqwthLwJEUOEL0QPZ0XQmNN7be5Ggit5+4dq3Bw==
-
-normalize-css-color@^1.0.2:
-  version "1.0.2"
-  resolved "https://mirrors.huaweicloud.com/repository/npm/normalize-css-color/-/normalize-css-color-1.0.2.tgz"
-  integrity sha512-jPJ/V7Cp1UytdidsPqviKEElFQJs22hUUgK5BOPHTwOonNCk7/2qOxhhqzEajmFrWJowADFfOFh1V+aWkRfy+w==
 
 normalize-package-data@^2.5.0:
   version "2.5.0"
@@ -9912,14 +9886,6 @@ react-devtools-core@^4.26.1:
     shell-quote "^1.6.1"
     ws "^7"
 
-react-dom@18.2.0:
-  version "18.2.0"
-  resolved "https://mirrors.huaweicloud.com/repository/npm/react-dom/-/react-dom-18.2.0.tgz"
-  integrity sha512-6IMTriUmvsjHUjNtEDudZfuDQUoWXVxKHhlEGSk81n4YFS+r/Kl99wXiwlVXtPBtJenozv2P+hxDsw9eA7Xo6g==
-  dependencies:
-    loose-envify "^1.1.0"
-    scheduler "^0.23.0"
-
 react-freeze@^1.0.0:
   version "1.0.3"
   resolved "https://registry.npmjs.org/react-freeze/-/react-freeze-1.0.3.tgz"
@@ -9973,6 +9939,19 @@ react-native-ratings@^8.1.0:
   dependencies:
     lodash "^4.17.15"
 
+react-native-reanimated@~2.14.4:
+  version "2.14.4"
+  resolved "https://mirrors.huaweicloud.com/repository/npm/react-native-reanimated/-/react-native-reanimated-2.14.4.tgz#3fa3da4e7b99f5dfb28f86bcf24d9d1024d38836"
+  integrity sha512-DquSbl7P8j4SAmc+kRdd75Ianm8G+IYQ9T4AQ6lrpLVeDkhZmjWI0wkutKWnp6L7c5XNVUrFDUf69dwETLCItQ==
+  dependencies:
+    "@babel/plugin-transform-object-assign" "^7.16.7"
+    "@babel/preset-typescript" "^7.16.7"
+    convert-source-map "^1.7.0"
+    invariant "^2.2.4"
+    lodash.isequal "^4.5.0"
+    setimmediate "^1.0.5"
+    string-hash-64 "^1.0.3"
+
 react-native-safe-area-context@4.5.0:
   version "4.5.0"
   resolved "https://mirrors.huaweicloud.com/repository/npm/react-native-safe-area-context/-/react-native-safe-area-context-4.5.0.tgz"
@@ -9998,19 +9977,6 @@ react-native-vector-icons@^9.2.0:
   dependencies:
     prop-types "^15.7.2"
     yargs "^16.1.1"
-
-react-native-web@~0.18.10:
-  version "0.18.12"
-  resolved "https://mirrors.huaweicloud.com/repository/npm/react-native-web/-/react-native-web-0.18.12.tgz"
-  integrity sha512-fboP7yqobJ8InSr4fP+bQ3scOtSQtUoPcR+HWasH8b/fk/RO+mWcJs/8n+lewy9WTZc2D68ha7VwRDviUshEWA==
-  dependencies:
-    "@babel/runtime" "^7.18.6"
-    create-react-class "^15.7.0"
-    fbjs "^3.0.4"
-    inline-style-prefixer "^6.0.1"
-    normalize-css-color "^1.0.2"
-    postcss-value-parser "^4.2.0"
-    styleq "^0.1.2"
 
 react-native@0.71.8:
   version "0.71.8"
@@ -10993,6 +10959,11 @@ strict-uri-encode@^2.0.0:
   resolved "https://registry.npmjs.org/strict-uri-encode/-/strict-uri-encode-2.0.0.tgz"
   integrity sha512-QwiXZgpRcKkhTj2Scnn++4PKtWsH0kpzZ62L2R6c/LUVYv7hVnZqcg2+sMuT6R7Jusu1vviK/MFsu6kNJfWlEQ==
 
+string-hash-64@^1.0.3:
+  version "1.0.3"
+  resolved "https://mirrors.huaweicloud.com/repository/npm/string-hash-64/-/string-hash-64-1.0.3.tgz#0deb56df58678640db5c479ccbbb597aaa0de322"
+  integrity sha512-D5OKWKvDhyVWWn2x5Y9b+37NUllks34q1dCDhk/vYcso9fmhs+Tl3KR/gE4v5UNj2UA35cnX4KdVVGkG1deKqw==
+
 string-length@^4.0.1:
   version "4.0.2"
   resolved "https://mirrors.huaweicloud.com/repository/npm/string-length/-/string-length-4.0.2.tgz"
@@ -11148,11 +11119,6 @@ stylehacks@^5.1.1:
   dependencies:
     browserslist "^4.21.4"
     postcss-selector-parser "^6.0.4"
-
-styleq@^0.1.2:
-  version "0.1.3"
-  resolved "https://mirrors.huaweicloud.com/repository/npm/styleq/-/styleq-0.1.3.tgz"
-  integrity sha512-3ZUifmCDCQanjeej1f6kyl/BeP/Vae5EYkQ9iJfUm/QwZvlgnZzyflqAsAWYURdtea8Vkvswu2GrC57h3qffcA==
 
 sucrase@^3.20.0:
   version "3.32.0"

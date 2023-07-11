@@ -40,6 +40,12 @@
         "caughtErrorsIgnorePattern": "^_$"
       }
     ],
+    "react-hooks/exhaustive-deps": [
+      "warn",
+      {
+        "additionalHooks": "(useAnimatedStyle|useDerivedValue|useAnimatedProps)"
+      }
+    ],
     "react-native/no-unused-styles": "warn",
     "react-native/no-single-element-style-arrays": "error",
 
