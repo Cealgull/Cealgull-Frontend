@@ -6,11 +6,11 @@ import {
   Alert,
   Dimensions,
   Easing,
+  Pressable,
   StyleSheet,
   Text,
   View,
 } from "react-native";
-import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import {
   WordSelectedContext,
   WordSelectedContextType,
@@ -22,6 +22,10 @@ export default function WordCardList({
 }: {
   restartTimes: number;
 }) {
+  /**
+   * `restartTimes` increases when the user restart the selection.
+   * Therefore a re-sort will trigger.
+   */
   const wordList = useMemo<string[]>(() => {
     const wordListChinese = wordlists["chinese_simplified"];
     shuffle(wordListChinese);
@@ -111,10 +115,7 @@ const WordCard: React.FC<WordCardProps> = ({ word }) => {
   };
 
   return (
-    <TouchableWithoutFeedback
-      onPress={handlePress}
-      accessibilityRole="checkbox"
-    >
+    <Pressable onPress={handlePress} accessibilityRole="checkbox">
       <View
         style={[
           styles.word_card,
@@ -123,7 +124,7 @@ const WordCard: React.FC<WordCardProps> = ({ word }) => {
       >
         <Text style={styles.word}>{word}</Text>
       </View>
-    </TouchableWithoutFeedback>
+    </Pressable>
   );
 };
 

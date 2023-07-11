@@ -4,8 +4,7 @@
  */
 import { Button } from "@rneui/themed";
 import React, { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import UserCard from "./UserCard";
 import user from "./userInfo";
@@ -28,13 +27,13 @@ export default function LoginView() {
       <Text style={styles.welcome}>欢迎回来！</Text>
       <View>
         {user.map(({ userName, email }, i) => (
-          <TouchableWithoutFeedback
+          <Pressable
             key={`user_login${i}`}
             onPress={() => setSelected(i)}
             accessibilityRole="checkbox"
           >
             <UserCard {...{ userName, email }} selected={selected === i} />
-          </TouchableWithoutFeedback>
+          </Pressable>
         ))}
       </View>
       <LoginButton />

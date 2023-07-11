@@ -10,9 +10,9 @@ import {
   Dimensions,
   Keyboard,
   Platform,
+  Pressable,
   StyleSheet,
   Text,
-  TouchableWithoutFeedback,
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -94,7 +94,7 @@ export default function PublishView({ onClose }: PublishViewProps) {
 
   return (
     <>
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <Pressable onPress={Keyboard.dismiss}>
         <View style={styles.container}>
           {/* HeaderBar is inflexible */}
           <HeaderBarWrapper alignMethod="lr">
@@ -119,7 +119,7 @@ export default function PublishView({ onClose }: PublishViewProps) {
             />
           </View>
         </View>
-      </TouchableWithoutFeedback>
+      </Pressable>
     </>
   );
 }
