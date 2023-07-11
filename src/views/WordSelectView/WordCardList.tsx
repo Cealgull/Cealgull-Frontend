@@ -1,5 +1,5 @@
 import { TabView } from "@rneui/themed";
-import { mnemonicWordLists } from "@src/assets/Mnemonics";
+import { mnemonicWordLists } from "@src/utils/bip";
 import shuffle from "@src/utils/shuffle";
 import React, { useCallback, useContext, useMemo } from "react";
 import {

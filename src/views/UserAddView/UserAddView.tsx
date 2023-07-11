@@ -1,7 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import { Button, ButtonProps, Icon, Text } from "@rneui/themed";
 import { LoginTabScreenPropsGeneric } from "@src/@types/navigation";
-import { check } from "@src/assets/Mnemonics/check";
+import { check } from "@src/utils/bip/check";
 import React, { useMemo, useState } from "react";
 import {
   Dimensions,
