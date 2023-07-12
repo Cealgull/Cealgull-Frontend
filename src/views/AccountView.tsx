@@ -1,8 +1,8 @@
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { Icon, ListItem } from "@rneui/themed";
-import HeaderBarWrapper from "@src/components/HeaderBarWrapper";
 import { useNavigation } from "@react-navigation/native";
+import { Icon, ListItem } from "@rneui/themed";
 import { StackScreenPropsGeneric } from "@src/@types/navigation";
+import HeaderBarWrapper from "@src/components/HeaderBarWrapper";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 
 export const AccountView = () => {

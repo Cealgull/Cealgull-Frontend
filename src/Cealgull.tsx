@@ -5,9 +5,9 @@ import {
   createStackNavigator,
 } from "@react-navigation/stack";
 import {
+  LoginTabParamList,
   RootStackParamList,
   RootTabParamList,
-  LoginTabParamList,
 } from "@src/@types/navigation";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import {
@@ -41,7 +41,7 @@ const LoginTabsScreen = () => {
   );
 };
 
-const FourmTabsScreen = () => {
+const ForumTabsScreen = () => {
   return (
     <ForumTab.Navigator
       screenOptions={{
@@ -67,7 +67,7 @@ export default function Cealgull() {
           <Stack.Screen name="Login" component={LoginTabsScreen}></Stack.Screen>
           <Stack.Screen
             name="Main"
-            component={FourmTabsScreen}
+            component={ForumTabsScreen}
             options={{ gestureEnabled: false }}
           ></Stack.Screen>
           <Stack.Screen

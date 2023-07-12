@@ -1,12 +1,12 @@
+import { useNavigation } from "@react-navigation/native";
 import { Button, Dialog, Icon } from "@rneui/themed";
+import { LoginTabScreenPropsGeneric } from "@src/@types/navigation";
 import React, { useCallback, useState } from "react";
 import { Alert, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import WordCardList from "./WordCardList";
 import { WordSelectedContext } from "./WordSelectContext";
 import { selectConfig } from "./select.config";
-import { useNavigation } from "@react-navigation/native";
-import { LoginTabScreenPropsGeneric } from "@src/@types/navigation";
 
 export default function WordSelectView() {
   const [wordList, setWordList] = useState<string[]>([]);

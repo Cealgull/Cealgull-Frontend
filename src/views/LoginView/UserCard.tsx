@@ -1,19 +1,16 @@
 import { useNavigation } from "@react-navigation/native";
 import { Avatar, Icon, Image } from "@rneui/themed";
-import {
-  LoginTabScreenPropsGeneric,
-  StackScreenPropsGeneric,
-} from "@src/@types/navigation";
+import { LoginTabScreenPropsGeneric } from "@src/@types/navigation";
 import React, { useMemo } from "react";
 import {
   Dimensions,
+  Pressable,
   StyleProp,
   StyleSheet,
   Text,
   View,
   ViewStyle,
 } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
 
 interface UserCardProps {
   userName: string;
@@ -53,7 +50,7 @@ export function UserAddCard() {
     useNavigation<LoginTabScreenPropsGeneric<"UserLogin">["navigation"]>();
 
   return (
-    <TouchableOpacity
+    <Pressable
       onPress={() => {
         navigation.navigate("UserAdd");
       }}
@@ -68,7 +65,7 @@ export function UserAddCard() {
           </View>
         </View>
       </View>
-    </TouchableOpacity>
+    </Pressable>
   );
 }
 
