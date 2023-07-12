@@ -8,7 +8,7 @@ export const HomeView: React.FC = () => {
     <View style={HomeViewStyle.whole}>
       <View style={{ backgroundColor: "rgb(225,225,225)" }}>
         <HeaderBarWrapper alignMethod="c">
-          <Text>Home</Text>
+          <Text>首页板块</Text>
         </HeaderBarWrapper>
       </View>
       <View style={HomeViewStyle.content}>

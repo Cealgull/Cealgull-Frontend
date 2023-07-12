@@ -12,6 +12,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import { Avatar } from "@rneui/base";
 import { useNavigation } from "@react-navigation/native";
 import { StackScreenPropsGeneric } from "@src/@types/navigation";
+import { numericCarry } from "@src/utils/numericCarry";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -20,9 +21,9 @@ const user = {
   avatar: "https://randomuser.me/api/portraits/men/36.jpg",
   name: "User",
   sign: "Hello World!",
-  numberOfLikes: 122,
-  numberOfTopics: 9,
-  balance: 5000,
+  numberOfLikes: 23412341,
+  numberOfTopics: 437,
+  balance: 5132,
 };
 
 export default function PersonView() {
@@ -32,7 +33,9 @@ export default function PersonView() {
   return (
     <View style={HomeViewStyle.whole}>
       <View style={HomeViewStyle.header}>
-        <HeaderBarWrapper></HeaderBarWrapper>
+        <HeaderBarWrapper alignMethod="c">
+          <Text>个人板块</Text>
+        </HeaderBarWrapper>
       </View>
 
       <View style={HomeViewStyle.content}>
@@ -55,7 +58,7 @@ export default function PersonView() {
                 <Text>发帖数</Text>
               </View>
               <Text style={HomeViewStyle.staticsnum}>
-                {user.numberOfTopics}
+                {numericCarry(user.numberOfTopics)}
               </Text>
             </View>
             <View style={HomeViewStyle.staticsblock}>
@@ -63,14 +66,18 @@ export default function PersonView() {
                 <Icon type="antdesign" name="like2" />
                 <Text>获赞数</Text>
               </View>
-              <Text style={HomeViewStyle.staticsnum}>{user.numberOfLikes}</Text>
+              <Text style={HomeViewStyle.staticsnum}>
+                {numericCarry(user.numberOfLikes)}
+              </Text>
             </View>
             <View style={HomeViewStyle.staticsblock}>
               <View>
                 <Icon type="antdesign" name="pay-circle-o1" />
-                <Text>货币额</Text>
+                <Text>余额</Text>
               </View>
-              <Text style={HomeViewStyle.staticsnum}>{user.balance}</Text>
+              <Text style={HomeViewStyle.staticsnum}>
+                {numericCarry(user.balance)}
+              </Text>
             </View>
           </View>
 

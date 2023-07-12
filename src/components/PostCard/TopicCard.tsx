@@ -39,7 +39,10 @@ export default function TopicCard({
       <View style={TopicCardStyle.topCard}>
         <Text style={TopicCardStyle.timestyle}>{time}</Text>
       </View>
-      <TouchableOpacity onPress={() => navigation.push("Topic")}>
+      <TouchableOpacity
+        testID="TopicCardButton"
+        onPress={() => navigation.push("Topic")}
+      >
         <CardContent title={title} username={username} userAvatar={userAvatar}>
           {children}
         </CardContent>

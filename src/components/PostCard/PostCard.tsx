@@ -27,6 +27,15 @@ export default function PostCard({
   reply,
   level,
 }: PostCardProps) {
+  const handleLike = () => {
+    // TODO like
+  };
+  const handleDislike = () => {
+    // TODO dislike
+  };
+  const handleComment = () => {
+    // TODO comment
+  };
   return (
     <View style={PostCardStyle.whole}>
       <View style={PostCardStyle.topCard}>
@@ -40,34 +49,22 @@ export default function PostCard({
         {children}
       </CardContent>
       <View style={PostCardStyle.bottomCard}>
-        <TouchableOpacity
-          onPress={() => {
-            console.log("good");
-          }}
-        >
-          <View style={PostCardStyle.iconview}>
+        <TouchableOpacity onPress={handleLike}>
+          <View testID="goodButton" style={PostCardStyle.iconview}>
             <Icon size={24} color="#8B8989" type="antdesign" name="like2" />
-            <Text style={PostCardStyle.icontext}>{numericCarry(20101)}</Text>
+            <Text style={PostCardStyle.icontext}>{numericCarry(1)}</Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
-            console.log("bad");
-          }}
-        >
-          <View style={PostCardStyle.iconview}>
+        <TouchableOpacity onPress={handleDislike}>
+          <View testID="badButton" style={PostCardStyle.iconview}>
             <Icon size={24} color="#8B8989" type="antdesign" name="dislike2" />
-            <Text style={PostCardStyle.icontext}>{numericCarry(2144313)}</Text>
+            <Text style={PostCardStyle.icontext}>{numericCarry(2)}</Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
-            console.log("comment");
-          }}
-        >
-          <View style={PostCardStyle.iconview}>
+        <TouchableOpacity onPress={handleComment}>
+          <View testID="commentButton" style={PostCardStyle.iconview}>
             <Icon size={24} color="#8B8989" type="antdesign" name="message1" />
-            <Text style={PostCardStyle.icontext}>{numericCarry(99)}</Text>
+            <Text style={PostCardStyle.icontext}>{numericCarry(3)}</Text>
           </View>
         </TouchableOpacity>
       </View>

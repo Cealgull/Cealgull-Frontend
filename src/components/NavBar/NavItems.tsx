@@ -32,11 +32,11 @@ export const NavPublishIcon = () => {
           size={26}
           reverse
           color="red"
+          testID="publishIcon"
           type="antdesign"
           name="pluscircle"
         />
       </TouchableOpacity>
-
       <Text style={NavbarIcon.text}>新建话题</Text>
     </View>
   );
