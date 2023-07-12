@@ -1,4 +1,9 @@
+import { useNavigation } from "@react-navigation/native";
 import { Avatar, Icon, Image } from "@rneui/themed";
+import {
+  LoginTabScreenPropsGeneric,
+  StackScreenPropsGeneric,
+} from "@src/@types/navigation";
 import React, { useMemo } from "react";
 import {
   Dimensions,
@@ -8,6 +13,7 @@ import {
   View,
   ViewStyle,
 } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 interface UserCardProps {
   userName: string;
@@ -43,17 +49,26 @@ export default function UserCard({ userName, email, selected }: UserCardProps) {
  * Placeholder for no user.
  */
 export function UserAddCard() {
+  const navigation =
+    useNavigation<LoginTabScreenPropsGeneric<"UserLogin">["navigation"]>();
+
   return (
-    <View style={styles.card}>
-      <View style={styles.content_container}>
-        <View style={{ flex: 0 }}>
-          <Icon name="adduser" type="antdesign" size={72} />
-        </View>
-        <View style={styles.info_container}>
-          <Text style={{ fontSize: 20 }}>添加用户</Text>
+    <TouchableOpacity
+      onPress={() => {
+        navigation.navigate("UserAdd");
+      }}
+    >
+      <View style={styles.card}>
+        <View style={styles.content_container}>
+          <View style={{ flex: 0 }}>
+            <Icon name="adduser" type="antdesign" size={72} />
+          </View>
+          <View style={styles.info_container}>
+            <Text style={{ fontSize: 20 }}>添加用户</Text>
+          </View>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
 

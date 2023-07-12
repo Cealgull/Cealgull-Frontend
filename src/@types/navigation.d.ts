@@ -15,6 +15,7 @@ type RootTabParamList = {
 };
 
 type RootStackParamList = {
+  Login: undefined;
   Main: undefined;
   Publish: PublishScreenProps;
   Topic: TopicScreenProps;
@@ -22,11 +23,21 @@ type RootStackParamList = {
   Setting: SettingScreenProps;
 };
 
+type LoginTabParamList = {
+  UserLogin: undefined;
+  UserAdd: undefined;
+  WordSelect: undefined;
+};
+
 type TabScreenList = keyof RootTabParamList;
 type StackScreenList = keyof RootStackParamList;
+type LoginTabScreenList = keyof LoginTabParamList;
 
 export type TabScreenPropsGeneric<Screen extends TabScreenList> =
   BottomTabScreenProps<RootTabParamList, Screen>;
 
 export type StackScreenPropsGeneric<Screen extends StackScreenList> =
   NativeStackScreenProps<RootStackParamList, Screen>;
+
+export type LoginTabScreenPropsGeneric<Screen extends LoginTabScreenList> =
+  BottomTabScreenProps<LoginTabParamList, Screen>;

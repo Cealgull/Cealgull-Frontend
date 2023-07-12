@@ -5,6 +5,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import WordCardList from "./WordCardList";
 import { WordSelectedContext } from "./WordSelectContext";
 import { selectConfig } from "./select.config";
+import { useNavigation } from "@react-navigation/native";
+import { LoginTabScreenPropsGeneric } from "@src/@types/navigation";
 
 export default function WordSelectView() {
   const [wordList, setWordList] = useState<string[]>([]);
@@ -12,6 +14,8 @@ export default function WordSelectView() {
   const [isDialogVisible, setIsDialogVisible] = useState(false);
   // Fake state to trigger re-renders for `WordSelectList`
   const [restartTimes, setRestartTimes] = useState<number>(0);
+  const navigation =
+    useNavigation<LoginTabScreenPropsGeneric<"WordSelect">["navigation"]>();
 
   const selectNext = useCallback(() => {
     if (wordList.length === selectConfig[index].most) setIndex((i) => i + 1);
@@ -35,7 +39,10 @@ export default function WordSelectView() {
   const toggleDialog = useCallback(() => setIsDialogVisible((f) => !f), []);
 
   // TODO select OK callback
-  const handleSelectOK = () => console.log(`选词完成，已选[${wordList}]`);
+  const handleSelectOK = () => {
+    navigation.navigate("UserLogin");
+    setIsDialogVisible(false);
+  };
 
   return (
     <SafeAreaView style={styles.container}>

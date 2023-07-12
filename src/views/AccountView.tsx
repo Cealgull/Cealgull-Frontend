@@ -44,7 +44,12 @@ export const AccountView = () => {
 
           <Text style={{ padding: 10, color: "#8B8989" }}>账户切换</Text>
           <TouchableOpacity>
-            <ListItem containerStyle={{ justifyContent: "center" }}>
+            <ListItem
+              containerStyle={{ justifyContent: "center" }}
+              onPress={() => {
+                navigation.navigate("Login");
+              }}
+            >
               <Icon color="red" type="feather" name="log-out"></Icon>
               <ListItem.Title style={{ color: "red" }}>退出登录</ListItem.Title>
             </ListItem>

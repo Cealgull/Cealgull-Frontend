@@ -1,4 +1,6 @@
+import { useNavigation } from "@react-navigation/native";
 import { Button, ButtonProps, Icon, Text } from "@rneui/themed";
+import { LoginTabScreenPropsGeneric } from "@src/@types/navigation";
 import { check } from "@src/assets/Mnemonics/check";
 import React, { useMemo, useState } from "react";
 import {
@@ -13,6 +15,8 @@ import {
 
 export default function UserAddScreen() {
   const [wordInput, setWordInput] = useState<string>("");
+  const navigation =
+    useNavigation<LoginTabScreenPropsGeneric<"UserAdd">["navigation"]>();
 
   const valid = useMemo(
     () => check(wordInput, "chinese_simplified"),
@@ -21,10 +25,12 @@ export default function UserAddScreen() {
 
   const handleSubmit = () => {
     // TODO submit mnemonics
+    navigation.navigate("UserLogin");
   };
 
   const goToSelect = () => {
     // TODO go to selection view
+    navigation.navigate("WordSelect");
   };
 
   return (
