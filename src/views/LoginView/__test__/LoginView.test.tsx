@@ -5,6 +5,16 @@
 import { fireEvent, render, screen } from "@testing-library/react-native";
 import { ReactTestInstance } from "react-test-renderer";
 import LoginView from "../LoginView";
+const mockedNavigate = jest.fn();
+jest.mock("@react-navigation/native", () => {
+  const actualNav = jest.requireActual("@react-navigation/native");
+  return {
+    ...actualNav,
+    useNavigation: () => ({
+      navigate: mockedNavigate,
+    }),
+  };
+});
 
 jest.mock("../userInfo.ts", () => ({
   __esModule: true,

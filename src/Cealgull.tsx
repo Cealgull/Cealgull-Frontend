@@ -4,7 +4,11 @@ import {
   CardStyleInterpolators,
   createStackNavigator,
 } from "@react-navigation/stack";
-import { RootStackParamList, RootTabParamList } from "@src/@types/navigation";
+import {
+  LoginTabParamList,
+  RootStackParamList,
+  RootTabParamList,
+} from "@src/@types/navigation";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import {
   AccountScreen,
@@ -14,21 +18,40 @@ import {
   SettingScreen,
   TopicScreen,
 } from "./views/BottomTabScreen";
+import LoginView from "./views/LoginView/LoginView";
+import UserAddScreen from "./views/UserAddScreen";
+import WordSelectView from "./views/WordSelectView";
 
-const Tab = createBottomTabNavigator<RootTabParamList>();
+const LoginTab = createBottomTabNavigator<LoginTabParamList>();
+const ForumTab = createBottomTabNavigator<RootTabParamList>();
 const Stack = createStackNavigator<RootStackParamList>();
 
-const MainScreen = () => {
+const LoginTabsScreen = () => {
   return (
-    <Tab.Navigator
+    <LoginTab.Navigator
       screenOptions={{
         tabBarStyle: { display: "none" },
         headerShown: false,
       }}
     >
-      <Tab.Screen name="Home" component={HomeScreen}></Tab.Screen>
-      <Tab.Screen name="Person" component={PersonScreen}></Tab.Screen>
-    </Tab.Navigator>
+      <LoginTab.Screen name="UserLogin" component={LoginView} />
+      <LoginTab.Screen name="UserAdd" component={UserAddScreen} />
+      <LoginTab.Screen name="WordSelect" component={WordSelectView} />
+    </LoginTab.Navigator>
+  );
+};
+
+const ForumTabsScreen = () => {
+  return (
+    <ForumTab.Navigator
+      screenOptions={{
+        tabBarStyle: { display: "none" },
+        headerShown: false,
+      }}
+    >
+      <ForumTab.Screen name="Person" component={PersonScreen}></ForumTab.Screen>
+      <ForumTab.Screen name="Home" component={HomeScreen}></ForumTab.Screen>
+    </ForumTab.Navigator>
   );
 };
 
@@ -41,7 +64,12 @@ export default function Cealgull() {
             headerShown: false,
           }}
         >
-          <Stack.Screen name="Main" component={MainScreen}></Stack.Screen>
+          <Stack.Screen name="Login" component={LoginTabsScreen}></Stack.Screen>
+          <Stack.Screen
+            name="Main"
+            component={ForumTabsScreen}
+            options={{ gestureEnabled: false }}
+          ></Stack.Screen>
           <Stack.Screen
             name="Publish"
             options={{

@@ -1,7 +1,10 @@
+import { useNavigation } from "@react-navigation/native";
 import { Avatar, Icon, Image } from "@rneui/themed";
+import { LoginTabScreenPropsGeneric } from "@src/@types/navigation";
 import React, { useMemo } from "react";
 import {
   Dimensions,
+  Pressable,
   StyleProp,
   StyleSheet,
   Text,
@@ -43,17 +46,26 @@ export default function UserCard({ userName, email, selected }: UserCardProps) {
  * Placeholder for no user.
  */
 export function UserAddCard() {
+  const navigation =
+    useNavigation<LoginTabScreenPropsGeneric<"UserLogin">["navigation"]>();
+
   return (
-    <View style={styles.card}>
-      <View style={styles.content_container}>
-        <View style={{ flex: 0 }}>
-          <Icon name="adduser" type="antdesign" size={72} />
-        </View>
-        <View style={styles.info_container}>
-          <Text style={{ fontSize: 20 }}>添加用户</Text>
+    <Pressable
+      onPress={() => {
+        navigation.navigate("UserAdd");
+      }}
+    >
+      <View style={styles.card}>
+        <View style={styles.content_container}>
+          <View style={{ flex: 0 }}>
+            <Icon name="adduser" type="antdesign" size={72} />
+          </View>
+          <View style={styles.info_container}>
+            <Text style={{ fontSize: 20 }}>添加用户</Text>
+          </View>
         </View>
       </View>
-    </View>
+    </Pressable>
   );
 }
 

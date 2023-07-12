@@ -2,6 +2,16 @@ import { fireEvent, render, screen } from "@testing-library/react-native";
 import { Alert } from "react-native";
 import { ReactTestInstance } from "react-test-renderer";
 import WordSelectView from "../WordSelectView";
+const mockedNavigate = jest.fn();
+jest.mock("@react-navigation/native", () => {
+  const actualNav = jest.requireActual("@react-navigation/native");
+  return {
+    ...actualNav,
+    useNavigation: () => ({
+      navigate: mockedNavigate,
+    }),
+  };
+});
 
 /**
  * @see https://jestjs.io/docs/es6-class-mocks

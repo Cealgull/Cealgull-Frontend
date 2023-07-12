@@ -6,6 +6,8 @@ import UserCard, { UserAddCard } from "./UserCard";
 // TODO 0 <= user.length <= 3
 import user from "./userInfo";
 import config from "@src/config";
+import { useNavigation } from "@react-navigation/native";
+import { StackScreenPropsGeneric } from "@src/@types/navigation";
 
 const userLengthMax = config["login.user.max"];
 /**
@@ -13,6 +15,9 @@ const userLengthMax = config["login.user.max"];
  */
 export default function LoginView() {
   const [selected, setSelected] = useState<number | undefined>(undefined);
+  const navigation =
+    useNavigation<StackScreenPropsGeneric<"Login">["navigation"]>();
+
   const handleDeleteUser = () => {
     // TODO Delete user
   };
@@ -47,7 +52,12 @@ export default function LoginView() {
               ))}
       </View>
       <View>
-        <LoginButton disabled={selected === undefined} />
+        <LoginButton
+          onPress={() => {
+            navigation.navigate("Main");
+          }}
+          disabled={selected === undefined}
+        />
         <DelUserButton
           onPress={handleDeleteUser}
           disabled={selected === undefined}
