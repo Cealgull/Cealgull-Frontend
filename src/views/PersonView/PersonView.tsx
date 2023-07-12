@@ -4,7 +4,7 @@ import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 
-export const PersonView: React.FC = () => {
+export default function PersonView() {
   return (
     <View style={PersonViewStyle.whole}>
       <View style={{ backgroundColor: "rgb(225,225,225)" }}>
@@ -19,7 +19,7 @@ export const PersonView: React.FC = () => {
       <NavBar />
     </View>
   );
-};
+}
 
 const PersonViewStyle = StyleSheet.create({
   content: {
