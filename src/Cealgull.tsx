@@ -10,21 +10,22 @@ import {
   RootTabParamList,
 } from "@src/@types/navigation";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { HomeScreen, PersonScreen } from "./views/ForumTabScreens";
 import {
   AccountScreen,
-  HomeScreen,
-  PersonScreen,
   PublishScreen,
   SettingScreen,
   TopicScreen,
-} from "./views/BottomTabScreen";
-import LoginView from "./views/LoginView/LoginView";
-import UserAddScreen from "./views/UserAddScreen";
-import WordSelectView from "./views/WordSelectView";
+} from "./views/RootStackScreens";
+import {
+  WordSelectScreen,
+  LoginScreen,
+  UserAddScreen,
+} from "./views/LoginTabScreens";
 
 const LoginTab = createBottomTabNavigator<LoginTabParamList>();
 const ForumTab = createBottomTabNavigator<RootTabParamList>();
-const Stack = createStackNavigator<RootStackParamList>();
+const RootStack = createStackNavigator<RootStackParamList>();
 
 const LoginTabsScreen = () => {
   return (
@@ -32,11 +33,12 @@ const LoginTabsScreen = () => {
       screenOptions={{
         tabBarStyle: { display: "none" },
         headerShown: false,
+        unmountOnBlur: true,
       }}
     >
-      <LoginTab.Screen name="UserLogin" component={LoginView} />
+      <LoginTab.Screen name="UserLogin" component={LoginScreen} />
       <LoginTab.Screen name="UserAdd" component={UserAddScreen} />
-      <LoginTab.Screen name="WordSelect" component={WordSelectView} />
+      <LoginTab.Screen name="WordSelect" component={WordSelectScreen} />
     </LoginTab.Navigator>
   );
 };
@@ -47,10 +49,11 @@ const ForumTabsScreen = () => {
       screenOptions={{
         tabBarStyle: { display: "none" },
         headerShown: false,
+        unmountOnBlur: true,
       }}
     >
-      <ForumTab.Screen name="Person" component={PersonScreen}></ForumTab.Screen>
-      <ForumTab.Screen name="Home" component={HomeScreen}></ForumTab.Screen>
+      <ForumTab.Screen name="Person" component={PersonScreen} />
+      <ForumTab.Screen name="Home" component={HomeScreen} />
     </ForumTab.Navigator>
   );
 };
@@ -59,29 +62,29 @@ export default function Cealgull() {
   return (
     <SafeAreaProvider>
       <NavigationContainer>
-        <Stack.Navigator
+        <RootStack.Navigator
           screenOptions={{
             headerShown: false,
           }}
         >
-          <Stack.Screen name="Login" component={LoginTabsScreen}></Stack.Screen>
-          <Stack.Screen
+          <RootStack.Screen name="Login" component={LoginTabsScreen} />
+          <RootStack.Screen
             name="Main"
             component={ForumTabsScreen}
             options={{ gestureEnabled: false }}
-          ></Stack.Screen>
-          <Stack.Screen
+          />
+          <RootStack.Screen
             name="Publish"
             options={{
               gestureDirection: "vertical",
               cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
             }}
             component={PublishScreen}
-          ></Stack.Screen>
-          <Stack.Screen name="Topic" component={TopicScreen}></Stack.Screen>
-          <Stack.Screen name="Setting" component={SettingScreen}></Stack.Screen>
-          <Stack.Screen name="Account" component={AccountScreen}></Stack.Screen>
-        </Stack.Navigator>
+          />
+          <RootStack.Screen name="Topic" component={TopicScreen} />
+          <RootStack.Screen name="Setting" component={SettingScreen} />
+          <RootStack.Screen name="Account" component={AccountScreen} />
+        </RootStack.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>
   );
