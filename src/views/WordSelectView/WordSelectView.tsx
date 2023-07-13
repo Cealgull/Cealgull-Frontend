@@ -6,7 +6,7 @@ import { Alert, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import WordCardList from "./WordCardList";
 import { WordSelectedContext } from "./WordSelectContext";
-import { selectConfig } from "./select.config";
+import { selectConfig, selectLength } from "./select.config";
 
 export default function WordSelectView() {
   const [wordList, setWordList] = useState<string[]>([]);
@@ -146,9 +146,12 @@ const CompleteDialog: React.FC<CompleteDialogProps> = ({
     >
       <Dialog.Title title="确认助记词" titleStyle={styles.dialog_title} />
       <Text style={styles.dialog_text1}>您当前选择的助记词是：</Text>
-      <Text style={styles.dialog_mnemonics}>{`${wordList
-        .slice(0, 5)
-        .join(" ")}\n${wordList.slice(5, 11).join(" ")}`}</Text>
+      <Text style={styles.dialog_mnemonics}>
+        {[
+          wordList.slice(0, Math.floor(selectLength / 2)).join(" "),
+          wordList.slice(Math.floor(selectLength / 2)).join(" "),
+        ].join("\n")}
+      </Text>
       <Dialog.Actions>
         <Dialog.Button
           title={"重选"}

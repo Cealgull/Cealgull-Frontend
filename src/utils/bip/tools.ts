@@ -6,6 +6,12 @@ import {
   wordlists,
 } from "bip39";
 import { Language, mnemonicWordLists } from "./basic";
+import HDKey from "hdkey";
+
+/** BEGIN polyfill */
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+global.Buffer = require("buffer").Buffer;
+/** END polyfill */
 
 const DEFAULT_LANG: Language = "chinese_simplified";
 
@@ -84,6 +90,8 @@ export function fixMnemonics(
 
 interface ConvertResult {
   seed: string;
+  privateKey: string;
+  publicKey: string;
 }
 
 type HandleResult =
@@ -104,10 +112,14 @@ export function handleMnemonics(
     return { mnemonics: sentence, valid: false };
   }
   const seedBuffer = mnemonicToSeedSync(sentence);
+  const derivedKey = HDKey.fromMasterSeed(seedBuffer).derive("m/44'/0'/0'/0/0");
+
   return {
     mnemonics: sentence,
     valid: true,
     seed: seedBuffer.toString("hex"),
+    privateKey: derivedKey.privateKey.toString("hex"),
+    publicKey: derivedKey.publicKey.toString("hex"),
   };
 }
 

@@ -22,3 +22,4 @@ const configs = counts.reduce<SelectConfig[]>((previous, count, i) => {
 
 export { configs as selectConfig };
 export type { SelectConfig as SelectConfigType };
+export const selectLength = counts.reduce((p, c) => p + c);
