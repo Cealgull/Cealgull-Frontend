@@ -1,4 +1,4 @@
-import { fixMnemonics, isValidMnemonics } from "../tools";
+import { fixMnemonics, handleMnemonics, isValidMnemonics } from "../tools";
 
 describe("Test bip utils", () => {
   test("function: isValidMnemonics", () => {
@@ -42,6 +42,17 @@ describe("Test bip utils", () => {
     });
     notFixableMS.forEach((ms) => {
       expect(() => fixMnemonics(ms)).toThrow(/invalid/);
+    });
+  });
+
+  test.only("function: handleMnemonics", () => {
+    const mnemonics = "铝 北 肠 泼 舞 京 墙 色 谐 养 园 暗";
+    const messages = ["hello, world!", "中文字", ""];
+    const { sign, verify } = handleMnemonics(mnemonics);
+
+    messages.forEach((m) => {
+      const signature = sign(m);
+      expect(verify(signature, m)).toBeTruthy();
     });
   });
 });
