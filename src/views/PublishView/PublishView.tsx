@@ -4,7 +4,7 @@
  */
 import { Button, Icon } from "@rneui/themed";
 import HeaderBarWrapper from "@src/components/HeaderBarWrapper";
-import useImagePicker from "@src/services/useImagePicker";
+import useImagePicker from "@src/hooks/useImagePicker";
 import React, { useMemo, useState } from "react";
 import {
   Dimensions,
