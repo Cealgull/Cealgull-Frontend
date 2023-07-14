@@ -137,6 +137,43 @@ export function handleMnemonics(sentence: string): HandleResult {
   };
 }
 
+/**
+ * This function handles the final private key (skips the steps of deriving keys from mnemonics)
+ * @param privateKey hex
+ * @returns @see handleMnemonics
+ */
+export function handlePrivateKey(privateKey: string): HandleResult {
+  const publicKey = ed.getPublicKey(privateKey);
+
+  return {
+    privateKey: privateKey,
+    publicKey: Buffer.from(publicKey).toString("hex"),
+    sign(message) {
+      const buffer = Buffer.from(normalize(message), "utf-8");
+      return ed.sign(buffer, Buffer.from(privateKey, "hex"));
+    },
+    verify(signature, message) {
+      const buffer = Buffer.from(normalize(message), "utf-8");
+      return ed.verify(signature, buffer, publicKey);
+    },
+  };
+}
+
+/**
+ * This function uses private key to sign a raw string (with ED25519),
+ * and encode the signature with base64.
+ * @param message raw string
+ * @param privateKey hex
+ * @returns signature encoded by base64
+ */
+export function signAndEncode(message: string, privateKey: string): string {
+  const signature = ed.sign(
+    Buffer.from(normalize(message)),
+    Buffer.from(privateKey, "hex")
+  );
+  return Buffer.from(signature).toString("base64");
+}
+
 function normalize(str: string) {
   return (str || "").normalize("NFKD");
 }

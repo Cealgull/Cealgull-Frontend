@@ -25,3 +25,13 @@ export function startAuthServer() {
     },
   });
 }
+
+export function startForumServer() {
+  return createServer({
+    urlPrefix: process.env["FORUM_API"],
+    environment: "test",
+    routes() {
+      this.post(APIConfig["user.login"], () => ({}));
+    },
+  });
+}
