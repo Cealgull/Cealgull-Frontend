@@ -1,4 +1,4 @@
-export interface returnTopicProps {
+interface ForumTopic {
   category: string;
   cid: string;
   createTime: string;
@@ -10,7 +10,7 @@ export interface returnTopicProps {
   updateTime: string;
 }
 
-export interface returnPostProps {
+interface ForumPost {
   belongTo: string;
   cid: string;
   createTime: string;
@@ -21,22 +21,7 @@ export interface returnPostProps {
   updateTime: string;
 }
 
-export interface createTopicProps {
-  content: string;
-  images: string[];
-  title: string;
-  category: string;
-  tags?: string[];
-}
-
-export interface createPostProps {
-  content: string;
-  images: string[];
-  replyTo: string;
-  belongTo: string;
-}
-
-export interface returnUserProps {
+interface UserInfo {
   avatar: string;
   username: string;
   identityId: string;

@@ -23,7 +23,8 @@
     "sourceType": "module",
     "ecmaFeatures": {
       "jsx": true
-    }
+    },
+    "project": ["tsconfig.json"]
   },
   "plugins": [
     "@typescript-eslint",
@@ -42,6 +43,7 @@
         "caughtErrorsIgnorePattern": "^_$"
       }
     ],
+    "@typescript-eslint/restrict-plus-operands": "error",
     "react-hooks/exhaustive-deps": [
       "warn",
       {

@@ -1,6 +1,5 @@
 import HeaderBarWrapper from "@src/components/HeaderBarWrapper";
 import { PostCard } from "@src/components/PostCard";
-import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 

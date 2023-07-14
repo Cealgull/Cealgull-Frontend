@@ -1,6 +1,5 @@
 import APIConfig from "../api.config";
 import { request } from "../ajax";
-import { returnUserProps } from "@src/@types/returnProps";
 
 export async function getUserInfo(uid: string) {
   const response = await request({
@@ -10,6 +9,6 @@ export async function getUserInfo(uid: string) {
   if (!response.ok) {
     throw "getUserInfo error!";
   }
-  const data = (await response.json()) as returnUserProps;
+  const data = (await response.json()) as UserInfo;
   return data;
 }

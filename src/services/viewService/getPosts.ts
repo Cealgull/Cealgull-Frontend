@@ -1,4 +1,3 @@
-import { returnPostProps } from "@src/@types/returnProps";
 import APIConfig from "../api.config";
 import { requestWithCookie } from "../ajax";
 
@@ -12,7 +11,7 @@ export async function getAllPostsByBelong(belong: string) {
   if (!response.ok) {
     throw "getAllPosts error!";
   }
-  const data = (await response.json()) as returnPostProps[];
+  const data = (await response.json()) as ForumTopic[];
   return data;
 }
 

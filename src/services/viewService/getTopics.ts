@@ -1,4 +1,3 @@
-import { returnTopicProps } from "@src/@types/returnProps";
 import { requestWithCookie } from "../ajax";
 import APIConfig from "../api.config";
 
@@ -10,7 +9,7 @@ export async function getAllTopics() {
   if (!request.ok) {
     throw "getAllTopics error!";
   }
-  const data = (await request.json()) as returnTopicProps[];
+  const data = (await request.json()) as ForumTopic[];
   return data;
 }
 

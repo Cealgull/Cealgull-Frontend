@@ -1,11 +1,17 @@
 import APIConfig from "../api.config";
 import { requestWithCookie } from "../ajax";
-import { createPostProps } from "@src/@types/returnProps";
+
+interface createPostProps {
+  content: string;
+  images: string[];
+  replyTo: string;
+  belongTo: string;
+}
 
 export async function createPost(createProps: createPostProps) {
   const response = await requestWithCookie({
     method: "POST",
-    url: APIConfig.createPost,
+    url: APIConfig[],
     body: createProps,
   });
   if (!response.ok) {

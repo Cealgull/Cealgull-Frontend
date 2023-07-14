@@ -1,6 +1,13 @@
 import APIConfig from "../api.config";
-import { createTopicProps } from "@src/@types/returnProps";
 import { requestWithCookie } from "../ajax";
+
+interface createTopicProps {
+  content: string;
+  images: string[];
+  title: string;
+  category: string;
+  tags?: string[];
+}
 
 export async function createTopic(createProps: createTopicProps) {
   const response = await requestWithCookie({

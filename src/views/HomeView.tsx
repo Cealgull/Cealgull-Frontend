@@ -1,18 +1,22 @@
 import HeaderBarWrapper from "@src/components/HeaderBarWrapper";
 import { NavBar } from "@src/components/NavBar";
 import { TopicCard } from "@src/components/PostCard";
-import { StyleSheet, Text, View, FlatList } from "react-native";
 import { getAllTopics } from "@src/services/viewService/getTopics";
 import { useQuery } from "@tanstack/react-query/build/lib/useQuery";
-import { returnTopicProps } from "@src/@types/returnProps";
+import { FlatList, StyleSheet, Text, View } from "react-native";
 
 export const HomeView: React.FC = () => {
-  const { isLoading, isError, data, error } = useQuery({
+  const { data: topicList, isSuccess } = useQuery<ForumTopic[]>({
     queryKey: ["allTopics"],
-    queryFn: () => getAllTopics(),
+    queryFn: getAllTopics,
   });
 
-  const renderTopic = ({ item }: { item: returnTopicProps }) => {
+  // FIXME do what you want
+  if (!isSuccess) {
+    return null;
+  }
+
+  const renderTopic = ({ item }: { item: ForumTopic }) => {
     return <TopicCard {...item} />;
   };
 
@@ -24,10 +28,10 @@ export const HomeView: React.FC = () => {
         </HeaderBarWrapper>
       </View>
       <View style={HomeViewStyle.content}>
-        <FlatList data={data} renderItem={renderTopic}></FlatList>
+        <FlatList data={topicList} renderItem={renderTopic}></FlatList>
       </View>
       <NavBar />
-    </View>
+    </View> //
   );
 };
 

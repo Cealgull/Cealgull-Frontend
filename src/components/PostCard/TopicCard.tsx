@@ -1,7 +1,11 @@
 import { useNavigation } from "@react-navigation/native";
 import { Icon } from "@rneui/themed";
 import { StackScreenPropsGeneric } from "@src/@types/navigation";
+import { getTextIpfs } from "@src/services/viewService/getContent";
+import { getUserInfo } from "@src/services/viewService/getUserInfo";
 import { numericCarry } from "@src/utils/numericCarry";
+import timeTransfer from "@src/utils/timeTransfer";
+import { useQuery } from "@tanstack/react-query/build/lib/useQuery";
 import React from "react";
 import {
   Dimensions,
@@ -12,42 +16,32 @@ import {
 } from "react-native";
 import { CardContent } from "./CardContent";
 import { TopicTab } from "./TopicTab";
-import {
-  returnTopicProps as ReturnTopicProps,
-  returnUserProps as ReturnUserProps,
-} from "@src/@types/returnProps";
-import timeTransfer from "@src/utils/timeTransfer";
-import { useQuery } from "@tanstack/react-query/build/lib/useQuery";
-import { getContents } from "@src/services/viewService/getContent";
-import { getUserInfo } from "@src/services/viewService/getUserInfo";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
 export default function TopicCard({
-  category,
   cid,
   createTime,
   creator,
   id,
-  images,
   tags,
   title,
-  updateTime,
-}: ReturnTopicProps) {
+}: ForumTopic) {
   const navigation =
     useNavigation<StackScreenPropsGeneric<"Main">["navigation"]>();
 
+  // FIXME useQuery. It may be a little bit hard to begin.
   const Tagicons = tags.map((tag) => {
     return <TopicTab tabtitle={tag} key={tag} />;
   });
-  const { data: contentText } = useQuery({
+  const { data: contentText } = useQuery<string>({
     queryKey: ["TopicContent", cid],
-    queryFn: () => getContents(cid),
+    queryFn: async () => await getTextIpfs(cid),
   });
-  const { isSuccess, data: userInfo } = useQuery({
+  const { isSuccess, data: userInfo } = useQuery<UserInfo>({
     queryKey: ["User", creator],
-    queryFn: () => getUserInfo(creator),
+    queryFn: async () => await getUserInfo(creator),
   });
 
   if (!isSuccess)
