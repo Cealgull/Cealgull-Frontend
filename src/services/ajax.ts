@@ -28,6 +28,6 @@ export async function request(props: FetchProps) {
 }
 
 // TODO cookie
-export async function requestWithCookie(props: FetchProps, userId: number) {
+export async function requestWithCookie(props: FetchProps, userId?: number) {
   return await request(props);
 }
