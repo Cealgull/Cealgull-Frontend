@@ -1,9 +1,21 @@
 import HeaderBarWrapper from "@src/components/HeaderBarWrapper";
 import { NavBar } from "@src/components/NavBar";
 import { TopicCard } from "@src/components/PostCard";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, FlatList } from "react-native";
+import { getAllTopics } from "@src/services/viewService/getTopics";
+import { useQuery } from "@tanstack/react-query/build/lib/useQuery";
+import { returnTopicProps } from "@src/@types/returnProps";
 
 export const HomeView: React.FC = () => {
+  const { isLoading, isError, data, error } = useQuery({
+    queryKey: ["allTopics"],
+    queryFn: () => getAllTopics(),
+  });
+
+  const renderTopic = ({ item }: { item: returnTopicProps }) => {
+    return <TopicCard {...item} />;
+  };
+
   return (
     <View style={HomeViewStyle.whole}>
       <View style={{ backgroundColor: "rgb(225,225,225)" }}>
@@ -12,24 +24,7 @@ export const HomeView: React.FC = () => {
         </HeaderBarWrapper>
       </View>
       <View style={HomeViewStyle.content}>
-        <ScrollView>
-          <TopicCard
-            username="User1"
-            userAvatar="https://randomuser.me/api/portraits/men/36.jpg"
-            title="HELLO"
-            time="2023/7/6 11:01"
-          >
-            <Text>HELLO WORLD!</Text>
-          </TopicCard>
-          <TopicCard
-            username="User1"
-            userAvatar="https://randomuser.me/api/portraits/men/36.jpg"
-            title="HELLO"
-            time="2023/7/6 11:01"
-          >
-            <Text>HELLO WORLD!</Text>
-          </TopicCard>
-        </ScrollView>
+        <FlatList data={data} renderItem={renderTopic}></FlatList>
       </View>
       <NavBar />
     </View>

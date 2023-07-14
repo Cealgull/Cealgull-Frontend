@@ -35,3 +35,12 @@ export interface createPostProps {
   replyTo: string;
   belongTo: string;
 }
+
+export interface returnUserProps {
+  avatar: string;
+  username: string;
+  identityId: string;
+  signature: string;
+  roles?: string[];
+  badge?: string[];
+}

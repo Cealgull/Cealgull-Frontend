@@ -12,46 +12,70 @@ import {
 } from "react-native";
 import { CardContent } from "./CardContent";
 import { TopicTab } from "./TopicTab";
+import {
+  returnTopicProps as ReturnTopicProps,
+  returnUserProps as ReturnUserProps,
+} from "@src/@types/returnProps";
+import timeTransfer from "@src/utils/timeTransfer";
+import { useQuery } from "@tanstack/react-query/build/lib/useQuery";
+import { getContents } from "@src/services/viewService/getContent";
+import { getUserInfo } from "@src/services/viewService/getUserInfo";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
-interface TopicCardProps {
-  children?: React.ReactNode;
-  title?: string;
-  username: string;
-  userAvatar: string;
-  time: string;
-  Tab?: string[];
-}
-
 export default function TopicCard({
-  children,
+  category,
+  cid,
+  createTime,
+  creator,
+  id,
+  images,
+  tags,
   title,
-  userAvatar,
-  username,
-  time,
-}: TopicCardProps) {
+  updateTime,
+}: ReturnTopicProps) {
   const navigation =
     useNavigation<StackScreenPropsGeneric<"Main">["navigation"]>();
+
+  const Tagicons = tags.map((tag) => {
+    return <TopicTab tabtitle={tag} key={tag} />;
+  });
+  const { data: contentText } = useQuery({
+    queryKey: ["TopicContent", cid],
+    queryFn: () => getContents(cid),
+  });
+  const { isSuccess, data: userInfo } = useQuery({
+    queryKey: ["User", creator],
+    queryFn: () => getUserInfo(creator),
+  });
+
+  if (!isSuccess)
+    return (
+      <Text style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        Is Loading...
+      </Text>
+    );
   return (
     <View style={TopicCardStyle.whole}>
       <View style={TopicCardStyle.topCard}>
-        <Text style={TopicCardStyle.timestyle}>{time}</Text>
+        <Text style={TopicCardStyle.timestyle}>{timeTransfer(createTime)}</Text>
       </View>
       <TouchableOpacity
         testID="TopicCardButton"
-        onPress={() => navigation.push("Topic")}
+        onPress={() => navigation.push("Topic", { tid: id })}
       >
-        <CardContent title={title} username={username} userAvatar={userAvatar}>
-          {children}
+        <CardContent
+          title={title}
+          username={userInfo.username}
+          userAvatar={userInfo.avatar}
+        >
+          <Text>{contentText}</Text>
         </CardContent>
       </TouchableOpacity>
       <View style={TopicCardStyle.bottomCard}>
         <View style={{ flexDirection: "row", flex: 1, flexWrap: "wrap" }}>
-          <TopicTab tabtitle="#聊天灌水" />
-          <TopicTab tabtitle="#灌水聊天" />
-          <TopicTab tabtitle="#灌水聊天" />
+          {[...Tagicons]}
         </View>
         <View
           style={{

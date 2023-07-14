@@ -18,7 +18,11 @@ export const CardContent = ({
   return (
     <View>
       <View style={CardContentStyle.personCard}>
-        <Avatar rounded size={40} source={{ uri: userAvatar }} />
+        <Avatar
+          rounded
+          size={40}
+          source={{ uri: "http://123.60.158.219:10207/ipfs/" + userAvatar }}
+        />
         <Text style={CardContentStyle.personCardName}>{username}</Text>
       </View>
 

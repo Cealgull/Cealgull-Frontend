@@ -22,7 +22,9 @@ import {
   LoginScreen,
   UserAddScreen,
 } from "./views/LoginTabScreens";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
+const queryClient = new QueryClient();
 const LoginTab = createBottomTabNavigator<LoginTabParamList>();
 const ForumTab = createBottomTabNavigator<RootTabParamList>();
 const RootStack = createStackNavigator<RootStackParamList>();
@@ -60,32 +62,38 @@ const ForumTabsScreen = () => {
 
 export default function Cealgull() {
   return (
-    <SafeAreaProvider>
-      <NavigationContainer>
-        <RootStack.Navigator
-          screenOptions={{
-            headerShown: false,
-          }}
-        >
-          <RootStack.Screen name="Login" component={LoginTabsScreen} />
-          <RootStack.Screen
-            name="Main"
-            component={ForumTabsScreen}
-            options={{ gestureEnabled: false }}
-          />
-          <RootStack.Screen
-            name="Publish"
-            options={{
-              gestureDirection: "vertical",
-              cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
+    <QueryClientProvider client={queryClient}>
+      <SafeAreaProvider>
+        <NavigationContainer>
+          <RootStack.Navigator
+            screenOptions={{
+              headerShown: false,
             }}
-            component={PublishScreen}
-          />
-          <RootStack.Screen name="Topic" component={TopicScreen} />
-          <RootStack.Screen name="Setting" component={SettingScreen} />
-          <RootStack.Screen name="Account" component={AccountScreen} />
-        </RootStack.Navigator>
-      </NavigationContainer>
-    </SafeAreaProvider>
+          >
+            <RootStack.Screen name="Login" component={LoginTabsScreen} />
+            <RootStack.Screen
+              name="Main"
+              component={ForumTabsScreen}
+              options={{ gestureEnabled: false }}
+            />
+            <RootStack.Screen
+              name="Publish"
+              options={{
+                gestureDirection: "vertical",
+                cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
+              }}
+              component={PublishScreen}
+            />
+            <RootStack.Screen
+              name="Topic"
+              initialParams={{ tid: "" }}
+              component={TopicScreen}
+            />
+            <RootStack.Screen name="Setting" component={SettingScreen} />
+            <RootStack.Screen name="Account" component={AccountScreen} />
+          </RootStack.Navigator>
+        </NavigationContainer>
+      </SafeAreaProvider>
+    </QueryClientProvider>
   );
 }
