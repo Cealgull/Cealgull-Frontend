@@ -13,6 +13,7 @@
     "plugin:react/jsx-runtime",
     "plugin:react-hooks/recommended",
     "plugin:testing-library/react",
+    "plugin:@tanstack/eslint-plugin-query/recommended",
     "prettier" // from `eslint-config-prettier`, put it **last**
   ],
   "overrides": [],
@@ -29,7 +30,8 @@
     "react",
     "react-native",
     "react-hooks",
-    "testing-library"
+    "testing-library",
+    "@tanstack/query"
   ],
   "rules": {
     "@typescript-eslint/no-unused-vars": [
