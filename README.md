@@ -51,7 +51,7 @@ The project is built with TypeScript + Expo Go. The structure is quite similar t
 - Prefer `React.FC` to `React.Component`.
 - Any single React component should be put into _components_ and _views_ folder, determined by its role.
 - Separate _services_ into a folder.
-- Customized React hooks should be put into _services_ or _utils_ folder, determined by their usage.
+- Customized React hooks should be put into _hooks_ folder.
 - Any test files should be put into the \_\__test_\_\_ folder at the directory of the tested component. For example,
   ```
   .
@@ -59,6 +59,7 @@ The project is built with TypeScript + Expo Go. The structure is quite similar t
   └── __test__
       └── HeaderBarWrapper.test.tsx
   ```
+- Don't push your sensitive information on GitHub. For example, the API configuration shouldn't be add to the repository.
 
 ### Test Cealgull.App
 
@@ -80,3 +81,21 @@ With [dotenv](https://www.dotenv.org/) installed, Node will search for _.env_ fi
 - `NODE_ENV`: one of `'develop'`, `'production'` and `'test'`. **This variable should never be set manually.** During development (launch the project with `yarn start`), `NODE_ENV` is set to `'develop'`; Jest automatically sets it to `'test'`; after the App is built and running on users' devices, `NODE_ENV` is set to `'production'`.
 - `AUTH_API`: the API of the authentication center. Example: `'http://localhost:8080'`. Should be set as secret.
 - `FORUM_API`: the API of the main backend service. Example: `'http://localhost:8080'`. Should be set as secret.
+
+## Submit a commit
+
+The following workflow should be done, except for some special cases.
+
+```sh
+yarn # fix dependencies
+yarn format:check
+yarn format # if the previous command fails
+yarn lint # fix errors! and try your best to fix warnings.
+yarn test
+
+#...
+
+git commit # input your message, and husky will auto-check it
+```
+
+With husky successfully installed, it will check this steps automatically.
