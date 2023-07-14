@@ -11,6 +11,8 @@ jest.mock("../ajax", () => ({
   ),
 }));
 
+jest.mock("../api.json", () => ({}), { virtual: true });
+
 describe("Test authentication service", () => {
   afterEach(jest.clearAllMocks);
 
