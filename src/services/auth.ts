@@ -1,5 +1,5 @@
 // TODO error handler
-import { signAndEncode } from "@src/utils/bip/tools";
+import { handleMnemonics, signAndEncode } from "@src/utils/bip/tools";
 import { request } from "./ajax";
 import APIConfig from "./api.config";
 
@@ -15,7 +15,7 @@ function ValidateAccount(account: string) {
  * @param account Jaccount (no suffix)
  * @throws "Invalid account string"
  */
-export async function queryEmail(account: string) {
+async function queryEmail(account: string) {
   if (!ValidateAccount(account)) {
     throw "Invalid account string!";
   }
@@ -33,14 +33,14 @@ export async function queryEmail(account: string) {
   return data;
 }
 
-export async function verifyEmail(account: string, verifyCode: string) {
+async function verifyEmail(account: string, verifyCode: string) {
   if (!ValidateAccount(account)) {
     throw "Invalid account string!";
   }
   if (verifyCode.length !== 6) {
     throw "Verify code must have length 6!";
   }
-  // TODO
+  // TODO waiting for the backend logic
   await request({
     method: "POST",
     url: APIConfig["auth.email.query"],
@@ -57,7 +57,7 @@ export async function verifyEmail(account: string, verifyCode: string) {
  * @param publicKey hex
  * @returns the cert
  */
-export async function queryCert(publicKey: string, signature = "HACK") {
+async function queryCert(publicKey: string, signature = "HACK") {
   const res = await request({
     url: APIConfig["auth.cert.query"],
     method: "POST",
@@ -66,18 +66,13 @@ export async function queryCert(publicKey: string, signature = "HACK") {
     },
     body: { pub: Buffer.from(publicKey, "hex").toString("base64") },
   });
-  try {
-    const data = (await res.json()) as { cert: string };
-    return data.cert;
-  } catch (e) {
-    throw "Failed to query cert!";
-  }
+  const data = (await res.json()) as { cert: string };
+  return data.cert;
 }
 
 async function _login(cert: string, signature: string): Promise<UserInfo> {
   const res = await request({
     url: APIConfig["user.login"],
-    // url: "https://request.worktile.com/2yStizLPV",
     method: "POST",
     headers: {
       signature: signature,
@@ -97,10 +92,19 @@ async function _login(cert: string, signature: string): Promise<UserInfo> {
  * @param privateKey hex
  * @param cert raw string
  */
-export async function login(
-  privateKey: string,
-  cert: string
-): Promise<UserInfo> {
+async function login(privateKey: string, cert: string): Promise<UserInfo> {
   const sig = signAndEncode(cert, privateKey);
   return await _login(cert, sig);
 }
+
+/**
+ * Use mnemonics to register a new user.
+ * @param mnemonics
+ */
+async function register(mnemonics: string) {
+  const { privateKey, publicKey } = handleMnemonics(mnemonics);
+  const cert = await queryCert(publicKey);
+  // TODO persist the user
+}
+
+export { queryEmail, verifyEmail, register, login };

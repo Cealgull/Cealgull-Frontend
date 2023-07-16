@@ -1,3 +1,7 @@
+/**
+ * Remember: fetch API is re-defined in react-native.
+ * It may be a little different from our familiar one.
+ */
 type Method = "GET" | "POST";
 
 interface FetchProps {
