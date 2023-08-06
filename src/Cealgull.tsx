@@ -86,7 +86,7 @@ export default function Cealgull() {
             />
             <RootStack.Screen
               name="Topic"
-              initialParams={{ tid: "" }}
+              initialParams={{ id: "" }}
               component={TopicScreen}
             />
             <RootStack.Screen name="Setting" component={SettingScreen} />

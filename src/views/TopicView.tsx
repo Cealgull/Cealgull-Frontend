@@ -4,10 +4,10 @@ import { StyleSheet, Text, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 
 export type TopicViewProps = {
-  tid: string;
+  id: string;
 };
 
-export const TopicView = ({ tid }: TopicViewProps) => {
+export const TopicView = ({ id }: TopicViewProps) => {
   return (
     <View style={TopicViewStyle.whole}>
       <View style={{ backgroundColor: "rgb(225,225,225)" }}>
@@ -25,7 +25,7 @@ export const TopicView = ({ tid }: TopicViewProps) => {
             time="2023/7/6 11:01"
             level={1}
           >
-            <Text>{tid}</Text>
+            <Text>{id}</Text>
           </PostCard>
           <PostCard
             username="User1"
@@ -34,7 +34,7 @@ export const TopicView = ({ tid }: TopicViewProps) => {
             reply={1}
             level={2}
           >
-            <Text>{tid}</Text>
+            <Text>{id}</Text>
           </PostCard>
         </ScrollView>
       </View>

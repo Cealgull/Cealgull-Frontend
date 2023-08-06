@@ -1,10 +1,11 @@
 import APIConfig from "../api.config";
 import { request } from "../ajax";
 
-export async function getTextIpfs(cid: string) {
+export async function getContents(cid: string) {
+  const sourceId = cid;
   const response = await request({
     method: "GET",
-    url: APIConfig.getIpfsSourece + "/" + cid,
+    url: `${APIConfig.getIpfsSourece}/${sourceId}`,
   });
   if (!response.ok) {
     throw "getContents error!";

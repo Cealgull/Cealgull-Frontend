@@ -6,20 +6,26 @@ import { useQuery } from "@tanstack/react-query/build/lib/useQuery";
 import { FlatList, StyleSheet, Text, View } from "react-native";
 
 export const HomeView: React.FC = () => {
-  const { data: topicList, isSuccess } = useQuery<ForumTopic[]>({
-    queryKey: ["allTopics"],
+  const {
+    isLoading,
+    isError,
+    data: topicList,
+    error,
+  } = useQuery<ForumTopic[]>({
+    queryKey: ["allTopics", "..."],
     queryFn: getAllTopics,
   });
-
-  // FIXME do what you want
-  if (!isSuccess) {
-    return null;
-  }
 
   const renderTopic = ({ item }: { item: ForumTopic }) => {
     return <TopicCard {...item} />;
   };
 
+  if (isLoading) {
+    return <Text>Is Loading...</Text>;
+  }
+  if (isError) {
+    return <Text>Error!</Text>;
+  }
   return (
     <View style={HomeViewStyle.whole}>
       <View style={{ backgroundColor: "rgb(225,225,225)" }}>

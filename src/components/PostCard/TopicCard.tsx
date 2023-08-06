@@ -57,7 +57,7 @@ export default function TopicCard({
       </View>
       <TouchableOpacity
         testID="TopicCardButton"
-        onPress={() => navigation.push("Topic", { tid: id })}
+        onPress={() => navigation.push("Topic", { id: id })}
       >
         <CardContent
           title={title}
