@@ -10,9 +10,8 @@ export const HomeView: React.FC = () => {
     isLoading,
     isError,
     data: topicList,
-    error,
   } = useQuery<ForumTopic[]>({
-    queryKey: ["allTopics", "..."],
+    queryKey: ["allTopics"],
     queryFn: getAllTopics,
   });
 

@@ -1,12 +1,11 @@
 import { useNavigation } from "@react-navigation/native";
 import { Icon } from "@rneui/themed";
 import { StackScreenPropsGeneric } from "@src/@types/navigation";
-import { getTextIpfs } from "@src/services/viewService/getContent";
+import { getContents } from "@src/services/viewService/getContent";
 import { getUserInfo } from "@src/services/viewService/getUserInfo";
 import { numericCarry } from "@src/utils/numericCarry";
 import timeTransfer from "@src/utils/timeTransfer";
 import { useQuery } from "@tanstack/react-query/build/lib/useQuery";
-import React from "react";
 import {
   Dimensions,
   StyleSheet,
@@ -37,7 +36,7 @@ export default function TopicCard({
   });
   const { data: contentText } = useQuery<string>({
     queryKey: ["TopicContent", cid],
-    queryFn: async () => await getTextIpfs(cid),
+    queryFn: async () => await getContents(cid),
   });
   const { isSuccess, data: userInfo } = useQuery<UserInfo>({
     queryKey: ["User", creator],
