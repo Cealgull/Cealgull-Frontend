@@ -5,7 +5,7 @@ import { getContents } from "@src/services/viewService/getContent";
 import { getUserInfo } from "@src/services/viewService/getUserInfo";
 import { numericCarry } from "@src/utils/numericCarry";
 import timeTransfer from "@src/utils/timeTransfer";
-import { useQuery } from "@tanstack/react-query/build/lib/useQuery";
+import { useQuery } from "@tanstack/react-query";
 import {
   Dimensions,
   StyleSheet,
