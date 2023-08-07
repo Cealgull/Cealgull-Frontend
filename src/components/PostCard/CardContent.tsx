@@ -15,14 +15,12 @@ export const CardContent = ({
   username,
   userAvatar,
 }: CardContentProps) => {
+  const avatarPath = `http://123.60.158.219:10207/ipfs/${userAvatar}`;
+
   return (
     <View>
       <View style={CardContentStyle.personCard}>
-        <Avatar
-          rounded
-          size={40}
-          source={{ uri: "http://123.60.158.219:10207/ipfs/" + userAvatar }}
-        />
+        <Avatar rounded size={40} source={{ uri: avatarPath }} />
         <Text style={CardContentStyle.personCardName}>{username}</Text>
       </View>
 

@@ -1,3 +1,10 @@
+/*
+ * id:the unique string to identify a topic
+ *
+ * cid:the unique string to identify the text content for a topic
+ * we usually use it to request in ipfs api
+ *
+ */
 interface ForumTopic {
   category: string;
   cid: string;
@@ -10,6 +17,13 @@ interface ForumTopic {
   updateTime: string;
 }
 
+/*
+ * id:the unique string to identify a post
+ *
+ * cid:the unique string to identify the text content for a post
+ * we usually use it to request in ipfs api
+ *
+ */
 interface ForumPost {
   belongTo: string;
   cid: string;

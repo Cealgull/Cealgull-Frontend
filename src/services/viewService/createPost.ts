@@ -11,7 +11,7 @@ interface createPostProps {
 export async function createPost(createProps: createPostProps) {
   const response = await requestWithCookie({
     method: "POST",
-    url: APIConfig[],
+    url: APIConfig.createPost,
     body: createProps,
   });
   if (!response.ok) {
