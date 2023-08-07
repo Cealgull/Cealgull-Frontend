@@ -1,6 +1,7 @@
 import { Avatar } from "@rneui/themed";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
+import APIConfig from "@src/services/api.config";
 
 interface CardContentProps {
   children?: React.ReactNode;
@@ -15,7 +16,7 @@ export const CardContent = ({
   username,
   userAvatar,
 }: CardContentProps) => {
-  const avatarPath = `http://123.60.158.219:10207/ipfs/${userAvatar}`;
+  const avatarPath = `${APIConfig["getIpfsSourece"]}/${userAvatar}`;
 
   return (
     <View>

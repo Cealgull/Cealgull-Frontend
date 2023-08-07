@@ -1,12 +1,6 @@
-// FIXME: native Date API is enough to do formatting and parsing.
-export default function timeTransfer(ISOtime: string): string {
-  const localDate = new Date(ISOtime);
-  const fullyear = localDate.getFullYear().toString();
-  const month = (localDate.getMonth() + 1).toString();
-  const date = localDate.getDate().toString();
-  const hour = localDate.getHours().toString();
-  const minute = localDate.getMinutes().toString();
-  const second = localDate.getSeconds().toString();
+import dayjs from "dayjs";
 
-  return `${fullyear}-${month}-${date} ${hour}:${minute}:${second}`;
+export function timeTransfer(ISOstring: string): string {
+  const ISOTime = dayjs(ISOstring);
+  return ISOTime.format("YYYY-MM-DD HH:mm:ss");
 }
