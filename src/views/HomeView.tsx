@@ -1,16 +1,9 @@
 import HeaderBarWrapper from "@src/components/HeaderBarWrapper";
 import { NavBar } from "@src/components/NavBar";
 import { TopicCard } from "@src/components/PostCard";
-import { getAllTopics } from "@src/services/viewService/getTopics";
+import { getAllTopics } from "@src/services/forum";
 import { useQuery } from "@tanstack/react-query";
-import {
-  FlatList,
-  Pressable,
-  StyleSheet,
-  Text,
-  Touchable,
-  View,
-} from "react-native";
+import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import { Icon, Skeleton } from "@rneui/themed";
 
 const CustomLinearGradient = () => {

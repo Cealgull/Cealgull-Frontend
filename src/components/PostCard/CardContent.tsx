@@ -16,7 +16,7 @@ export const CardContent = ({
   username,
   userAvatar,
 }: CardContentProps) => {
-  const avatarPath = `${APIConfig["getIpfsSourece"]}/${userAvatar}`;
+  const avatarPath = `${APIConfig["getIpfsSource"]}/${userAvatar}`;
 
   return (
     <View>

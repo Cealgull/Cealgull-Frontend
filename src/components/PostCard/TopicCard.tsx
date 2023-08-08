@@ -1,8 +1,8 @@
 import { useNavigation } from "@react-navigation/native";
 import { Icon } from "@rneui/themed";
 import { StackScreenPropsGeneric } from "@src/@types/navigation";
-import { getTextIpfs } from "@src/services/viewService/getContent";
-import { getUserInfo } from "@src/services/viewService/getUserInfo";
+import { getTextIpfs } from "@src/services/forum";
+import { getUserInfo } from "@src/services/forum";
 import { numericCarry } from "@src/utils/numericCarry";
 import { timeTransfer } from "@src/utils/timeTransfer";
 import { useQuery } from "@tanstack/react-query";
@@ -30,10 +30,6 @@ export default function TopicCard({
   const navigation =
     useNavigation<StackScreenPropsGeneric<"Main">["navigation"]>();
 
-  // FIXME useQuery. It may be a little bit hard to begin.
-  const Tagicons = tags.map((tag) => {
-    return <TopicTab tabtitle={tag} key={tag} />;
-  });
   const { data: contentText } = useQuery<string>({
     queryKey: ["TopicContent", cid],
     queryFn: async () => await getTextIpfs(cid),
@@ -41,6 +37,10 @@ export default function TopicCard({
   const { isSuccess, data: userInfo } = useQuery<UserInfo>({
     queryKey: ["User", creator],
     queryFn: async () => await getUserInfo(creator),
+  });
+
+  const tagIconList = tags.map((tag) => {
+    return <TopicTab tabtitle={tag} key={tag} />;
   });
 
   if (!isSuccess)
@@ -68,7 +68,7 @@ export default function TopicCard({
       </TouchableOpacity>
       <View style={TopicCardStyle.bottomCard}>
         <View style={{ flexDirection: "row", flex: 1, flexWrap: "wrap" }}>
-          {[...Tagicons]}
+          {[...tagIconList]}
         </View>
         <View
           style={{

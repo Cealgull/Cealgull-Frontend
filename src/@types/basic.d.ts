@@ -40,6 +40,6 @@ interface UserInfo {
   username: string;
   identityId: string;
   signature: string;
-  roles?: string[];
-  badge?: string[];
+  roles: string[];
+  badge: string[];
 }
