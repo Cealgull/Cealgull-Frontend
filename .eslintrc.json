@@ -13,6 +13,7 @@
     "plugin:react/jsx-runtime",
     "plugin:react-hooks/recommended",
     "plugin:testing-library/react",
+    "plugin:@tanstack/eslint-plugin-query/recommended",
     "prettier" // from `eslint-config-prettier`, put it **last**
   ],
   "overrides": [],
@@ -22,14 +23,16 @@
     "sourceType": "module",
     "ecmaFeatures": {
       "jsx": true
-    }
+    },
+    "project": ["tsconfig.json"]
   },
   "plugins": [
     "@typescript-eslint",
     "react",
     "react-native",
     "react-hooks",
-    "testing-library"
+    "testing-library",
+    "@tanstack/query"
   ],
   "rules": {
     "@typescript-eslint/no-unused-vars": [
@@ -40,6 +43,7 @@
         "caughtErrorsIgnorePattern": "^_$"
       }
     ],
+    "@typescript-eslint/restrict-plus-operands": "error",
     "react-hooks/exhaustive-deps": [
       "warn",
       {

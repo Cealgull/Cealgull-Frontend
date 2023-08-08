@@ -1,6 +1,7 @@
 import { Avatar } from "@rneui/themed";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
+import APIConfig from "@src/services/api.config";
 
 interface CardContentProps {
   children?: React.ReactNode;
@@ -15,10 +16,12 @@ export const CardContent = ({
   username,
   userAvatar,
 }: CardContentProps) => {
+  const avatarPath = `${APIConfig["getIpfsSource"]}/${userAvatar}`;
+
   return (
     <View>
       <View style={CardContentStyle.personCard}>
-        <Avatar rounded size={40} source={{ uri: userAvatar }} />
+        <Avatar rounded size={40} source={{ uri: avatarPath }} />
         <Text style={CardContentStyle.personCardName}>{username}</Text>
       </View>
 
