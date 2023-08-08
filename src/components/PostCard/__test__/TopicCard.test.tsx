@@ -1,40 +1,40 @@
 import { fireEvent, render, screen } from "@testing-library/react-native";
-import { Text } from "react-native";
 import TopicCard from "../TopicCard";
+import exampleTopicProps from "@root/__test__/response/forum_topic.json";
 
-const mockpush = jest.fn();
+const mockPush = jest.fn();
 jest.mock("@react-navigation/native", () => {
   const actualNav = jest.requireActual("@react-navigation/native");
   return {
     ...actualNav,
     useNavigation: () => ({
-      push: mockpush,
+      push: mockPush,
     }),
   };
 });
-
-const Props = {
-  children: <Text>Good afternoon!</Text>,
-  title: "HELLO",
-  username: "User1",
-  userAvatar: "",
-  time: "2003/02/19 18:35:00",
-};
+jest.mock("@tanstack/react-query", () => {
+  const actualQue = jest.requireActual("@tanstack/react-query");
+  return {
+    ...actualQue,
+    useQuery: () => {
+      return { data: "TopicMockText", isSuccess: true };
+    },
+  };
+});
 
 describe("TopicCard Test", () => {
   beforeEach(() => {
-    mockpush.mockClear();
+    mockPush.mockClear();
   });
   test("TopicCard render test", () => {
-    render(<TopicCard {...Props}></TopicCard>);
-    screen.getByText("Good afternoon!");
-    screen.getByText("HELLO");
-    screen.getByText("User1");
-    screen.getByText("2003/02/19 18:35:00");
+    render(<TopicCard {...exampleTopicProps}></TopicCard>);
+    screen.getByText("Genshin Impact, run!");
+    screen.getByText("TopicMockText");
   });
+
   test("TopicCard navigate test", () => {
-    render(<TopicCard {...Props}></TopicCard>);
+    render(<TopicCard {...exampleTopicProps}></TopicCard>);
     fireEvent.press(screen.getByTestId("TopicCardButton"));
-    expect(mockpush).toBeCalledTimes(1);
+    expect(mockPush).toBeCalledTimes(1);
   });
 });

@@ -40,9 +40,10 @@ export default function PostCard({
     <View style={PostCardStyle.whole}>
       <View style={PostCardStyle.topCard}>
         <Text style={PostCardStyle.timestyle}>{time}</Text>
+        {/* FIXME don't use space to control the layout */}
         <Text style={PostCardStyle.replystyle}>
-          {"#" + level}
-          {reply && "    回复#" + reply}
+          {`#${level}`}
+          {reply && `    回复#${reply}`}
         </Text>
       </View>
       <CardContent title={title} username={username} userAvatar={userAvatar}>

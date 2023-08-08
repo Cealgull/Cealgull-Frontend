@@ -1,10 +1,13 @@
 import HeaderBarWrapper from "@src/components/HeaderBarWrapper";
 import { PostCard } from "@src/components/PostCard";
-import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 
-export const TopicView: React.FC = () => {
+export type TopicViewProps = {
+  id: string;
+};
+
+export const TopicView = ({ id }: TopicViewProps) => {
   return (
     <View style={TopicViewStyle.whole}>
       <View style={{ backgroundColor: "rgb(225,225,225)" }}>
@@ -22,8 +25,7 @@ export const TopicView: React.FC = () => {
             time="2023/7/6 11:01"
             level={1}
           >
-            <Text>HELLO WORLD!</Text>
-            <Text>HELLO WORLD!</Text>
+            <Text>{id}</Text>
           </PostCard>
           <PostCard
             username="User1"
@@ -32,7 +34,7 @@ export const TopicView: React.FC = () => {
             reply={1}
             level={2}
           >
-            <Text>HELLO WORLD!</Text>
+            <Text>{id}</Text>
           </PostCard>
         </ScrollView>
       </View>
