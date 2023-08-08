@@ -28,6 +28,7 @@
     "bip39": "^3.1.0",
     "buffer": "^6.0.3",
     "crypto-js": "3.3.0",
+    "dayjs": "^1.11.9",
     "elliptic": "^6.5.4",
     "expo": "~48.0.18",
     "expo-image-picker": "^14.1.1",
