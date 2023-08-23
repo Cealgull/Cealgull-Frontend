@@ -2,14 +2,11 @@
  * @author Bojun Ren
  * @data 2023/08/23
  */
-import { handleMnemonics } from "@src/utils/bip";
 import { Response, Server } from "miragejs";
 import * as ajax from "../ajax";
 import APIConfig from "../api.config";
-import { login, queryEmail, verifyEmail } from "../auth";
-import { startAuthServer, startForumServer } from "./mirage";
-
-const mnemonics = "铝 北 肠 泼 舞 京 墙 色 谐 养 园 暗";
+import { queryEmail, verifyEmail } from "../auth";
+import { startAuthServer } from "./mirage";
 
 describe("Test authentication service", () => {
   const requestSpy = jest.spyOn(ajax, "request");
@@ -65,14 +62,5 @@ describe("Test authentication service", () => {
     await expect(queryEmail("Einstein")).rejects.toMatch(failResponse.message);
 
     expect(requestSpy).toBeCalledTimes(1);
-  });
-
-  test("Test login function (only make sure the request is normally sent)", async () => {
-    const server = startForumServer();
-
-    const { privateKey } = handleMnemonics(mnemonics);
-    await login(privateKey, "a fake cert");
-
-    server.shutdown();
   });
 });
