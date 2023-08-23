@@ -22,3 +22,8 @@ web-build/
 # Tweaks
 coverage
 api.json
+.env
+.env*
+.flaskenv*
+!.env.project
+!.env.vault
