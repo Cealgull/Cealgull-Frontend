@@ -41,3 +41,5 @@ jobs:
 
       - name: 🚀 Build app
         run: eas build -p android --non-interactive
+        env:
+          DOTENV_KEY: ${{ secrets.DOTENV_BUILD_KEY }}
