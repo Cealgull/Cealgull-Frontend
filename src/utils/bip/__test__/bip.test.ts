@@ -45,7 +45,7 @@ describe("Test bip utils", () => {
     });
   });
 
-  test.only("function: handleMnemonics", () => {
+  test("function: handleMnemonics", () => {
     const mnemonics = "铝 北 肠 泼 舞 京 墙 色 谐 养 园 暗";
     const messages = ["hello, world!", "中文字", ""];
     const { sign, verify } = handleMnemonics(mnemonics);
