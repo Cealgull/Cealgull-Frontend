@@ -1,15 +1,15 @@
 import { request } from "./ajax";
 import APIConfig from "./api.config";
 
-function isValidAccountString(account: string) {
-  const emailReg =
+function ValidateAccount(account: string) {
+  const accountValidateReg =
     // eslint-disable-next-line no-useless-escape
     /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))$/;
-  return account.match(emailReg) !== null;
+  return account.match(accountValidateReg) !== null;
 }
 
 export async function queryEmail(account: string) {
-  if (!isValidAccountString(account)) {
+  if (!ValidateAccount(account)) {
     throw "Invalid account string!";
   }
   const res = await request({
@@ -27,7 +27,7 @@ export async function queryEmail(account: string) {
 }
 
 export async function verifyEmail(account: string, verifyCode: string) {
-  if (!isValidAccountString(account)) {
+  if (!ValidateAccount(account)) {
     throw "Invalid account string!";
   }
   if (verifyCode.length !== 6) {
