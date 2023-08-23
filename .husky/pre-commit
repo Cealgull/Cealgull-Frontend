@@ -2,3 +2,6 @@
 . "$(dirname -- "$0")/_/husky.sh"
 
 yarn commitlint --edit ${1}
+yarn format:check
+yarn lint
+yarn test --coverage=false --verbose=false
