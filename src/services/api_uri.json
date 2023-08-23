@@ -1,0 +1,14 @@
+{
+  "auth.email.query": "/email/sign",
+  "auth.email.verify": "/email/verify",
+  "auth.cert.query": "/cert/sign",
+
+  "user.login": "/login",
+
+  "getAllTopics": "/getAllTopics",
+  "createTopic": "/createTopic",
+  "queryPostsByBelongTo": "/queryPostsByBelongTo",
+  "createPost": "/createPost",
+  "getIpfsSource": "/ipfs",
+  "user.info": "/getUserProfile"
+}
