@@ -38,3 +38,5 @@ jobs:
 
       - name: 🚀 Build app
         run: eas update --auto --non-interactive
+        env:
+          DOTENV_KEY: ${{ secrets.DOTENV_BUILD_KEY }}
