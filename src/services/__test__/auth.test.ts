@@ -4,7 +4,7 @@
  */
 import { Response, Server } from "miragejs";
 import * as ajax from "../ajax";
-import APIUri from "../api_uri.json";
+import APIConfig from "../api.config";
 import { queryEmail, verifyEmail } from "../auth";
 import { startAuthServer } from "./mirage";
 
@@ -28,7 +28,7 @@ describe("Test authentication service", () => {
       code: 200,
       message: "ok",
     };
-    server.post(APIUri["auth.email.query"], () => {
+    server.post(APIConfig["auth.email.query"], () => {
       return new Response(200, {}, successResponse);
     });
 
@@ -55,7 +55,7 @@ describe("Test authentication service", () => {
       code: 500,
       message: "wrong",
     };
-    server.post(APIUri["auth.email.query"], () => {
+    server.post(APIConfig["auth.email.query"], () => {
       return new Response(500, {}, failResponse);
     });
 
