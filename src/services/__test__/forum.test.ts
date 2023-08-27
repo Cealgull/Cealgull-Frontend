@@ -14,14 +14,7 @@ import {
   getTextIpfs,
   getUserInfo,
 } from "../forum";
-import {
-  getAllTopicsProps,
-  getAllPostsByBelongProps,
-  createPostProps,
-  createTopicProps,
-} from "../forum";
 import * as forumTestData from "./forumTestData.json";
-import { exp } from "react-native-reanimated";
 
 describe("Test forum service", () => {
   const requestSpy = jest.spyOn(ajax, "request");
@@ -33,42 +26,15 @@ describe("Test forum service", () => {
     server.shutdown();
     jest.clearAllMocks();
   });
-  const topicListArgu: getAllTopicsProps = {
-    pageSize: 10,
-    pageNum: 1,
-    category: "Test",
-    tags: "Test",
-    creator: "Tester",
-    sortedBy: "Test",
-  };
-  const postListArgu: getAllPostsByBelongProps = {
-    belongTo: "Test",
-    creator: "Test",
-    pageSize: 10,
-    pagenum: 1,
-  };
-  const topicCreateArgu: createTopicProps = {
-    content: "Test",
-    images: [],
-    title: "Test",
-    category: "Test",
-    tags: [],
-  };
-  const postCreateArgu: createPostProps = {
-    content: "Test",
-    images: [],
-    replyTo: "Test",
-    belongTo: "Test",
-  };
 
   test("forum.topic.list Test", async () => {
-    await expect(getAllTopics(topicListArgu)).resolves.toEqual(
+    await expect(getAllTopics(10, 1, "", "", "", "")).resolves.toEqual(
       forumTestData["forum.topic.list"]
     );
   });
 
   test("forum.post.list Test", async () => {
-    await expect(getAllPostsByBelong(postListArgu)).resolves.toEqual(
+    await expect(getAllPostsByBelong("", "", 10, 1)).resolves.toEqual(
       forumTestData["forum.post.list"]
     );
   });
@@ -86,11 +52,11 @@ describe("Test forum service", () => {
   });
 
   test("forum.topic.create Test", async () => {
-    await expect(createTopic(topicCreateArgu));
+    await expect(createTopic("", [], "", "", []));
   });
 
   test("forum.post.create Test", async () => {
-    await expect(createPost(postCreateArgu));
+    await expect(createPost("", [], "", ""));
   });
 
   test("Response error", async () => {
@@ -112,17 +78,17 @@ describe("Test forum service", () => {
     server.post(APIConfig["forum.post.create"], () => {
       return new Response(500);
     });
-    await expect(getAllTopics(topicListArgu)).rejects.toEqual(
+    await expect(getAllTopics(10, 1, "", "", "", "")).rejects.toEqual(
       "getAllTopics error!"
     );
-    await expect(createPost(postCreateArgu)).rejects.toEqual(
+    await expect(createPost("", [], "", "")).rejects.toEqual(
       "createPost error!"
     );
-    await expect(createTopic(topicCreateArgu)).rejects.toEqual(
+    await expect(createTopic("", [], "", "", [])).rejects.toEqual(
       "createTopic error!"
     );
     await expect(getTextIpfs("Text")).rejects.toEqual("getContents error!");
-    await expect(getAllPostsByBelong(postListArgu)).rejects.toEqual(
+    await expect(getAllPostsByBelong("", "", 10, 1)).rejects.toEqual(
       "getAllPosts error!"
     );
     await expect(getUserInfo("Text")).rejects.toEqual("getUserInfo error!");

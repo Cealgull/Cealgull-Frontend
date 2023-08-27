@@ -5,25 +5,36 @@
 
 import APIConfig from "./api.config";
 import { requestWithCookie, request } from "./ajax";
-export interface createPostProps {
+interface createPostProps {
   content: string;
   images: string[];
   replyTo: string;
   belongTo: string;
 }
 
-export async function createPost(createProps: createPostProps): Promise<void> {
+export async function createPost(
+  content: string,
+  images: string[],
+  replyTo: string,
+  belongTo: string
+): Promise<void> {
+  const requestBody: createPostProps = {
+    content: content,
+    images: images,
+    replyTo: replyTo,
+    belongTo: belongTo,
+  };
   const response = await requestWithCookie({
     method: "POST",
     url: APIConfig["forum.post.create"],
-    body: createProps,
+    body: requestBody,
   });
   if (!response.ok) {
     throw "createPost error!";
   }
 }
 
-export interface createTopicProps {
+interface createTopicProps {
   content: string;
   images: string[];
   title: string;
@@ -32,12 +43,23 @@ export interface createTopicProps {
 }
 
 export async function createTopic(
-  createProps: createTopicProps
+  content: string,
+  images: string[],
+  title: string,
+  category: string,
+  tags: string[]
 ): Promise<void> {
+  const requestBody: createTopicProps = {
+    content: content,
+    images: images,
+    title: title,
+    category: category,
+    tags: tags,
+  };
   const response = await requestWithCookie({
     method: "POST",
     url: APIConfig["forum.topic.create"],
-    body: createProps,
+    body: requestBody,
   });
   if (!response.ok) {
     throw "createTopic error!";
@@ -57,7 +79,7 @@ export async function getTextIpfs(cid: string): Promise<string> {
   return data;
 }
 
-export interface getAllPostsByBelongProps {
+interface getAllPostsByBelongProps {
   belongTo: string;
   creator: string;
   pageSize: number;
@@ -65,12 +87,21 @@ export interface getAllPostsByBelongProps {
 }
 
 export async function getAllPostsByBelong(
-  getPostProps: getAllPostsByBelongProps
+  belongTo: string,
+  creator: string,
+  pageSize: number,
+  pagenum: number
 ): Promise<ForumTopic[]> {
+  const requestBody: getAllPostsByBelongProps = {
+    belongTo: belongTo,
+    creator: creator,
+    pageSize: pageSize,
+    pagenum: pagenum,
+  };
   const response = await requestWithCookie({
     method: "POST",
     url: APIConfig["forum.post.list"],
-    body: getPostProps,
+    body: requestBody,
   });
   if (!response.ok) {
     throw "getAllPosts error!";
@@ -79,7 +110,7 @@ export async function getAllPostsByBelong(
   return data;
 }
 
-export interface getAllTopicsProps {
+interface getAllTopicsProps {
   pageSize: number;
   pageNum: number;
   category: string;
@@ -89,12 +120,25 @@ export interface getAllTopicsProps {
 }
 
 export async function getAllTopics(
-  getTopicsProps: getAllTopicsProps
+  pageSize: number,
+  pageNum: number,
+  category: string,
+  tags: string,
+  creator: string,
+  sortedBy: string
 ): Promise<ForumTopic[]> {
+  const requestBody: getAllTopicsProps = {
+    pageSize: pageSize,
+    pageNum: pageNum,
+    category: category,
+    tags: tags,
+    creator: creator,
+    sortedBy: sortedBy,
+  };
   const request = await requestWithCookie({
     method: "POST",
     url: APIConfig["forum.topic.list"],
-    body: getTopicsProps,
+    body: requestBody,
   });
   if (!request.ok) {
     throw "getAllTopics error!";
