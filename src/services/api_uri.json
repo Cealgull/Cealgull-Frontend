@@ -3,12 +3,12 @@
   "auth.email.verify": "/email/verify",
   "auth.cert.query": "/cert/sign",
 
-  "user.login": "/login",
+  "user.login": "/auth/login",
+  "user.profile": "/api/users/query/profile",
 
-  "getAllTopics": "/getAllTopics",
-  "createTopic": "/createTopic",
-  "queryPostsByBelongTo": "/queryPostsByBelongTo",
-  "createPost": "/createPost",
-  "getIpfsSource": "/ipfs",
-  "user.info": "/getUserProfile"
+  "forum.topic.list": "/api/topic/query/list",
+  "forum.post.list": "/api/post/query/list",
+  "forum.topic.create": "/api/topic/invoke/create",
+  "forum.post.create": "/api/post/invoke/create",
+  "getIpfsSource": "/ipfs"
 }

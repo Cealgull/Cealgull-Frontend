@@ -1,0 +1,127 @@
+{
+  "user.profile": {
+    "username": "john_doe",
+    "wallet": "0x1234567890abcdef",
+    "avatar": "QCIDabcd",
+    "signature": "Hello, world!",
+    "muted": true,
+    "banned": false,
+    "balance": 1000,
+    "credibility": 50,
+    "privilege": 2,
+    "activeRole": "Moderator",
+    "rolesAssigned": ["User", "Moderator"],
+    "activeBadge": {
+      "name": "Gold Badge",
+      "cid": "gold-badge-cid"
+    },
+    "badgesReceived": [
+      {
+        "name": "Silver Badge",
+        "cid": "silver-badge-cid"
+      },
+      {
+        "name": "Bronze Badge",
+        "cid": "bronze-badge-cid"
+      }
+    ],
+    "createdAt": "2023-01-15T12:30:45Z",
+    "updatedAt": "2023-08-20T08:15:30Z"
+  },
+
+  "forum.topic.list": [
+    {
+      "id": 123,
+      "hash": "abcdef123456",
+      "title": "Sample Topic",
+      "creator": {
+        "username": "john_doe",
+        "wallet": "0x1234567890abcdef",
+        "avatar": "https://example.com/avatar.jpg",
+        "badge": "badge-cid-value",
+        "role": "User"
+      },
+      "avatar": "https://example.com/topic_avatar.jpg",
+      "content": "This is the content of the topic.",
+      "categoryAssigned": {
+        "id": 456,
+        "name": "Technology",
+        "color": 16777215
+      },
+      "tagsAssigned": [
+        {
+          "id": 789,
+          "name": "programming"
+        },
+        {
+          "id": 890,
+          "name": "software"
+        }
+      ],
+      "upvotes": ["0x1234567890abcdef", "0xfedcba0987654321"],
+      "downvotes": ["0x567890abcdef1234"],
+      "assets": [
+        {
+          "creator": "john_doe",
+          "contentType": "image/jpeg",
+          "createdAt": "2023-02-20T11:10:00Z",
+          "updatedAt": "2023-08-19T08:30:00Z",
+          "cid": "asset-cid-image"
+        }
+      ],
+      "closed": false,
+      "createdAt": "2023-01-15T12:30:45Z",
+      "updatedAt": "2023-08-20T08:15:30Z"
+    }
+  ],
+
+  "forum.post.list": [
+    {
+      "id": 123,
+      "hash": "abcdef123456",
+      "creator": {
+        "username": "john_doe",
+        "wallet": "0x1234567890abcdef",
+        "avatar": "https://example.com/avatar.jpg",
+        "badge": "badge-cid-value",
+        "role": "User"
+      },
+      "content": "This is the content of the post.",
+      "createAt": "2023-01-15T12:30:45Z",
+      "updateAt": "2023-08-20T08:15:30Z",
+      "replyTo": {
+        "creator": {
+          "username": "jane_smith",
+          "wallet": "0x9876543210abcdef",
+          "avatar": "https://example.com/jane_avatar.jpg",
+          "badge": "badge-cid-value-jane",
+          "role": "User"
+        },
+        "content": "Reply content",
+        "updateAt": "2023-08-19T14:55:00Z",
+        "assets": [
+          {
+            "creator": "jane_smith",
+            "contentType": "image/jpeg",
+            "createdAt": "2023-03-10T15:45:00Z",
+            "updatedAt": "2023-08-18T09:30:15Z",
+            "cid": "asset-cid-image"
+          }
+        ]
+      },
+      "assets": [
+        {
+          "creator": "john_doe",
+          "contentType": "image/jpeg",
+          "createdAt": "2023-02-20T11:10:00Z",
+          "updatedAt": "2023-08-19T08:30:00Z",
+          "cid": "asset-cid-image"
+        }
+      ],
+      "upvotes": ["0x1234567890abcdef", "0xfedcba0987654321"],
+      "downvotes": ["0x567890abcdef1234"],
+      "belongTo": "Technology"
+    }
+  ],
+  "getIpfsText": "Test Data"
+}

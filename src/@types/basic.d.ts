@@ -5,16 +5,49 @@
  * we usually use it to request in ipfs api
  *
  */
-interface ForumTopic {
-  category: string;
-  cid: string;
-  createTime: string;
+
+interface User {
+  username: string;
+  wallet: string;
+  avatar: string;
+  badge: string;
+  role: string;
+}
+
+interface Category {
+  id: number;
+  name: string;
+  color: number;
+}
+
+interface Tag {
+  id: number;
+  name: string;
+}
+
+interface Asset {
   creator: string;
-  id: string;
-  images: string[];
-  tags: string[];
+  contentType: string;
+  createdAt: string;
+  updatedAt: string;
+  cid: string;
+}
+
+interface ForumTopic {
+  id: number;
+  hash: string;
   title: string;
-  updateTime: string;
+  creator: User;
+  avatar: string;
+  content: string;
+  categoryAssigned: Category;
+  tagsAssigned: Tag[];
+  upvotes: string[];
+  downvotes: string[];
+  assets: Asset[];
+  closed: boolean;
+  createdAt: string;
+  updatedAt: string;
 }
 
 /*
@@ -25,21 +58,38 @@ interface ForumTopic {
  *
  */
 interface ForumPost {
-  belongTo: string;
-  cid: string;
-  createTime: string;
-  creator: string;
-  id: string;
-  images: string[];
-  replyTo: string;
-  updateTime: string;
+  id: number;
+  hash: string;
+  creator: User;
+  content: string;
+  createdAt: string;
+  updateAt: string;
+  replyTo: ForumPost;
+  assets: Asset[];
+  upvotes: string[];
+  downvotes: string[];
+  belongto: string;
+}
+
+interface Badge {
+  Name: string;
+  CID: string;
 }
 
 interface UserInfo {
-  avatar: string;
   username: string;
-  identityId: string;
+  wallet: string;
+  avatar: string;
   signature: string;
-  roles: string[];
-  badge: string[];
+  muted: boolean;
+  banned: boolean;
+  balance: number;
+  credibility: number;
+  privilege: number;
+  activeRole: string;
+  rolesAssigned: string[];
+  activeBadge: Badge;
+  badgesReceived: Badge[];
+  createdAt: string;
+  updateAt: string;
 }
