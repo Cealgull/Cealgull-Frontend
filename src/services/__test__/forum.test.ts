@@ -3,7 +3,6 @@
  * @data 2023/08/24
  */
 import { Response, Server } from "miragejs";
-import * as ajax from "../ajax";
 import APIConfig from "../api.config";
 import { startForumServer } from "./mirage";
 import {
@@ -17,7 +16,6 @@ import {
 import * as forumTestData from "./forumTestData.json";
 
 describe("Test forum service", () => {
-  const requestSpy = jest.spyOn(ajax, "request");
   let server: Server;
   beforeEach(() => {
     server = startForumServer();

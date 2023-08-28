@@ -1,6 +1,5 @@
 import { createServer } from "miragejs";
 import APIConfig from "../api.config";
-import { request } from "../ajax";
 import * as forumTestData from "./forumTestData.json";
 
 const sampleCert =
@@ -32,13 +31,13 @@ export function startForumServer() {
     environment: "test",
     routes() {
       this.post(APIConfig["user.login"], () => ({}));
-      this.get(APIConfig["user.profile"], (_schema, request) => {
+      this.get(APIConfig["user.profile"], () => {
         return forumTestData["user.profile"];
       });
-      this.post(APIConfig["forum.topic.list"], (_schema, request) => {
+      this.post(APIConfig["forum.topic.list"], () => {
         return forumTestData["forum.topic.list"];
       });
-      this.post(APIConfig["forum.post.list"], (_schema, request) => {
+      this.post(APIConfig["forum.post.list"], () => {
         return forumTestData["forum.post.list"];
       });
       this.get(`${APIConfig["getIpfsSource"]}/*path`, () => {
