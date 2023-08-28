@@ -5,7 +5,6 @@
 
 import APIConfig from "./api.config";
 import { requestWithCookie, request } from "./ajax";
-
 interface createPostProps {
   content: string;
   images: string[];
@@ -13,11 +12,22 @@ interface createPostProps {
   belongTo: string;
 }
 
-export async function createPost(createProps: createPostProps): Promise<void> {
+export async function createPost(
+  content: string,
+  images: string[],
+  replyTo: string,
+  belongTo: string
+): Promise<void> {
+  const requestBody: createPostProps = {
+    content: content,
+    images: images,
+    replyTo: replyTo,
+    belongTo: belongTo,
+  };
   const response = await requestWithCookie({
     method: "POST",
-    url: APIConfig.createPost,
-    body: createProps,
+    url: APIConfig["forum.post.create"],
+    body: requestBody,
   });
   if (!response.ok) {
     throw "createPost error!";
@@ -33,12 +43,23 @@ interface createTopicProps {
 }
 
 export async function createTopic(
-  createProps: createTopicProps
+  content: string,
+  images: string[],
+  title: string,
+  category: string,
+  tags: string[]
 ): Promise<void> {
+  const requestBody: createTopicProps = {
+    content: content,
+    images: images,
+    title: title,
+    category: category,
+    tags: tags,
+  };
   const response = await requestWithCookie({
     method: "POST",
-    url: APIConfig.createTopic,
-    body: createProps,
+    url: APIConfig["forum.topic.create"],
+    body: requestBody,
   });
   if (!response.ok) {
     throw "createTopic error!";
@@ -58,12 +79,29 @@ export async function getTextIpfs(cid: string): Promise<string> {
   return data;
 }
 
+interface getAllPostsByBelongProps {
+  belongTo: string;
+  creator: string;
+  pageSize: number;
+  pagenum: number;
+}
+
 export async function getAllPostsByBelong(
-  belong: string
+  belongTo: string,
+  creator: string,
+  pageSize: number,
+  pagenum: number
 ): Promise<ForumTopic[]> {
+  const requestBody: getAllPostsByBelongProps = {
+    belongTo: belongTo,
+    creator: creator,
+    pageSize: pageSize,
+    pagenum: pagenum,
+  };
   const response = await requestWithCookie({
-    method: "GET",
-    url: `${APIConfig.queryPostsByBelongTo}?belongTo=${belong}`,
+    method: "POST",
+    url: APIConfig["forum.post.list"],
+    body: requestBody,
   });
   if (!response.ok) {
     throw "getAllPosts error!";
@@ -72,10 +110,35 @@ export async function getAllPostsByBelong(
   return data;
 }
 
-export async function getAllTopics(): Promise<ForumTopic[]> {
+interface getAllTopicsProps {
+  pageSize: number;
+  pageNum: number;
+  category: string;
+  tags: string;
+  creator: string;
+  sortedBy: string;
+}
+
+export async function getAllTopics(
+  pageSize: number,
+  pageNum: number,
+  category: string,
+  tags: string,
+  creator: string,
+  sortedBy: string
+): Promise<ForumTopic[]> {
+  const requestBody: getAllTopicsProps = {
+    pageSize: pageSize,
+    pageNum: pageNum,
+    category: category,
+    tags: tags,
+    creator: creator,
+    sortedBy: sortedBy,
+  };
   const request = await requestWithCookie({
-    method: "GET",
-    url: APIConfig.getAllTopics,
+    method: "POST",
+    url: APIConfig["forum.topic.list"],
+    body: requestBody,
   });
   if (!request.ok) {
     throw "getAllTopics error!";
@@ -84,10 +147,10 @@ export async function getAllTopics(): Promise<ForumTopic[]> {
   return data;
 }
 
-export async function getUserInfo(uid: string): Promise<UserInfo> {
+export async function getUserInfo(wallet: string): Promise<UserInfo> {
   const response = await request({
     method: "GET",
-    url: `${APIConfig["user.info"]}?userId=${uid}`,
+    url: `${APIConfig["user.profile"]}?wallet=${wallet}`,
   });
   if (!response.ok) {
     throw "getUserInfo error!";
