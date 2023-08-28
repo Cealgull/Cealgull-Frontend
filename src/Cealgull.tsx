@@ -23,6 +23,7 @@ import {
   UserAddScreen,
 } from "./views/LoginTabScreens";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import CealgullNative from "./native/NativeModule";
 
 const queryClient = new QueryClient();
 const LoginTab = createBottomTabNavigator<LoginTabParamList>();

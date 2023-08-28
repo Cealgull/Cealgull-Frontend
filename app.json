@@ -20,8 +20,12 @@
       "backgroundColor": "#ffffff"
     },
     "assetBundlePatterns": ["**/*"],
+    "experiments": {
+      "turboModules": true
+    },
     "ios": {
-      "supportsTablet": false
+      "supportsTablet": false,
+      "bundleIdentifier": "com.cealgull.cealgull"
     },
     "android": {
       "adaptiveIcon": {
