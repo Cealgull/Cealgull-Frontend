@@ -14,7 +14,6 @@ const config: Config = {
   transformIgnorePatterns: [
     "node_modules/(?!((jest-)?react-native|@react-native(-community)?|@rneui|@noble)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|react-native-svg)",
   ],
-  collectCoverageFrom: ["src/**/{!(*.d.ts),}.{ts,js,.tsx,.jsx}", "App.tsx"],
   coveragePathIgnorePatterns: ["mirage.(js|ts)"],
 };
 

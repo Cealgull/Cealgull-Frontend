@@ -11,6 +11,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:ci": "jest --coverage",
+    "test:all": "jest --collectCoverageFrom='[\"src/**/{!(*.d.ts),}.{ts,js,.tsx,.jsx}\", \"App.tsx\"]'",
     "lint": "eslint .",
     "format": "prettier -w .",
     "format:check": "prettier --check ."
