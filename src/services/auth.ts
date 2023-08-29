@@ -1,4 +1,5 @@
 // TODO error handler
+import { type UserInfoPOJO } from "@src/models/User";
 import { handleMnemonics, signAndEncode } from "@src/utils/bip/tools";
 import { request } from "./ajax";
 import APIConfig from "./api.config";
@@ -70,7 +71,9 @@ async function queryCert(publicKey: string, signature = "HACK") {
   return data.cert;
 }
 
-async function _login(cert: string, signature: string): Promise<UserInfo> {
+type LoginResponse = UserInfoPOJO;
+
+async function _login(cert: string, signature: string): Promise<LoginResponse> {
   const res = await request({
     url: APIConfig["user.login"],
     method: "POST",
@@ -81,7 +84,7 @@ async function _login(cert: string, signature: string): Promise<UserInfo> {
       cert,
     },
   });
-  const data = (await res.json()) as UserInfo;
+  const data = (await res.json()) as LoginResponse;
   return data;
 }
 
@@ -92,7 +95,7 @@ async function _login(cert: string, signature: string): Promise<UserInfo> {
  * @param privateKey hex
  * @param cert raw string
  */
-async function login(privateKey: string, cert: string): Promise<UserInfo> {
+async function login(privateKey: string, cert: string): Promise<LoginResponse> {
   const sig = signAndEncode(cert, privateKey);
   return await _login(cert, sig);
 }
@@ -107,4 +110,4 @@ async function register(mnemonics: string) {
   // TODO persist the user
 }
 
-export { queryEmail, verifyEmail, register, login };
+export { login, queryEmail, register, verifyEmail };

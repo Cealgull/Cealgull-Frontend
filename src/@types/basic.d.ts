@@ -6,14 +6,6 @@
  *
  */
 
-interface User {
-  username: string;
-  wallet: string;
-  avatar: string;
-  badge: string;
-  role: string;
-}
-
 interface Category {
   id: number;
   name: string;
@@ -69,27 +61,4 @@ interface ForumPost {
   upvotes: string[];
   downvotes: string[];
   belongto: string;
-}
-
-interface Badge {
-  Name: string;
-  CID: string;
-}
-
-interface UserInfo {
-  username: string;
-  wallet: string;
-  avatar: string;
-  signature: string;
-  muted: boolean;
-  banned: boolean;
-  balance: number;
-  credibility: number;
-  privilege: number;
-  activeRole: string;
-  rolesAssigned: string[];
-  activeBadge: Badge;
-  badgesReceived: Badge[];
-  createdAt: string;
-  updateAt: string;
 }
