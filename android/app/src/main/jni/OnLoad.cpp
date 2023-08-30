@@ -32,7 +32,7 @@
 #include <fbjni/fbjni.h>
 #include <react/renderer/componentregistry/ComponentDescriptorProviderRegistry.h>
 #include <rncli.h>
-#include <native.h>
+#include <native/modprovider.h>
 
 namespace facebook::react {
 
@@ -51,11 +51,8 @@ void registerComponents(
 std::shared_ptr<TurboModule> cxxModuleProvider(
     const std::string &name,
     const std::shared_ptr<CallInvoker> &jsInvoker) {
-  if(name == "NativeModule"){
-    return std::make_shared<NativeModule>(jsInvoker);
-  }
-  // Not implemented yet: provide pure-C++ NativeModules here.
-  return nullptr;
+  static TurboModuleProvider turboModuleProvider;
+  return turboModuleProvider.getTurboModule(name,jsInvoker);
 }
 
 std::shared_ptr<TurboModule> javaModuleProvider(

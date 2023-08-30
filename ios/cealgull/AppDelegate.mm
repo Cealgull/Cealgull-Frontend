@@ -80,13 +80,11 @@
 ᠆ (Class)getModuleClassFromName : (const char *)name { return RCTCoreModulesClassProvider(name); }
 
 #pragma mark RCTTurboModuleManagerDelegate
-- (std::shared_ptr<facebook::react::TurboModule>)getTurboModule:(const std::string &)name
-                                                      jsInvoker:(std::shared_ptr<facebook::react::CallInvoker>)jsInvoker)
-{
-  if (name == "NativeModule") {
-    return std::make_shared<facebook::react::NativeSampleModule>(jsInvoker);
-  }
-  return nullptr
+- (std::shared_ptr<facebook::react::TurboModule>)
+    getTurboModule:(const std::string &)name
+         jsInvoker:(std::shared_ptr<facebook::react::CallInvoker>)jsInvoker {
+  static TurboModuleProvider turboModuleProvider;
+  return turboModuleProvider.getTurboModule(name, jsInvoker);
 }
 
 @end
