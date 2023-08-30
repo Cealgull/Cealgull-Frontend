@@ -4,3 +4,6 @@
 [submodule "cpp/thirdparty/openssl"]
 	path = cpp/thirdparty/openssl
 	url = git@github.com:viaduck/openssl-cmake.git
+[submodule "cpp/thirdparty/libsignal"]
+	path = cpp/thirdparty/libsignal
+	url = git@github.com:signalapp/libsignal.git
