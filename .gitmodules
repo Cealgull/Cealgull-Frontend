@@ -1,3 +1,6 @@
 [submodule "cpp/thirdparty/wasm3"]
 	path = cpp/thirdparty/wasm3
 	url = git@github.com:wasm3/wasm3.git
+[submodule "cpp/thirdparty/openssl"]
+	path = cpp/thirdparty/openssl
+	url = git@github.com:viaduck/openssl-cmake.git

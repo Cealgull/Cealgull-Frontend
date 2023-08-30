@@ -11,7 +11,7 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Android")
   set(CROSS_ANDROID ON)
 endif()
 
-add_subdirectory(thirdparty/openssl-cmake openssl_build)
+add_subdirectory(thirdparty/openssl openssl_build)
 
 add_library(cppnative STATIC
   src/native/modprovider.cc
