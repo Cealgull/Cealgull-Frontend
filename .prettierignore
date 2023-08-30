@@ -1,4 +1,5 @@
+.cxx
+.expo
 build
 coverage
-.expo
-.cxx
+thirdparty
