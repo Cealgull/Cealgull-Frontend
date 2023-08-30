@@ -4,6 +4,7 @@ set(CMAKE_VERBOSE_MAKEFILE on)
 
 add_compile_options(-fexceptions -frtti -std=c++17)
 
+set(BUILD_SHARED_LIBS OFF)
 set(BUILD_OPENSSL ON)
 set(OPENSSL_MODULES "")
 set(OPENSSL_BUILD_VERSION "3.1.2")
@@ -12,6 +13,7 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Android")
 endif()
 
 add_subdirectory(thirdparty/openssl openssl_build)
+add_subdirectory(thirdparty/wasm3/platforms/cpp/wasm3_cpp wasm3_build)
 
 add_library(cppnative STATIC
   src/native/modprovider.cc
@@ -22,4 +24,4 @@ add_library(cppnative STATIC
 
 target_include_directories(cppnative PUBLIC include)
 target_include_directories(react_codegen_AppSpecs PUBLIC include)
-target_link_libraries(cppnative jsi react_nativemodule_core react_codegen_AppSpecs crypto)
+target_link_libraries(cppnative jsi react_nativemodule_core react_codegen_AppSpecs crypto wasm3_cpp)
