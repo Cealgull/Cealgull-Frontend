@@ -17,6 +17,7 @@
     "prettier" // from `eslint-config-prettier`, put it **last**
   ],
   "overrides": [],
+  "ignorePatterns": ["cpp/thirdparty/**/*.js"],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaVersion": "latest",
