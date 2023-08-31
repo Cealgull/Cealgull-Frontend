@@ -10,7 +10,7 @@ interface RingSignSpec {
 
 export interface Spec extends TurboModule {
   readonly reverseString: (input: string) => string;
-  readonly ringSign: (input: RingSignSpec) => string;
+  readonly ringSign: (msg: string, spec: RingSignSpec) => string;
 }
 
 export default TurboModuleRegistry.getEnforcing<Spec>("NativeCrypto");

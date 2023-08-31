@@ -8,6 +8,9 @@
 
 #include <string>
 #include <vector>
+#include <memory>
+#include <optional>
+#include <functional>
 
 namespace cealgull {
 namespace crypto {
@@ -25,12 +28,12 @@ struct RingSignSpec {
       : priv(priv), pubs(pubs), num(num), mine(mine) {}
 };
 
-std::vector<uint8_t> sign(const RingSignSpec &spec);
+std::optional<std::vector<uint8_t>> sign(const std::string &msg, const RingSignSpec &spec);
 
 }  // namespace ringsig
 }  // namespace crypto
 }  // namespace cealgull
-//
+
 namespace facebook {
 namespace react {
 using RingSignSpec = cealgull::crypto::ringsig::RingSignSpec;

@@ -6,11 +6,11 @@
 #include "AppSpecsJSI.h"
 #endif
 
-#include "crypto/ringsig.h"
-
 #include <memory>
 #include <string>
 #include <vector>
+
+#include "crypto/ringsig.h"
 
 namespace facebook::react {
 
@@ -18,7 +18,8 @@ class NativeCrypto : public NativeCryptoCxxSpec<NativeCrypto> {
  public:
   NativeCrypto(std::shared_ptr<CallInvoker> jsInvoker);
   std::string reverseString(jsi::Runtime &rt, std::string input);
-  std::string ringSign(jsi::Runtime &rt, cealgull::crypto::ringsig::RingSignSpec spec);
+  std::string ringSign(jsi::Runtime &rt, std::string msg,
+                       cealgull::crypto::ringsig::RingSignSpec spec);
 };
 
 }  // namespace facebook::react
