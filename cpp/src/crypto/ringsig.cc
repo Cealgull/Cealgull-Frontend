@@ -19,14 +19,9 @@ static int ringsig_hashPOINT2BN(const EVP_MD_CTX *mctx, const EC_GROUP *g,
                                 const EC_POINT *point, BIGNUM *bn);
 static int ringsig_keypair_extern2spec(const ringsig_keypair_extern_t *ext,
                                        ringsig_keypair_spec_t *spec);
-static int ringsig_keypair_spec2extern(const ringsig_keypair_spec_t *spec,
-                                       ringsig_keypair_extern_t *ext);
 static int ringsig_b642BN(const char *b64, BIGNUM *bn);
 static int ringsig_b642POINTS(const char *b64, int nr_mem, const EC_GROUP *g,
                               EC_POINT **pubs);
-static int ringsig_BN2b64(const BIGNUM *bn, char *b64);
-static int ringsig_POINTS2b64(const EC_GROUP *g, const EC_POINT **ps,
-                              int nr_mem, char *b64);
 static void ringsig_keypair_spec_free(ringsig_keypair_spec_t *spec);
 
 static int ringsig_prehash(EVP_MD_CTX *mctx, const char *msg, int msg_len) {
@@ -92,26 +87,6 @@ static int ringsig_b642POINTS(const char *b64, int nr_mem, const EC_GROUP *g,
   return 1;
 }
 
-static int ringsig_BN2b64(const BIGNUM *bn, char *b64) {
-  char buf[MAX_BNBUF] = {0};
-  BN_bn2bin(bn, (unsigned char *)buf);
-  Base64encode(b64, buf, BN_SIZE);
-  return 1;
-}
-
-static int ringsig_POINTS2b64(const EC_GROUP *g, const EC_POINT **ps,
-                              int nr_mem, char *b64) {
-  char *buf = (char *)calloc(sizeof(char), nr_mem * POINT_SIZE);
-  int sz = POINT_SIZE;
-  for (int i = 0; i < nr_mem; i++) {
-    uint8_t *p = (uint8_t *)buf + i * sz;
-    EC_POINT_point2oct(g, ps[i], POINT_CONVERSION_UNCOMPRESSED, p, sz, NULL);
-  }
-  Base64encode(b64, buf, nr_mem * sz);
-  free(buf);
-  return 1;
-}
-
 static int ringsig_keypair_extern2spec(const ringsig_keypair_extern_t *ext,
                                        ringsig_keypair_spec_t *spec) {
   spec->nr_mem = ext->nr_mem;
@@ -122,21 +97,6 @@ static int ringsig_keypair_extern2spec(const ringsig_keypair_extern_t *ext,
 
   ringsig_b642BN(ext->priv, spec->priv);
   ringsig_b642POINTS(ext->pubs, ext->nr_mem, spec->g, spec->pubs);
-  return 1;
-}
-
-static int ringsig_keypair_spec2extern(const ringsig_keypair_spec_t *spec,
-                                       ringsig_keypair_extern_t *ext) {
-  ext->nr_mem = spec->nr_mem;
-  ext->mine = spec->mine;
-  char * priv = (char *)calloc(sizeof(char), Base64encode_len(BN_SIZE));
-  char *pubs =
-      (char *)calloc(sizeof(char), Base64encode_len(spec->nr_mem * POINT_SIZE));
-  ringsig_BN2b64(spec->priv, priv);
-  ringsig_POINTS2b64(spec->g, (const EC_POINT **)spec->pubs, ext->nr_mem,
-                     pubs);
-  ext->priv = priv;
-  ext->pubs = pubs;
   return 1;
 }
 
@@ -228,12 +188,17 @@ int ringsig_sign_b64(const ringsig_keypair_extern_t *spec, const char *msg,
 namespace cealgull::crypto::ringsig{
 std::optional<std::string>sign(const RingsigSpec &spec, const std::string &msg) {
 
-  if (msg.length() < internal::ringsig_sign_len(spec.nr_mem))
+  internal::ringsig_keypair_extern_t ext;
+
+  if(internal::Base64decode_len(spec.priv.data()) < BN_SIZE)
+    return std::nullopt;
+  if(internal::Base64decode_len(spec.pubs.data()) < POINT_SIZE * spec.nr_mem)
     return std::nullopt;
 
-  internal::ringsig_keypair_extern_t ext = {spec.priv.data(), spec.pubs.data(),
-                                            spec.nr_mem, spec.mine};
-
+  ext.priv = spec.priv.data();
+  ext.pubs = spec.pubs.data();
+  ext.nr_mem = spec.nr_mem;
+  ext.mine = spec.mine;
   std::string sig(internal::ringsig_signb64_len(ext.nr_mem), 0);
   internal::ringsig_sign_b64(&ext, msg.data(), msg.size(), sig.data());
 
