@@ -1,7 +1,7 @@
 import type { MainScreenPropsGeneric } from "@src/@types/navigation";
-import { PersonView } from "../PersonView";
+import { PersonView, PersonViewProps } from "../PersonView";
 
-export type PersonScreenProps = undefined;
+export type PersonScreenProps = PersonViewProps;
 
 export default function PersonScreen({
   route: { params },

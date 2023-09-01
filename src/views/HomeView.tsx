@@ -5,23 +5,56 @@ import { getAllTopics } from "@src/services/forum";
 import { useQuery } from "@tanstack/react-query";
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import { Icon, Skeleton } from "@rneui/themed";
+import { Server } from "miragejs";
+import { startForumServer } from "@src/services/__test__/mirage";
 
 const CustomLinearGradient = () => {
   return <Text style={HomeViewStyle.loadingText}>{"Loading...."}</Text>;
 };
 
-export const HomeView: React.FC = () => {
+export interface HomeViewProps {
+  pageSize: number;
+  category: string;
+  tags: string;
+}
+
+export const HomeView: React.FC<HomeViewProps> = ({
+  pageSize,
+  category = "",
+  tags = "",
+}: HomeViewProps) => {
+  const pageNum = 1;
+  const mirageRequest = async () => {
+    //this will be used when backend is close.
+    const server: Server = startForumServer();
+    const response = await getAllTopics(
+      pageSize,
+      pageNum,
+      category,
+      tags,
+      "",
+      ""
+    );
+    server.shutdown();
+    return response;
+  };
+  const normalRequest = async () => {
+    //this will be used in official Version.
+    return await getAllTopics(pageSize, pageNum, category, tags, "", "");
+  };
+
   const {
     isLoading,
     isError,
     data: topicList,
     refetch: refetchTopicList,
   } = useQuery<ForumTopic[]>({
-    queryKey: ["allTopics"],
-    queryFn: getAllTopics,
+    queryKey: ["allTopics", pageSize, pageNum, category, tags],
+    // queryFn: normalRequest
+    queryFn: mirageRequest,
   });
 
-  const renderTopic = ({ item }: { item: ForumTopic }) => {
+  const renderTopicCard = ({ item }: { item: ForumTopic }) => {
     return <TopicCard {...item} />;
   };
   const HomeLoadingView = () => {
@@ -29,7 +62,9 @@ export const HomeView: React.FC = () => {
       <View style={HomeViewStyle.whole}>
         <View style={{ backgroundColor: "rgb(225,225,225)" }}>
           <HeaderBarWrapper alignMethod="c">
-            <Text>首页板块</Text>
+            <Text
+              style={HomeViewStyle.pageTitle}
+            >{`首页 ${category} ${tags}`}</Text>
           </HeaderBarWrapper>
         </View>
         <View style={HomeViewStyle.content}>
@@ -47,7 +82,9 @@ export const HomeView: React.FC = () => {
       <View style={HomeViewStyle.whole}>
         <View style={{ backgroundColor: "rgb(225,225,225)" }}>
           <HeaderBarWrapper alignMethod="c">
-            <Text>首页板块</Text>
+            <Text
+              style={HomeViewStyle.pageTitle}
+            >{`首页 ${category} ${tags}`}</Text>
           </HeaderBarWrapper>
         </View>
         <View style={HomeViewStyle.content}>
@@ -55,6 +92,7 @@ export const HomeView: React.FC = () => {
             onPress={() => {
               refetchTopicList();
             }}
+            style={{ alignItems: "center" }}
           >
             <Icon
               name="closecircle"
@@ -63,7 +101,10 @@ export const HomeView: React.FC = () => {
               size={50}
             ></Icon>
             <Text style={HomeViewStyle.errorText}>
-              Error! Please refresh the page!{" "}
+              Fail to fetch the Content!
+            </Text>
+            <Text style={HomeViewStyle.errorText}>
+              Press to refresh this page!
             </Text>
           </Pressable>
         </View>
@@ -76,11 +117,13 @@ export const HomeView: React.FC = () => {
       <View style={HomeViewStyle.whole}>
         <View style={{ backgroundColor: "rgb(225,225,225)" }}>
           <HeaderBarWrapper alignMethod="c">
-            <Text>首页板块</Text>
+            <Text
+              style={HomeViewStyle.pageTitle}
+            >{`首页 ${category} ${tags}`}</Text>
           </HeaderBarWrapper>
         </View>
         <View style={HomeViewStyle.content}>
-          <FlatList data={topicList} renderItem={renderTopic}></FlatList>
+          <FlatList data={topicList} renderItem={renderTopicCard}></FlatList>
         </View>
         <NavBar />
       </View>
@@ -104,8 +147,13 @@ const HomeViewStyle = StyleSheet.create({
     alignItems: "center",
   },
   errorText: {
-    paddingTop: 20,
-    fontSize: 20,
+    justifyContent: "center",
+    paddingTop: 18,
+    fontSize: 18,
+  },
+  pageTitle: {
+    fontSize: 16,
+    fontWeight: "bold",
   },
   loadingText: {
     color: "grey",

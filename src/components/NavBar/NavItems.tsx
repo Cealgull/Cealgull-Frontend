@@ -9,18 +9,33 @@ import { PublishViewProps } from "@src/views/PublishView/PublishView";
 import { useCallback } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-export const NavMyIcon = () => {
+interface NavMyIconProps {
+  focused: boolean;
+}
+export const NavMyIcon = ({ focused }: NavMyIconProps) => {
   const navigation =
     useNavigation<MainScreenPropsGeneric<"Person">["navigation"]>();
+
+  const content = focused ? (
+    <View style={{ alignItems: "center" }}>
+      <Icon type="antdesign" name="user" color={"red"} size={32} />
+      <Text style={[NavbarIconStyle.text, { marginTop: 5, color: "red" }]}>
+        个人
+      </Text>
+    </View>
+  ) : (
+    <View style={{ alignItems: "center" }}>
+      <Icon type="antdesign" name="user" size={32} />
+      <Text style={[NavbarIconStyle.text, { marginTop: 5 }]}>个人</Text>
+    </View>
+  );
   return (
     <TouchableOpacity
-      onPress={() => navigation.navigate("Person")}
-      style={NavbarIcon.wrapper}
+      /*FIX ME:we need wallet in auth login service */
+      onPress={() => navigation.navigate("Person", { wallet: "" })}
+      style={NavbarIconStyle.wrapper}
     >
-      <View>
-        <Icon type="antdesign" name="user" />
-        <Text style={[NavbarIcon.text, { marginTop: 5 }]}>个人</Text>
-      </View>
+      {content}
     </TouchableOpacity>
   );
 };
@@ -50,7 +65,7 @@ export const NavPublishIcon = () => {
   );
 
   return (
-    <View style={NavbarIcon.wrapper}>
+    <View style={NavbarIconStyle.wrapper}>
       <TouchableOpacity
         onPress={() =>
           navigation.push("Publish", { onPublish } as PublishViewProps)
@@ -65,28 +80,48 @@ export const NavPublishIcon = () => {
           name="pluscircle"
         />
       </TouchableOpacity>
-      <Text style={NavbarIcon.text}>新建话题</Text>
+      <Text style={NavbarIconStyle.text}>新建话题</Text>
     </View>
   );
 };
 
-export const NavHomeIcon = () => {
+interface NavHomeIconProps {
+  focused: boolean;
+}
+
+export const NavHomeIcon = ({ focused }: NavHomeIconProps) => {
   const navigation =
     useNavigation<MainScreenPropsGeneric<"Home">["navigation"]>();
+  const content = focused ? (
+    <View style={{ alignItems: "center" }}>
+      <Icon type="antdesign" name="home" size={32} color={"red"} />
+      <Text style={[NavbarIconStyle.text, { marginTop: 5, color: "red" }]}>
+        首页
+      </Text>
+    </View>
+  ) : (
+    <View style={{ alignItems: "center" }}>
+      <Icon type="antdesign" name="home" size={32} />
+      <Text style={[NavbarIconStyle.text, { marginTop: 5 }]}>首页</Text>
+    </View>
+  );
   return (
     <TouchableOpacity
-      style={NavbarIcon.wrapper}
-      onPress={() => navigation.navigate("Home")}
+      style={NavbarIconStyle.wrapper}
+      onPress={() =>
+        navigation.navigate("Home", {
+          pageSize: 10,
+          category: "",
+          tags: "",
+        })
+      }
     >
-      <View>
-        <Icon type="antdesign" name="home" />
-        <Text style={[NavbarIcon.text, { marginTop: 5 }]}>首页</Text>
-      </View>
+      {content}
     </TouchableOpacity>
   );
 };
 
-const NavbarIcon = StyleSheet.create({
+const NavbarIconStyle = StyleSheet.create({
   text: {
     fontWeight: "bold",
   },

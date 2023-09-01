@@ -1,11 +1,8 @@
 import { useNavigation } from "@react-navigation/native";
 import { Icon } from "@rneui/themed";
 import { StackScreenPropsGeneric } from "@src/@types/navigation";
-import { getTextIpfs } from "@src/services/forum";
-import { getUserInfo } from "@src/services/forum";
 import { numericCarry } from "@src/utils/numericCarry";
 import { timeTransfer } from "@src/utils/timeTransfer";
-import { useQuery } from "@tanstack/react-query";
 import {
   Dimensions,
   StyleSheet,
@@ -14,61 +11,77 @@ import {
   View,
 } from "react-native";
 import { CardContent } from "./CardContent";
-import { TopicTab } from "./TopicTab";
+import { TopicTag } from "./TopicTag";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
 export default function TopicCard({
-  cid,
-  createTime,
-  creator,
   id,
-  tags,
+  hash,
   title,
+  creator,
+  avatar,
+  content,
+  categoryAssigned,
+  tagsAssigned,
+  upvotes,
+  downvotes,
+  assets,
+  closed,
+  createdAt,
+  updatedAt,
 }: ForumTopic) {
   const navigation =
     useNavigation<StackScreenPropsGeneric<"Main">["navigation"]>();
 
-  const { data: contentText } = useQuery<string>({
-    queryKey: ["TopicContent", cid],
-    queryFn: async () => await getTextIpfs(cid),
-  });
-  const { isSuccess, data: userInfo } = useQuery<UserInfo>({
-    queryKey: ["User", creator],
-    queryFn: async () => await getUserInfo(creator),
+  const tagIconList: JSX.Element[] = tagsAssigned.map((tag) => {
+    return <TopicTag isCategory={false} tagTitle={tag.name} key={tag.id} />;
   });
 
-  const tagIconList = tags.map((tag) => {
-    return <TopicTab tabtitle={tag} key={tag} />;
-  });
+  const prop: ForumTopic = {
+    id,
+    hash,
+    title,
+    creator,
+    avatar,
+    content,
+    categoryAssigned,
+    tagsAssigned,
+    upvotes,
+    downvotes,
+    assets,
+    closed,
+    createdAt,
+    updatedAt,
+  };
 
-  if (!isSuccess)
-    return (
-      <Text style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        Is Loading...
-      </Text>
-    );
   return (
     <View style={TopicCardStyle.whole}>
       <View style={TopicCardStyle.topCard}>
-        <Text style={TopicCardStyle.timestyle}>{timeTransfer(createTime)}</Text>
+        <TopicTag isCategory={true} tagTitle={categoryAssigned.name}></TopicTag>
+        <Text style={TopicCardStyle.timestyle}>{timeTransfer(createdAt)}</Text>
       </View>
       <TouchableOpacity
         testID="TopicCardButton"
-        onPress={() => navigation.push("Topic", { id: id })}
+        onPress={() =>
+          navigation.push("Topic", {
+            pageSize: 10,
+            topTopic: prop,
+          })
+        }
       >
         <CardContent
           title={title}
-          username={userInfo.username}
-          userAvatar={userInfo.avatar}
+          username={creator.username}
+          userAvatar={creator.avatar}
         >
-          <Text>{contentText}</Text>
+          <Text>{content}</Text>
         </CardContent>
       </TouchableOpacity>
       <View style={TopicCardStyle.bottomCard}>
         <View style={{ flexDirection: "row", flex: 1, flexWrap: "wrap" }}>
-          {[...tagIconList]}
+          {tagIconList}
         </View>
         <View
           style={{
@@ -119,6 +132,8 @@ const TopicCardStyle = StyleSheet.create({
     color: "#FF7256",
   },
   topCard: {
+    flexDirection: "row",
+    justifyContent: "space-between",
     borderBottomWidth: 1,
     borderColor: "rgb(230,230,230)",
     marginHorizontal: "5%",

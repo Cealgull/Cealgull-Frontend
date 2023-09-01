@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from "@testing-library/react-native";
 import TopicCard from "../TopicCard";
-import exampleTopicProps from "@root/__test__/response/forum_topic.json";
+import * as componentTestData from "../../../../__test__/response/componentTestData.json";
 
 const mockPush = jest.fn();
 jest.mock("@react-navigation/native", () => {
@@ -27,14 +27,13 @@ describe("TopicCard Test", () => {
     mockPush.mockClear();
   });
   test("TopicCard render test", () => {
-    // FIXME type error
-    render(<TopicCard {...exampleTopicProps}></TopicCard>);
-    screen.getByText("Genshin Impact, run!");
-    screen.getByText("TopicMockText");
+    render(<TopicCard {...componentTestData["TopicCard.test"]}></TopicCard>);
+    screen.getByText("This is the content of the topic.");
+    screen.getByText("Technology");
   });
 
   test("TopicCard navigate test", () => {
-    render(<TopicCard {...exampleTopicProps}></TopicCard>);
+    render(<TopicCard {...componentTestData["TopicCard.test"]}></TopicCard>);
     fireEvent.press(screen.getByTestId("TopicCardButton"));
     expect(mockPush).toBeCalledTimes(1);
   });

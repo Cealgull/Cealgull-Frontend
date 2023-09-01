@@ -58,6 +58,11 @@ export function startForumServer() {
       this.post(APIConfig["upload.avatar"], () => {
         return forumTestData["upload.avatar"];
       });
+      this.post(APIConfig["forum.topic.create"], () => ({}));
+      this.post(APIConfig["forum.post.create"], () => ({}));
+      this.get(APIConfig["forum.user.statistics"], () => {
+        return forumTestData["forum.user.statistics"];
+      });
     },
   });
 }

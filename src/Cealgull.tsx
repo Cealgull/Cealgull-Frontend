@@ -85,11 +85,7 @@ const RootStackScreen: React.FC = () => {
         }}
         component={PublishScreen}
       />
-      <RootStack.Screen
-        name="Topic"
-        initialParams={{ id: "" }}
-        component={TopicScreen}
-      />
+      <RootStack.Screen name="Topic" component={TopicScreen} />
       <RootStack.Screen name="Setting" component={SettingScreen} />
       <RootStack.Screen name="Account" component={AccountScreen} />
       <RootStack.Screen name="Welcome" component={WelcomeScreen} />

@@ -3,6 +3,7 @@ import { NavBar } from "..";
 
 const mockedNavigate = jest.fn();
 const mockpush = jest.fn();
+const mockUseRoute = jest.fn();
 jest.mock("@react-navigation/native", () => {
   const actualNav = jest.requireActual("@react-navigation/native");
   return {
@@ -10,6 +11,9 @@ jest.mock("@react-navigation/native", () => {
     useNavigation: () => ({
       navigate: mockedNavigate,
       push: mockpush,
+    }),
+    useRoute: () => ({
+      name: "Person",
     }),
   };
 });
@@ -19,6 +23,7 @@ describe("NavBar Test", () => {
     // Alternatively, set "clearMocks" in your Jest config to "true"
     mockpush.mockClear();
     mockedNavigate.mockClear();
+    mockUseRoute.mockClear();
   });
 
   test("NavBar render test", () => {

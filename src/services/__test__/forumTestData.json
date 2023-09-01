@@ -72,6 +72,49 @@
       "closed": false,
       "createdAt": "2023-01-15T12:30:45Z",
       "updatedAt": "2023-08-20T08:15:30Z"
+    },
+    {
+      "id": 456,
+      "hash": "abcdef123456",
+      "title": "Sample Topic",
+      "creator": {
+        "username": "john_doe",
+        "wallet": "0x1234567890abcdef",
+        "avatar": "https://example.com/avatar.jpg",
+        "badge": "badge-cid-value",
+        "role": "User"
+      },
+      "avatar": "https://example.com/topic_avatar.jpg",
+      "content": "This is the content of the topic.",
+      "categoryAssigned": {
+        "id": 456,
+        "name": "Technology",
+        "color": 16777215
+      },
+      "tagsAssigned": [
+        {
+          "id": 789,
+          "name": "programming"
+        },
+        {
+          "id": 890,
+          "name": "software"
+        }
+      ],
+      "upvotes": ["0x1234567890abcdef", "0xfedcba0987654321"],
+      "downvotes": ["0x567890abcdef1234"],
+      "assets": [
+        {
+          "creator": "john_doe",
+          "contentType": "image/jpeg",
+          "createdAt": "2023-02-20T11:10:00Z",
+          "updatedAt": "2023-08-19T08:30:00Z",
+          "cid": "asset-cid-image"
+        }
+      ],
+      "closed": false,
+      "createdAt": "2023-01-15T12:30:45Z",
+      "updatedAt": "2023-08-20T08:15:30Z"
     }
   ],
 
@@ -109,6 +152,33 @@
           }
         ]
       },
+      "assets": [
+        {
+          "creator": "john_doe",
+          "contentType": "image/jpeg",
+          "createdAt": "2023-02-20T11:10:00Z",
+          "updatedAt": "2023-08-19T08:30:00Z",
+          "cid": "asset-cid-image"
+        }
+      ],
+      "upvotes": ["0x1234567890abcdef", "0xfedcba0987654321"],
+      "downvotes": ["0x567890abcdef1234"],
+      "belongTo": "Technology"
+    },
+    {
+      "id": 456,
+      "hash": "abcdef123456",
+      "creator": {
+        "username": "john_doe",
+        "wallet": "0x1234567890abcdef",
+        "avatar": "https://example.com/avatar.jpg",
+        "badge": "badge-cid-value",
+        "role": "User"
+      },
+      "content": "This is the content of the post.",
+      "createAt": "2023-01-15T12:30:45Z",
+      "updateAt": "2023-08-20T08:15:30Z",
+      "replyTo": null,
       "assets": [
         {
           "creator": "john_doe",

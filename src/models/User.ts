@@ -16,6 +16,38 @@ import { storageName } from "./config";
 import { modifyUserInfo } from "@src/services/forum";
 
 /**
+ * @description The struct to get the statistics data of a user
+ * @author HaoCheng Wang
+ */
+export interface UserStatistics {
+  upvotesGranted: number;
+  upvotesRecieved: number;
+  postsCreated: number;
+  topicsCreated: number;
+  uptime: Date;
+  lastSeen: Date;
+  registerDate: Date;
+  postsViewed: number;
+}
+
+/**
+ * @author HaoCheng Wang
+ * @description Convert a json object to the UserStatistic
+ * @param json The json object
+ * @returns UserStatistics
+ */
+export function jsonToUserStatistics(
+  json: Record<string, unknown>
+): UserStatistics {
+  const res = {} as UserStatistics;
+  Object.assign(res, json);
+  res.uptime = new Date(json.uptime as string);
+  res.lastSeen = new Date(json.lastSeen as string);
+  res.registerDate = new Date(json.registerDate as string);
+  return res;
+}
+
+/**
  * The canonical response POJO of the user information.
  * @alias LoginResponse
  * @alias UserProfileResponse

@@ -12,8 +12,10 @@ import {
   getAllTopics,
   getTextIpfs,
   getUserInfo,
+  getUserStatistics,
 } from "../forum";
 import * as forumTestData from "./forumTestData.json";
+import { jsonToUserInfoPOJO, jsonToUserStatistics } from "@src/models/User";
 
 describe("Test forum service", () => {
   let server: Server;
@@ -39,10 +41,14 @@ describe("Test forum service", () => {
 
   test("user.profile Test", async () => {
     await expect(getUserInfo("Test")).resolves.toEqual(
-      forumTestData["user.profile"]
+      jsonToUserInfoPOJO(forumTestData["user.profile"])
     );
   });
-
+  test("forum.user.statistics", async () => {
+    await expect(getUserStatistics("Test")).resolves.toEqual(
+      jsonToUserStatistics(forumTestData["forum.user.statistics"])
+    );
+  });
   test("getIpfsText Test", async () => {
     await expect(getTextIpfs("Test")).resolves.toEqual(
       forumTestData["getIpfsText"]
@@ -76,6 +82,9 @@ describe("Test forum service", () => {
     server.post(APIConfig["forum.post.create"], () => {
       return new Response(500);
     });
+    server.get(APIConfig["forum.user.statistics"], () => {
+      return new Response(500);
+    });
     await expect(getAllTopics(10, 1, "", "", "", "")).rejects.toEqual(
       "getAllTopics error!"
     );
@@ -90,5 +99,8 @@ describe("Test forum service", () => {
       "getAllPosts error!"
     );
     await expect(getUserInfo("Text")).rejects.toEqual("getUserInfo error!");
+    await expect(getUserStatistics("Text")).rejects.toEqual(
+      "getUserStatistics error!"
+    );
   });
 });

@@ -9,22 +9,24 @@ const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
 interface PostCardProps {
-  children?: React.ReactNode;
-  title?: string;
-  username: string;
-  userAvatar: string;
-  time: string;
-  reply?: number;
   level: number;
+  postInfo: ForumPost;
 }
 
 export default function PostCard({
-  children,
-  title,
-  username,
-  userAvatar,
-  time,
-  reply,
+  postInfo: {
+    id,
+    hash,
+    creator,
+    content,
+    createAt,
+    updateAt,
+    replyTo,
+    assets,
+    upvotes,
+    downvotes,
+    belongTo,
+  },
   level,
 }: PostCardProps) {
   const handleLike = () => {
@@ -39,15 +41,12 @@ export default function PostCard({
   return (
     <View style={PostCardStyle.whole}>
       <View style={PostCardStyle.topCard}>
-        <Text style={PostCardStyle.timestyle}>{time}</Text>
+        <Text style={PostCardStyle.timestyle}>{createAt}</Text>
         {/* FIXME don't use space to control the layout */}
-        <Text style={PostCardStyle.replystyle}>
-          {`#${level}`}
-          {reply && `    回复#${reply}`}
-        </Text>
+        <Text style={PostCardStyle.replystyle}>{`#${level}`}</Text>
       </View>
-      <CardContent title={title} username={username} userAvatar={userAvatar}>
-        {children}
+      <CardContent username={creator.username} userAvatar={creator.avatar}>
+        <Text>{content}</Text>
       </CardContent>
       <View style={PostCardStyle.bottomCard}>
         <TouchableOpacity onPress={handleLike}>

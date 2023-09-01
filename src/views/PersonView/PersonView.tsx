@@ -1,86 +1,131 @@
+import { useNavigation } from "@react-navigation/native";
+import { Icon, ListItem } from "@rneui/themed";
+import { StackScreenPropsGeneric } from "@src/@types/navigation";
 import HeaderBarWrapper from "@src/components/HeaderBarWrapper";
 import { NavBar } from "@src/components/NavBar";
+import { PersonCard } from "@src/components/PersonCard";
+import { UserInfoPOJO, UserStatistics } from "@src/models/User";
+import { startForumServer } from "@src/services/__test__/mirage";
+import { getUserInfo, getUserStatistics } from "@src/services/forum";
+import { useQuery } from "@tanstack/react-query";
+import { Server } from "miragejs";
 import {
+  Pressable,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
-  Dimensions,
 } from "react-native";
-import { Icon, ListItem } from "@rneui/themed";
 import { ScrollView } from "react-native-gesture-handler";
-import { Avatar } from "@rneui/base";
-import { useNavigation } from "@react-navigation/native";
-import { StackScreenPropsGeneric } from "@src/@types/navigation";
-import { numericCarry } from "@src/utils/numericCarry";
 
-const windowWidth = Dimensions.get("window").width;
-const windowHeight = Dimensions.get("window").height;
+export interface PersonViewProps {
+  wallet: string;
+}
 
-const user = {
-  avatar: "https://randomuser.me/api/portraits/men/36.jpg",
-  name: "User",
-  sign: "Hello World!",
-  numberOfLikes: 23412341,
-  numberOfTopics: 437,
-  balance: 5132,
-};
-
-export default function PersonView() {
+const PersonView: React.FC<PersonViewProps> = ({
+  wallet = "",
+}: PersonViewProps) => {
   const navigation =
     useNavigation<StackScreenPropsGeneric<"Main">["navigation"]>();
 
+  interface UserResponseObject {
+    userInfo: UserInfoPOJO;
+    userStatistics: UserStatistics;
+  }
+  const userRequest = async (wallet: string) => {
+    return {
+      userInfo: await getUserInfo(wallet),
+      userStatistics: await getUserStatistics(wallet),
+    };
+  };
+
+  const mirageRequest = async () => {
+    //this will be used when backend is close.
+    const server: Server = startForumServer();
+    const response = await userRequest(wallet);
+    server.shutdown();
+    return response;
+  };
+  const normalRequest = async () => {
+    //this will be used in official Version.
+    return await userRequest(wallet);
+  };
+
+  const {
+    isSuccess,
+    isLoading,
+    isError,
+    data: userReturnData,
+    refetch: refetchUser,
+  } = useQuery<UserResponseObject>({
+    queryKey: ["userInfo", "userStatistics", wallet],
+    // queryFn:normalRequest
+    queryFn: mirageRequest,
+  });
+
+  const PersonErrorView = () => {
+    return (
+      <View style={PersonViewStyle.whole}>
+        <View style={PersonViewStyle.header}>
+          <HeaderBarWrapper alignMethod="c">
+            <Text style={PersonViewStyle.pageTitle}>个人</Text>
+          </HeaderBarWrapper>
+        </View>
+        <View style={PersonViewStyle.errorContent}>
+          <Pressable
+            onPress={() => {
+              refetchUser();
+            }}
+            style={{ alignItems: "center" }}
+          >
+            <Icon
+              name="closecircle"
+              type="antdesign"
+              color={"red"}
+              size={50}
+            ></Icon>
+            <Text style={PersonViewStyle.errorText}>
+              Fail to fetch the Content!
+            </Text>
+            <Text style={PersonViewStyle.errorText}>
+              Press to refresh this page!
+            </Text>
+          </Pressable>
+        </View>
+
+        <NavBar />
+      </View>
+    );
+  };
+  let personCard;
+
+  if (isError) {
+    return <PersonErrorView />;
+  }
+  if (isLoading) {
+    personCard = (
+      <PersonCard
+        userInfo={{} as UserInfoPOJO}
+        userStatistics={{} as UserStatistics}
+        isLoading={true}
+      />
+    );
+  }
+  if (isSuccess) {
+    personCard = <PersonCard {...userReturnData} isLoading={false} />;
+  }
+
   return (
-    <View style={HomeViewStyle.whole}>
-      <View style={HomeViewStyle.header}>
+    <View style={PersonViewStyle.whole}>
+      <View style={PersonViewStyle.header}>
         <HeaderBarWrapper alignMethod="c">
-          <Text>个人板块</Text>
+          <Text style={PersonViewStyle.pageTitle}>{`个人`}</Text>
         </HeaderBarWrapper>
       </View>
 
-      <View style={HomeViewStyle.content}>
+      <View style={PersonViewStyle.content}>
         <ScrollView>
-          <View style={HomeViewStyle.infowrapper}>
-            <Avatar
-              size={windowWidth * 0.2}
-              rounded
-              source={{ uri: user.avatar }}
-            />
-            <View style={HomeViewStyle.info}>
-              <Text style={HomeViewStyle.name}>{user.name}</Text>
-              <Text style={HomeViewStyle.sign}>{user.sign}</Text>
-            </View>
-          </View>
-          <View style={HomeViewStyle.staticsshell}>
-            <View style={HomeViewStyle.staticsblock}>
-              <View>
-                <Icon type="antdesign" name="filetext1" />
-                <Text>发帖数</Text>
-              </View>
-              <Text style={HomeViewStyle.staticsnum}>
-                {numericCarry(user.numberOfTopics)}
-              </Text>
-            </View>
-            <View style={HomeViewStyle.staticsblock}>
-              <View>
-                <Icon type="antdesign" name="like2" />
-                <Text>获赞数</Text>
-              </View>
-              <Text style={HomeViewStyle.staticsnum}>
-                {numericCarry(user.numberOfLikes)}
-              </Text>
-            </View>
-            <View style={HomeViewStyle.staticsblock}>
-              <View>
-                <Icon type="antdesign" name="pay-circle-o1" />
-                <Text>余额</Text>
-              </View>
-              <Text style={HomeViewStyle.staticsnum}>
-                {numericCarry(user.balance)}
-              </Text>
-            </View>
-          </View>
-
+          {personCard}
           <View style={{ height: 10 }} />
           <TouchableOpacity onPress={() => console.log("HI")}>
             <ListItem>
@@ -139,45 +184,36 @@ export default function PersonView() {
       <NavBar />
     </View>
   );
-}
+};
 
 const ChevronStyle = {
   color: "black",
   size: 20,
 };
 
-const HomeViewStyle = StyleSheet.create({
-  content: {
-    flex: 1,
-  },
-  infowrapper: {
-    flexDirection: "row",
-    paddingVertical: windowHeight * 0.01,
-    marginHorizontal: windowHeight * 0.02,
-    borderBottomWidth: 1,
-    borderColor: "#CDC9C9",
-  },
+const PersonViewStyle = StyleSheet.create({
   header: { backgroundColor: "rgb(230,230,230)" },
-  info: { justifyContent: "center", paddingLeft: windowHeight * 0.02 },
-  name: { fontSize: 26, fontWeight: "bold" },
-  staticsshell: {
-    backgroundColor: "white",
-    paddingTop: 6,
-    paddingBottom: 6,
-    flexDirection: "row",
-    justifyContent: "space-around",
-  },
-  staticsblock: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  staticsnum: {
-    paddingLeft: 4,
+  pageTitle: {
     fontSize: 16,
     fontWeight: "bold",
   },
-  sign: { fontSize: 18, color: "#BEBEBE" },
+  content: {
+    flex: 1,
+  },
   whole: {
     flex: 1,
   },
+  errorText: {
+    justifyContent: "center",
+    paddingTop: 18,
+    fontSize: 18,
+  },
+  errorContent: {
+    backgroundColor: "rgb(240,240,240)",
+    flex: 8,
+    justifyContent: "center",
+    alignItems: "center",
+  },
 });
+
+export default PersonView;

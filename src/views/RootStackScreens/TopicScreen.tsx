@@ -6,5 +6,5 @@ export type TopicScreenProps = TopicViewProps;
 export default function TopicScreen({
   route: { params },
 }: StackScreenPropsGeneric<"Topic">) {
-  return <TopicView id={params.id} />;
+  return <TopicView {...params} />;
 }

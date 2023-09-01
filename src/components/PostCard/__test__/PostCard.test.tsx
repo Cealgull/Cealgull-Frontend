@@ -1,23 +1,15 @@
 import { render, screen } from "@testing-library/react-native";
 import { Text } from "react-native";
 import PostCard from "../PostCard";
-
-const Props = {
-  children: <Text>Good afternoon!</Text>,
-  title: "HELLO",
-  username: "User1",
-  userAvatar: "",
-  time: "2003/02/19 18:35:00",
-  level: 1,
-};
+import * as componentTestData from "../../../../__test__/response/componentTestData.json";
 
 describe("PostCard Test", () => {
   test("PostCard render test", () => {
-    render(<PostCard {...Props} />);
-    screen.getByText("Good afternoon!");
-    screen.getByText("HELLO");
-    screen.getByText("User1");
-    screen.getByText("2003/02/19 18:35:00");
+    render(
+      <PostCard postInfo={componentTestData["PostCard.test"]} level={1} />
+    );
+    screen.getByText("This is the content of the post.");
+    screen.getByText("john_doe");
     screen.getByText("#1");
   });
 

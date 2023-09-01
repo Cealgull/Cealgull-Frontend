@@ -3,7 +3,12 @@
  *
  */
 
-import { type UserInfoPOJO } from "@src/models/User";
+import {
+  UserStatistics,
+  type UserInfoPOJO,
+  jsonToUserInfoPOJO,
+  jsonToUserStatistics,
+} from "@src/models/User";
 import { request, requestWithCookie } from "./ajax";
 import APIConfig from "./api.config";
 
@@ -72,7 +77,7 @@ export async function getAllPostsByBelong(
   creator: string,
   pageSize: number,
   pagenum: number
-): Promise<ForumTopic[]> {
+): Promise<ForumPost[]> {
   interface getAllPostsByBelongProps {
     belongTo: string;
     creator: string;
@@ -93,7 +98,7 @@ export async function getAllPostsByBelong(
   if (!response.ok) {
     throw "getAllPosts error!";
   }
-  const data = (await response.json()) as ForumTopic[];
+  const data = (await response.json()) as ForumPost[];
   return data;
 }
 
@@ -113,7 +118,6 @@ export async function getAllTopics(
     creator: string;
     sortedBy: string;
   }
-
   const requestBody: getAllTopicsProps = {
     pageSize: pageSize,
     pageNum: pageNum,
@@ -127,6 +131,7 @@ export async function getAllTopics(
     url: APIConfig["forum.topic.list"],
     body: requestBody,
   });
+
   if (!request.ok) {
     throw "getAllTopics error!";
   }
@@ -146,7 +151,22 @@ export async function getUserInfo(
   if (!response.ok) {
     throw "getUserInfo error!";
   }
-  const data = (await response.json()) as UserProfileResponse;
+  const data = jsonToUserInfoPOJO(await response.json());
+  return data;
+}
+
+type UserStatisticResponse = UserStatistics;
+export async function getUserStatistics(
+  wallet: string
+): Promise<UserStatisticResponse> {
+  const response = await request({
+    method: "GET",
+    url: `${APIConfig["forum.user.statistics"]}?wallet=${wallet}`,
+  });
+  if (!response.ok) {
+    throw "getUserStatistics error!";
+  }
+  const data = jsonToUserStatistics(await response.json());
   return data;
 }
 

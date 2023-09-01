@@ -25,11 +25,19 @@ interface Asset {
   cid: string;
 }
 
+interface SimpleUser {
+  username: string;
+  wallet: string;
+  avatar: string;
+  badge: string;
+  role: string;
+}
+
 interface ForumTopic {
   id: number;
   hash: string;
   title: string;
-  creator: User;
+  creator: SimpleUser;
   avatar: string;
   content: string;
   categoryAssigned: Category;
@@ -52,13 +60,13 @@ interface ForumTopic {
 interface ForumPost {
   id: number;
   hash: string;
-  creator: User;
+  creator: SimpleUser;
   content: string;
-  createdAt: string;
+  createAt: string;
   updateAt: string;
-  replyTo: ForumPost;
+  replyTo: ForumPost | null;
   assets: Asset[];
   upvotes: string[];
   downvotes: string[];
-  belongto: string;
+  belongTo: string;
 }
