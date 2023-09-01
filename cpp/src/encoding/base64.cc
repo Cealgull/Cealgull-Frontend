@@ -1,4 +1,26 @@
-/* Copyright (c) 2023 Cealgull Project.
+/*
+ * Copyright (c) 2003 Apple Computer, Inc. All rights reserved.
+ *
+ * @APPLE_LICENSE_HEADER_START@
+ *
+ * Copyright (c) 1999-2003 Apple Computer, Inc.  All Rights Reserved.
+ *
+ * This file contains Original Code and/or Modifications of Original Code
+ * as defined in and that are subject to the Apple Public Source License
+ * Version 2.0 (the 'License'). You may not use this file except in
+ * compliance with the License. Please obtain a copy of the License at
+ * http://www.opensource.apple.com/apsl/ and read it before using this
+ * file.
+ *
+ * The Original Code and all software distributed under the License are
+ * distributed on an 'AS IS' basis, WITHOUT WARRANTY OF ANY KIND, EITHER
+ * EXPRESS OR IMPLIED, AND APPLE HEREBY DISCLAIMS ALL SUCH WARRANTIES,
+ * INCLUDING WITHOUT LIMITATION, ANY WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE, QUIET ENJOYMENT OR NON-INFRINGEMENT.
+ * Please see the License for the specific language governing rights and
+ * limitations under the License.
+ *
+ * @APPLE_LICENSE_HEADER_END@
  */
 /* ====================================================================
  * Copyright (c) 1995-1999 The Apache Group.  All rights reserved.
@@ -62,11 +84,17 @@
 
 #include "encoding/base64.h"
 
-namespace cealgull {
-namespace encoding {
-namespace b64 {
+#include <string.h>
+
+/* aaaack but it's fast and const should make it shared text page. */
+
+#ifdef __cplusplus
+namespace cealgull::encoding::b64 {
+namespace internal {
+#endif
 
 static const unsigned char pr2six[256] = {
+    /* ASCII table */
     64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
     64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
     64, 64, 64, 64, 64, 62, 64, 64, 64, 63, 52, 53, 54, 55, 56, 57, 58, 59, 60,
@@ -82,26 +110,35 @@ static const unsigned char pr2six[256] = {
     64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64,
     64, 64, 64, 64, 64, 64, 64, 64, 64};
 
+int Base64decode_len(const char *bufcoded) {
+  int nbytesdecoded;
+  const unsigned char *bufin;
+  int nprbytes;
 
-/* This is the same as ap_base64udecode() except on EBCDIC machines, where
- * the conversion of the output to ebcdic is left out.
- */
-std::vector<uint8_t> base64decode(const std::string &encoded) {
-  auto base64decode_len = [](const std::string &bufcoded) {
-    const uint8_t *bufin = reinterpret_cast<const uint8_t *>(bufcoded.data());
-    while (pr2six[*(bufin++)] <= 63)
-      ;
-    int nprbytes =
-        (bufin - reinterpret_cast<const uint8_t *>(bufcoded.data())) - 1;
-    int ncap = ((nprbytes + 3) / 4) * 3;
+  bufin = (const unsigned char *)bufcoded;
+  while (pr2six[*(bufin++)] <= 63)
+    ;
 
-    return std::make_pair(nprbytes, ncap + 1);
-  };
+  nprbytes = (bufin - (const unsigned char *)bufcoded) - 1;
+  nbytesdecoded = ((nprbytes + 3) / 4) * 3;
 
-  auto [nprbytes, ncap] = base64decode_len(encoded);
-  const uint8_t *bufin = reinterpret_cast<const uint8_t *>(encoded.data());
-  std::vector<uint8_t> decoded(ncap, 0);
-  uint8_t *bufout = decoded.data();
+  return nbytesdecoded + 1;
+}
+
+int Base64decode(char *bufplain, const char *bufcoded) {
+  int nbytesdecoded;
+  const unsigned char *bufin;
+  unsigned char *bufout;
+  int nprbytes;
+
+  bufin = (const unsigned char *)bufcoded;
+  while (pr2six[*(bufin++)] <= 63)
+    ;
+  nprbytes = (bufin - (const unsigned char *)bufcoded) - 1;
+  nbytesdecoded = ((nprbytes + 3) / 4) * 3;
+
+  bufout = (unsigned char *)bufplain;
+  bufin = (const unsigned char *)bufcoded;
 
   while (nprbytes > 4) {
     *(bufout++) = (unsigned char)(pr2six[*bufin] << 2 | pr2six[bufin[1]] >> 4);
@@ -124,25 +161,20 @@ std::vector<uint8_t> base64decode(const std::string &encoded) {
     *(bufout++) = (unsigned char)(pr2six[bufin[2]] << 6 | pr2six[bufin[3]]);
   }
 
-  auto nbytesdecoded = ncap - ((4 - nprbytes) & 3);
-  decoded.resize(nbytesdecoded);
-  return decoded;
+  nbytesdecoded -= (4 - nprbytes) & 3;
+  return nbytesdecoded;
 }
 
 static const char basis_64[] =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
+int Base64encode_len(int len) { return ((len + 2) / 3 * 4) + 1; }
 
-std::string base64encode(const std::vector<uint8_t> &plain) {
-  
-  auto base64encode_len = [](int len) { return ((len + 2) / 3 * 4) + 1; };
-
-  std::string encoded(base64encode_len(plain.size()),0);
-  char *p = encoded.data();
-  const char *string = reinterpret_cast<const char *>(plain.data());
-  int len = plain.size();
+int Base64encode(char *encoded, const char *string, int len) {
   int i;
+  char *p;
 
+  p = encoded;
   for (i = 0; i < len - 2; i += 3) {
     *p++ = basis_64[(string[i] >> 2) & 0x3F];
     *p++ =
@@ -165,9 +197,26 @@ std::string base64encode(const std::vector<uint8_t> &plain) {
   }
 
   *p++ = '\0';
-  encoded.resize(p - encoded.data());
-  return encoded;
+  return p - encoded;
 }
-}  // namespace b64
-}  // namespace encoding
-}  // namespace cealgull
+
+#ifdef __cplusplus
+}
+}
+#endif
+
+#ifdef __cplusplus
+namespace cealgull::encoding::b64 {
+std::string Base64encode(const std::string &msg) {
+  std::string out(internal::Base64encode_len(msg.length()), 0);
+  internal::Base64encode(out.data(), msg.data(), msg.length());
+  return out;
+}
+
+std::string Base64decode(const std::string &msg) {
+  std::string out(internal::Base64decode_len(msg.data()), 0);
+  internal::Base64decode(out.data(), msg.data());
+  return out;
+}
+};  // namespace cealgull::encoding::b64
+#endif

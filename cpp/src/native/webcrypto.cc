@@ -1,5 +1,4 @@
 #include "native/webcrypto.h"
-
 #include "encoding/base64.h"
 
 namespace facebook::react {
@@ -13,12 +12,8 @@ std::string NativeCrypto::reverseString(jsi::Runtime& rt, std::string input) {
 
 std::string NativeCrypto::ringSign(
     jsi::Runtime& rt, std::string msg,
-    cealgull::crypto::ringsig::RingSignSpec spec) {
-  auto sig = cealgull::crypto::ringsig::sign(msg, spec);
-  if (sig.has_value())
-    return cealgull::encoding::b64::base64encode(sig.value());
-  else
-    return "";
+    cealgull::crypto::ringsig::RingsigSpec spec) {
+  return cealgull::crypto::ringsig::sign(spec, msg).value_or("");
 }
 
 }  // namespace facebook::react

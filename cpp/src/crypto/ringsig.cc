@@ -1,206 +1,242 @@
 #include "crypto/ringsig.h"
 
-#include <openssl/bn.h>
-#include <openssl/ec.h>
-#include <openssl/evp.h>
-
-#include <exception>
-#include <optional>
-#include <string>
-
 #include "encoding/base64.h"
 
-namespace cealgull {
-namespace crypto {
-namespace ringsig {
-constexpr int POINT_SIZE = 65;
-constexpr int PRIV_SIZE = 32;
+#define BN_SIZE 32
+#define POINT_SIZE 65
+#define MAX_BNBUF 128
+#define MAX_POINTSBUF 4160
 
-using BN_unique_ptr = std::unique_ptr<BIGNUM, std::function<decltype(BN_free)>>;
-using BN_CTX_unique_ptr =
-    std::unique_ptr<BN_CTX, std::function<decltype(BN_CTX_free)>>;
-using EC_POINT_unique_ptr =
-    std::unique_ptr<EC_POINT, std::function<decltype(EC_POINT_free)>>;
-using EC_GROUP_unique_ptr =
-    std::unique_ptr<EC_GROUP, std::function<decltype(EC_GROUP_free)>>;
-using BN_CTX_unique_ptr =
-    std::unique_ptr<BN_CTX, std::function<decltype(BN_CTX_free)>>;
-using EVP_MD_CTX_unique_ptr =
-    std::unique_ptr<EVP_MD_CTX, std::function<decltype(EVP_MD_CTX_free)>>;
+namespace cealgull::crypto::ringsig::internal{
 
-static inline BN_unique_ptr ring_BN_rand() {
-  BN_unique_ptr bn(BN_new(), BN_free);
-  if (BN_rand(bn.get(), PRIV_SIZE * 8, BN_RAND_TOP_TWO, BN_RAND_BOTTOM_ANY) ==
-      0) {
-    throw std::bad_alloc();
+using namespace encoding::b64::internal;
+
+static int ringsig_prehash(EVP_MD_CTX *mctx, const char *msg, int msg_len);
+static void ringsig_hash_free(EVP_MD_CTX *mctx);
+static int ringsig_hash2BN(const EVP_MD_CTX *mctx, const char *msg, int msg_len,
+                           BIGNUM *bn);
+static int ringsig_hashPOINT2BN(const EVP_MD_CTX *mctx, const EC_GROUP *g,
+                                const EC_POINT *point, BIGNUM *bn);
+static int ringsig_keypair_extern2spec(const ringsig_keypair_extern_t *ext,
+                                       ringsig_keypair_spec_t *spec);
+static int ringsig_keypair_spec2extern(const ringsig_keypair_spec_t *spec,
+                                       ringsig_keypair_extern_t *ext);
+static int ringsig_b642BN(const char *b64, BIGNUM *bn);
+static int ringsig_b642POINTS(const char *b64, int nr_mem, const EC_GROUP *g,
+                              EC_POINT **pubs);
+static int ringsig_BN2b64(const BIGNUM *bn, char *b64);
+static int ringsig_POINTS2b64(const EC_GROUP *g, const EC_POINT **ps,
+                              int nr_mem, char *b64);
+static void ringsig_keypair_spec_free(ringsig_keypair_spec_t *spec);
+
+static int ringsig_prehash(EVP_MD_CTX *mctx, const char *msg, int msg_len) {
+  EVP_DigestInit(mctx, EVP_sm3());
+  EVP_DigestUpdate(mctx, msg, msg_len);
+  return 1;
+}
+
+static void ringsig_hash_free(EVP_MD_CTX *mctx) { EVP_MD_CTX_free(mctx); }
+
+static int ringsig_hash2BN(const EVP_MD_CTX *mctx, const char *msg, int msg_len,
+                           BIGNUM *bn) {
+  char buf[BN_SIZE] = {0};
+
+  EVP_MD_CTX *mctx_bn = EVP_MD_CTX_new();
+  EVP_MD_CTX_copy(mctx_bn, mctx);
+  EVP_DigestUpdate(mctx_bn, msg, msg_len);
+
+  uint32_t sz = BN_SIZE;
+  EVP_DigestFinal(mctx_bn, (uint8_t *)buf, &sz);
+  EVP_MD_CTX_free(mctx_bn);
+  BN_bin2bn((const unsigned char *)buf, BN_SIZE, bn);
+
+  return 1;
+}
+
+static int ringsig_hashPOINT2BN(const EVP_MD_CTX *mctx, const EC_GROUP *g,
+                                const EC_POINT *point, BIGNUM *bn) {
+  char buf[MAX_BNBUF] = {0};
+  uint32_t sz = POINT_SIZE;
+  EC_POINT_point2oct(g, point, POINT_CONVERSION_UNCOMPRESSED, (uint8_t *)buf,
+                     sz, NULL);
+  ringsig_hash2BN(mctx, buf, sz, bn);
+  return 1;
+}
+
+int ringsig_sign_len(int nr_mem) {
+  return nr_mem * (BN_SIZE + POINT_SIZE) + BN_SIZE;
+}
+
+int ringsig_signb64_len(int nr_mem) {
+  return Base64encode_len(ringsig_sign_len(nr_mem));
+}
+
+static int ringsig_b642BN(const char *b64, BIGNUM *bn) {
+  char buf[MAX_BNBUF] = {0};
+  int sz = BN_SIZE;
+  Base64decode(buf, b64);
+  BN_bin2bn((const unsigned char *)buf, BN_SIZE, bn);
+  return 1;
+}
+
+static int ringsig_b642POINTS(const char *b64, int nr_mem, const EC_GROUP *g,
+                              EC_POINT **pubs) {
+  char *buf = (char *)calloc(sizeof(char), nr_mem * POINT_SIZE);
+  int sz = POINT_SIZE;
+  Base64decode(buf, b64);
+  for (int i = 0; i < nr_mem; i++) {
+    pubs[i] = EC_POINT_new(g);
+    EC_POINT_oct2point(g, pubs[i], (const uint8_t *)buf + i * sz, sz, NULL);
   }
+  free(buf);
+  return 1;
+}
+
+static int ringsig_BN2b64(const BIGNUM *bn, char *b64) {
+  char buf[MAX_BNBUF] = {0};
+  BN_bn2bin(bn, (unsigned char *)buf);
+  Base64encode(b64, buf, BN_SIZE);
+  return 1;
+}
+
+static int ringsig_POINTS2b64(const EC_GROUP *g, const EC_POINT **ps,
+                              int nr_mem, char *b64) {
+  char *buf = (char *)calloc(sizeof(char), nr_mem * POINT_SIZE);
+  int sz = POINT_SIZE;
+  for (int i = 0; i < nr_mem; i++) {
+    uint8_t *p = (uint8_t *)buf + i * sz;
+    EC_POINT_point2oct(g, ps[i], POINT_CONVERSION_UNCOMPRESSED, p, sz, NULL);
+  }
+  Base64encode(b64, buf, nr_mem * sz);
+  free(buf);
+  return 1;
+}
+
+static int ringsig_keypair_extern2spec(const ringsig_keypair_extern_t *ext,
+                                       ringsig_keypair_spec_t *spec) {
+  spec->nr_mem = ext->nr_mem;
+  spec->mine = ext->mine;
+  spec->priv = BN_new();
+  spec->pubs = (EC_POINT **)calloc(sizeof(EC_POINT *), ext->nr_mem);
+  spec->g = EC_GROUP_new_by_curve_name(NID_sm2);
+
+  ringsig_b642BN(ext->priv, spec->priv);
+  ringsig_b642POINTS(ext->pubs, ext->nr_mem, spec->g, spec->pubs);
+  return 1;
+}
+
+static int ringsig_keypair_spec2extern(const ringsig_keypair_spec_t *spec,
+                                       ringsig_keypair_extern_t *ext) {
+  ext->nr_mem = spec->nr_mem;
+  ext->mine = spec->mine;
+  char * priv = (char *)calloc(sizeof(char), Base64encode_len(BN_SIZE));
+  char *pubs =
+      (char *)calloc(sizeof(char), Base64encode_len(spec->nr_mem * POINT_SIZE));
+  ringsig_BN2b64(spec->priv, priv);
+  ringsig_POINTS2b64(spec->g, (const EC_POINT **)spec->pubs, ext->nr_mem,
+                     pubs);
+  ext->priv = priv;
+  ext->pubs = pubs;
+  return 1;
+}
+
+static void ringsig_keypair_spec_free(ringsig_keypair_spec_t *spec) {
+  BN_free(spec->priv);
+  for (int i = 0; i < spec->nr_mem; i++) EC_POINT_free(spec->pubs[i]);
+  EC_GROUP_free(spec->g);
+}
+
+static BIGNUM *ringsig_BN_rand() {
+  BIGNUM *bn = BN_new();
+  BN_rand(bn, BN_SIZE * 8, BN_RAND_TOP_TWO, BN_RAND_BOTTOM_ANY);
   return bn;
 }
 
-static std::vector<EC_POINT_unique_ptr> pubs2EC_POINT(const EC_GROUP *g,
-                                                      const std::string &pubs,
-                                                      int num) {
-  auto b = encoding::b64::base64decode(pubs);
-  if (b.size() != num * POINT_SIZE) throw std::bad_alloc();
+int ringsig_sign(const ringsig_keypair_extern_t *ext, const char *msg,
+                 int msg_len, char *sig) {
+  int n = ext->nr_mem;
+  int pi = ext->mine;
+  ringsig_keypair_spec_t spec;
+  ringsig_keypair_extern2spec(ext, &spec);
 
-  std::vector<EC_POINT_unique_ptr> points(num);
+  BIGNUM *k = ringsig_BN_rand();
+  BIGNUM *order = BN_new();
+  BIGNUM **r = (BIGNUM **)calloc(sizeof(BIGNUM *), ext->nr_mem);
+  BIGNUM **c = (BIGNUM **)calloc(sizeof(BIGNUM *), ext->nr_mem);
+  BN_CTX *bctx = BN_CTX_new();
+  EC_POINT *p = EC_POINT_new(spec.g);
+  EVP_MD_CTX *mctx = EVP_MD_CTX_new();
+  int ret = 0;
 
-  for (int i = 0; i < num; i++) {
-    points[i] = EC_POINT_unique_ptr(EC_POINT_new(g), EC_POINT_free);
+  ringsig_prehash(mctx, msg, msg_len);
 
-    if (points[i] == nullptr) throw new std::bad_alloc();
+  c[(pi + 1) % n] = BN_new();
 
-    if (EC_POINT_oct2point(g, points[i].get(), b.data() + i * POINT_SIZE,
-                           POINT_SIZE, nullptr) <= 0)
-      throw std::bad_alloc();
-  }
-  return points;
-}
+  EC_GROUP_get_order(spec.g, order, NULL);
+  EC_POINT_mul(spec.g, p, k, NULL, NULL, NULL);
+  ringsig_hashPOINT2BN(mctx, spec.g, p, c[(pi + 1) % n]);
 
-static BN_unique_ptr priv2BN(const std::string &priv) {
-  auto b = encoding::b64::base64decode(priv);
-  auto bn = BN_unique_ptr(BN_bin2bn(b.data(), b.size(), nullptr), BN_free);
-  if (bn == nullptr) throw std::bad_alloc();
-  return bn;
-}
-
-EVP_MD_CTX_unique_ptr initH1ctx(const std::string &msg) {
-  auto mctx = EVP_MD_CTX_unique_ptr(EVP_MD_CTX_new(), EVP_MD_CTX_free);
-
-  if (mctx == nullptr) throw std::bad_alloc();
-
-  if (EVP_DigestInit(mctx.get(), EVP_sm3()) <= 0) throw new std::bad_alloc();
-
-  if (EVP_DigestUpdate(mctx.get(), msg.data(), msg.size()) <= 0)
-    throw std::bad_alloc();
-
-  return mctx;
-}
-
-static BN_unique_ptr hash_msg2BN(const EVP_MD_CTX *mctx,
-                                 const std::vector<uint8_t> &msg) {
-  uint32_t dst_len;
-  uint8_t buf[32];
-
-  auto bn = BN_unique_ptr(BN_new(), BN_free);
-
-  if (bn == nullptr) throw std::bad_alloc();
-
-  auto new_mctx = EVP_MD_CTX_unique_ptr(EVP_MD_CTX_dup(mctx), EVP_MD_CTX_free);
-
-  if (new_mctx == nullptr) throw std::bad_alloc();
-
-  if (EVP_DigestUpdate(new_mctx.get(), msg.data(), msg.size()) <= 0)
-    throw std::bad_alloc();
-  if (EVP_DigestFinal(new_mctx.get(), buf, &dst_len) <= 0)
-    throw std::bad_alloc();
-
-  if (BN_bin2bn(buf, dst_len, bn.get()) == nullptr) throw std::bad_alloc();
-  return bn;
-}
-
-static BN_unique_ptr hash_EC_POINT2BN(const EVP_MD_CTX *mctx, const EC_GROUP *g,
-                                      const EC_POINT_unique_ptr &&p) {
-  auto sz = EC_POINT_point2oct(g, p.get(), POINT_CONVERSION_UNCOMPRESSED,
-                               nullptr, 0, nullptr);
-  if (sz == 0) throw std::bad_alloc();
-
-  std::vector<uint8_t> msg(sz, 0);
-
-  if (EC_POINT_point2oct(g, p.get(), POINT_CONVERSION_UNCOMPRESSED, msg.data(),
-                         sz, nullptr) <= 0)
-    throw std::bad_alloc();
-
-  return hash_msg2BN(mctx, msg);
-}
-
-static std::vector<uint8_t> serialize(
-    const EC_GROUP_unique_ptr &&g, const BN_unique_ptr &&c0,
-    const std::vector<EC_POINT_unique_ptr> &&pubs,
-    const std::vector<BN_unique_ptr> &&r) {
-  std::vector<uint8_t> ret = std::vector<uint8_t>();
-
-  {
-    std::vector<uint8_t> buf(32, 0);
-    std::string sig;
-    BN_bn2bin(c0.get(), buf.data());
-    ret.insert(ret.end(), buf.begin(), buf.end());
+  for (int i = (pi + 1) % n; i != pi; i = (i + 1) % n) {
+    r[i] = ringsig_BN_rand();
+    c[(i + 1) % n] = BN_new();
+    EC_POINT_mul(spec.g, p, r[i], spec.pubs[i], c[i], NULL);
+    ringsig_hashPOINT2BN(mctx, spec.g, p, c[(i + 1) % n]);
   }
 
-  for (auto &&pub : pubs) {
-    auto sz = EC_POINT_point2oct(
-        g.get(), pub.get(), POINT_CONVERSION_UNCOMPRESSED, nullptr, 0, nullptr);
-    std::vector<uint8_t> buf(sz, 0);
-    EC_POINT_point2oct(g.get(), pub.get(), POINT_CONVERSION_UNCOMPRESSED,
-                       buf.data(), sz, nullptr);
-    ret.insert(ret.end(), buf.begin(), buf.end());
+  r[pi] = BN_new();
+
+  BN_mod_mul(r[pi], c[pi], spec.priv, order, bctx);
+  BN_mod_sub(r[pi], k, r[pi], order, bctx);
+  BN_bn2bin(c[0], (unsigned char *)sig);
+
+  for (int i = 0; i < n; i++) {
+    EC_POINT_point2oct(spec.g, spec.pubs[i], POINT_CONVERSION_UNCOMPRESSED,
+                       (uint8_t *)sig + BN_SIZE + i * POINT_SIZE, POINT_SIZE,
+                       NULL);
+    BN_bn2bin(r[i],
+              (unsigned char *)sig + BN_SIZE + n * POINT_SIZE + i * BN_SIZE);
   }
 
-  for (auto &&bn : r) {
-    std::vector<uint8_t> buf(32, 0);
-    std::string sig;
-    BN_bn2bin(bn.get(), buf.data());
-    ret.insert(ret.end(), buf.begin(), buf.end());
+  for (int i = 0; i < n; i++) {
+    BN_free(r[i]);
+    BN_free(c[i]);
   }
 
+  BN_free(k);
+  free(c);
+  free(r);
+  EC_POINT_free(p);
+  BN_free(order);
+  BN_CTX_free(bctx);
+  EVP_MD_CTX_free(mctx);
+  ringsig_keypair_spec_free(&spec);
+
+  ret = 1;
   return ret;
 }
 
-std::optional<std::vector<uint8_t>> sign(const std::string &msg,
-                                         const RingSignSpec &spec) {
-  try {
-    auto g =
-        EC_GROUP_unique_ptr(EC_GROUP_new_by_curve_name(NID_sm2), EC_GROUP_free);
-    auto order = BN_unique_ptr(BN_new(), BN_free);
-    if (EC_GROUP_get_order(g.get(), order.get(), nullptr) == 0)
-      throw std::bad_alloc();
-    auto mctx = initH1ctx(msg);
-    auto pubs = pubs2EC_POINT(g.get(), spec.pubs, spec.num);
-    auto priv = priv2BN(spec.priv);
-    auto k = ring_BN_rand();
-    int n = spec.num;
-    int pi = spec.mine;
-    std::vector<BN_unique_ptr> r(n);
-    std::vector<BN_unique_ptr> c(n);
-    {
-      auto p = EC_POINT_unique_ptr(EC_POINT_new(g.get()), EC_POINT_free);
-      if (p == nullptr) throw std::bad_alloc();
-      if (EC_POINT_mul(g.get(), p.get(), k.get(), nullptr, nullptr, nullptr) ==
-          0)
-        throw std::bad_alloc();
-      c[(pi + 1) % n] = hash_EC_POINT2BN(mctx.get(), g.get(),
-                                         std::move(p));  // c_i+1 = H(m, k * G)
-    }
-
-    for (int i = (pi + 1) % n; i != pi; i = (i + 1) % n) {
-      r[i] = ring_BN_rand();
-      auto p = EC_POINT_unique_ptr(EC_POINT_new(g.get()), EC_POINT_free);
-      if (EC_POINT_mul(g.get(), p.get(), r[i].get(), pubs[i].get(), c[i].get(),
-                       nullptr) == 0) {
-        throw std::bad_alloc();
-      }
-      c[(i + 1) % n] = hash_EC_POINT2BN(mctx.get(), g.get(), std::move(p));
-    }
-
-    r[pi] = ring_BN_rand();
-
-    auto bctx = BN_CTX_unique_ptr(BN_CTX_new(), BN_CTX_free);
-    if (BN_mod_mul(r[pi].get(), c[pi].get(), priv.get(), order.get(),
-                   bctx.get()) == 0)
-      throw std::bad_alloc();
-
-    if (BN_mod_sub(r[pi].get(), k.get(), r[pi].get(), order.get(),
-                   bctx.get()) == 0)
-      throw std::bad_alloc();
-
-    return serialize(std::move(g), std::move(c[0]), std::move(pubs),
-                     std::move(r));
-
-  } catch (std::bad_alloc &) {
-    return std::nullopt;
-  }
+int ringsig_sign_b64(const ringsig_keypair_extern_t *spec, const char *msg,
+                     int msg_len, char *sigb64) {
+  char *sig = (char *)calloc(sizeof(char), ringsig_sign_len(spec->nr_mem));
+  ringsig_sign(spec, msg, msg_len, sig);
+  Base64encode(sigb64, sig, ringsig_sign_len(spec->nr_mem));
+  free(sig);
+  return 1;
+}
 }
 
-}  // namespace ringsig
-}  // namespace crypto
-}  // namespace cealgull
+namespace cealgull::crypto::ringsig{
+std::optional<std::string>sign(const RingsigSpec &spec, const std::string &msg) {
+
+  if (msg.length() < internal::ringsig_sign_len(spec.nr_mem))
+    return std::nullopt;
+
+  internal::ringsig_keypair_extern_t ext = {spec.priv.data(), spec.pubs.data(),
+                                            spec.nr_mem, spec.mine};
+
+  std::string sig(internal::ringsig_signb64_len(ext.nr_mem), 0);
+  internal::ringsig_sign_b64(&ext, msg.data(), msg.size(), sig.data());
+
+  return sig;
+}
+}

@@ -1,62 +1,82 @@
-#pragma once
+#ifndef __RINGSIG_H
+#define __RINGSIG_H
 
-#if __has_include(<React-Codegen/AppSpecsJSI.h>)  // CocoaPod headers on Apple
-#include <React-Codegen/AppSpecsJSI.h>
-#elif __has_include("AppSpecsJSI.h")  // CMake headers on Android
-#include "AppSpecsJSI.h"
+#ifdef __cplusplus
+extern "C" {
 #endif
 
+#include <openssl/bn.h>
+#include <openssl/ec.h>
+#include <openssl/evp.h>
+
+#ifdef __cplusplus
+namespace cealgull::crypto::ringsig{
+namespace internal{
+#endif
+
+struct ringsig_keyset_spec {
+  BIGNUM **privs;
+  EC_POINT **pubs;
+  EC_GROUP *g;
+  int nr_mem;
+};
+
+struct ringsig_keyset_extern {
+  char **privs;
+  char *pubs;
+  int nr_mem;
+};
+
+struct ringsig_keypair_extern {
+  const char *priv;
+  const char *pubs;
+  int nr_mem;
+  int mine;
+};
+
+struct ringsig_keypair_spec {
+  BIGNUM *priv;
+  EC_POINT **pubs;
+  EC_GROUP *g;
+  int nr_mem;
+  int mine;
+};
+
+typedef struct ringsig_keyset_spec ringsig_keyset_spec_t;
+typedef struct ringsig_keyset_extern ringsig_keyset_extern_t;
+typedef struct ringsig_keypair_spec ringsig_keypair_spec_t;
+typedef struct ringsig_keypair_extern ringsig_keypair_extern_t;
+
+int ringsig_sign_len(int nr_mem);
+int ringsig_signb64_len(int nr_mem);
+int ringsig_sign(const ringsig_keypair_extern_t *spec, const char *msg,
+                 int msg_len, char *sig);
+int ringsig_sign_b64(const ringsig_keypair_extern_t *spec, const char *msg,
+                     int msg_len, char *sigb64);
+
+ringsig_keypair_extern_t ringsig_keypair_dispatch_spec(int mine);
+
+#ifdef __cplusplus
+}
+}
+}
+#endif
+
+#ifdef __cplusplus
 #include <string>
-#include <vector>
-#include <memory>
 #include <optional>
-#include <functional>
+namespace cealgull::crypto::ringsig{
 
-namespace cealgull {
-namespace crypto {
-namespace ringsig {
-
-struct RingSignSpec {
+struct RingsigSpec {
   std::string priv;
   std::string pubs;
-  int num;
+  int nr_mem;
   int mine;
-
- public:
-  RingSignSpec(const std::string &priv, const std::string &pubs, const int &num,
-               const int &mine)
-      : priv(priv), pubs(pubs), num(num), mine(mine) {}
 };
 
-std::optional<std::vector<uint8_t>> sign(const std::string &msg, const RingSignSpec &spec);
+std::optional<std::string> sign(const RingsigSpec &spec, const std::string &msg);
 
-}  // namespace ringsig
-}  // namespace crypto
-}  // namespace cealgull
+}
 
-namespace facebook {
-namespace react {
-using RingSignSpec = cealgull::crypto::ringsig::RingSignSpec;
-template <>
-struct Bridging<RingSignSpec> {
-  static RingSignSpec fromJs(jsi::Runtime &rt, const jsi::Object &value,
-                             const std::shared_ptr<CallInvoker> &jsInvoker) {
-    return RingSignSpec(
-        bridging::fromJs<std::string>(rt, value.getProperty(rt, "priv"),
-                                      jsInvoker),
-        bridging::fromJs<std::string>(rt, value.getProperty(rt, "pubs"),
-                                      jsInvoker),
-        bridging::fromJs<int>(rt, value.getProperty(rt, "num"), jsInvoker),
-        bridging::fromJs<int>(rt, value.getProperty(rt, "mine"), jsInvoker));
-  }
-  static jsi::Object toJs(jsi::Runtime &rt, const RingSignSpec &spec) {
-    auto result = facebook::jsi::Object(rt);
-    result.setProperty(rt, "priv", bridging::toJs(rt, spec.priv));
-    result.setProperty(rt, "pubs", bridging::toJs(rt, spec.pubs));
-    result.setProperty(rt, "num", bridging::toJs(rt, spec.num));
-    result.setProperty(rt, "mine", bridging::toJs(rt, spec.mine));
-    return result;
-  }
-};
-}  // namespace react
-}  // namespace facebook
+#endif
+#endif
