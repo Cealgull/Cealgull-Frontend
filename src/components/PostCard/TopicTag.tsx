@@ -18,7 +18,6 @@ export const TopicTag = ({ tagTitle, isCategory }: TopicTagProps) => {
       : { category: "", tags: tagTitle }),
   };
   const handleFilter = () => {
-    console.log(tagTitle);
     navigation.navigate("Home", navigateProps);
   };
   return (

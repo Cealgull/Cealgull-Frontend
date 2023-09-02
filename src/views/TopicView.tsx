@@ -1,4 +1,6 @@
+import { useNavigation } from "@react-navigation/native";
 import { Icon, Skeleton } from "@rneui/themed";
+import { StackScreenPropsGeneric } from "@src/@types/navigation";
 import HeaderBarWrapper from "@src/components/HeaderBarWrapper";
 import { NavBar } from "@src/components/NavBar";
 import { PostCard, TopicCard } from "@src/components/PostCard";
@@ -6,7 +8,14 @@ import { startForumServer } from "@src/services/__test__/mirage";
 import { getAllPostsByBelong } from "@src/services/forum";
 import { useQuery } from "@tanstack/react-query";
 import { Server } from "miragejs";
-import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  FlatList,
+  Pressable,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 type renderDataType = {
   isTop: boolean;
@@ -27,6 +36,8 @@ export const TopicView: React.FC<TopicViewProps> = ({
   pageSize,
   topTopic,
 }: TopicViewProps) => {
+  const navigation =
+    useNavigation<StackScreenPropsGeneric<"Topic">["navigation"]>();
   const mirageRequest = async () => {
     //this will be used when backend is close.
     const server: Server = startForumServer();
@@ -46,6 +57,20 @@ export const TopicView: React.FC<TopicViewProps> = ({
       topTopic.creator.wallet,
       pageSize,
       1
+    );
+  };
+
+  const PopButton = () => {
+    return (
+      <View>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.pop();
+          }}
+        >
+          <Icon type="antdesign" name="left" size={24} />
+        </TouchableOpacity>
+      </View>
     );
   };
 
@@ -72,19 +97,21 @@ export const TopicView: React.FC<TopicViewProps> = ({
   const renderTopicCard = ({ item }: { item: renderDataType }): JSX.Element => {
     if (item.isTop) {
       const cardProp = item.obj as ForumTopic;
-      return <TopicCard {...cardProp} />;
+      return <TopicCard topicInfo={cardProp} canjump={false} />;
     } else {
       const cardProp = item.obj as ForumPost;
       return <PostCard postInfo={cardProp} level={item.level} />;
     }
   };
+  const pageTitle = `话题--${topTopic.title}`;
 
   const TopicLoadingView = () => {
     return (
       <View style={TopicViewStyle.whole}>
-        <View style={{ backgroundColor: "rgb(225,225,225)" }}>
-          <HeaderBarWrapper alignMethod="c">
-            <Text style={TopicViewStyle.pageTitle}>话题</Text>
+        <View style={TopicViewStyle.header}>
+          <HeaderBarWrapper alignMethod="lc">
+            <PopButton />
+            <Text style={TopicViewStyle.pageTitle}>{pageTitle}</Text>
           </HeaderBarWrapper>
         </View>
         <View style={TopicViewStyle.content}>
@@ -93,7 +120,6 @@ export const TopicView: React.FC<TopicViewProps> = ({
             LinearGradientComponent={CustomLinearGradient}
           ></Skeleton>
         </View>
-        <NavBar />
       </View>
     );
   };
@@ -101,9 +127,10 @@ export const TopicView: React.FC<TopicViewProps> = ({
   const TopicErrorView = () => {
     return (
       <View style={TopicViewStyle.whole}>
-        <View style={{ backgroundColor: "rgb(225,225,225)" }}>
-          <HeaderBarWrapper alignMethod="c">
-            <Text style={TopicViewStyle.pageTitle}>话题</Text>
+        <View style={TopicViewStyle.header}>
+          <HeaderBarWrapper alignMethod="lc">
+            <PopButton />
+            <Text style={TopicViewStyle.pageTitle}>{pageTitle}</Text>
           </HeaderBarWrapper>
         </View>
         <View style={TopicViewStyle.content}>
@@ -127,7 +154,6 @@ export const TopicView: React.FC<TopicViewProps> = ({
             </Text>
           </Pressable>
         </View>
-        <NavBar />
       </View>
     );
   };
@@ -135,9 +161,10 @@ export const TopicView: React.FC<TopicViewProps> = ({
   const TopicSuccessView = () => {
     return (
       <View style={TopicViewStyle.whole}>
-        <View style={{ backgroundColor: "rgb(225,225,225)" }}>
-          <HeaderBarWrapper alignMethod="c">
-            <Text style={TopicViewStyle.pageTitle}>话题</Text>
+        <View style={TopicViewStyle.header}>
+          <HeaderBarWrapper alignMethod="lc">
+            <PopButton />
+            <Text style={TopicViewStyle.pageTitle}>{pageTitle}</Text>
           </HeaderBarWrapper>
         </View>
         <View style={TopicViewStyle.content}>
@@ -166,6 +193,10 @@ const TopicViewStyle = StyleSheet.create({
   loadingText: {
     color: "grey",
     fontSize: 26,
+  },
+  header: {
+    backgroundColor: "rgb(225,225,225)",
+    flex: 1,
   },
   whole: {
     flex: 1,

@@ -27,13 +27,23 @@ describe("TopicCard Test", () => {
     mockPush.mockClear();
   });
   test("TopicCard render test", () => {
-    render(<TopicCard {...componentTestData["TopicCard.test"]}></TopicCard>);
+    render(
+      <TopicCard
+        topicInfo={componentTestData["TopicCard.test"]}
+        canjump={false}
+      ></TopicCard>
+    );
     screen.getByText("This is the content of the topic.");
     screen.getByText("Technology");
   });
 
   test("TopicCard navigate test", () => {
-    render(<TopicCard {...componentTestData["TopicCard.test"]}></TopicCard>);
+    render(
+      <TopicCard
+        topicInfo={componentTestData["TopicCard.test"]}
+        canjump={true}
+      ></TopicCard>
+    );
     fireEvent.press(screen.getByTestId("TopicCardButton"));
     expect(mockPush).toBeCalledTimes(1);
   });

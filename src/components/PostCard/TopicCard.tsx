@@ -3,82 +3,76 @@ import { Icon } from "@rneui/themed";
 import { StackScreenPropsGeneric } from "@src/@types/navigation";
 import { numericCarry } from "@src/utils/numericCarry";
 import { timeTransfer } from "@src/utils/timeTransfer";
-import {
-  Dimensions,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { CardContent } from "./CardContent";
 import { TopicTag } from "./TopicTag";
+import { ImageList } from "../ImageList";
 
-const windowWidth = Dimensions.get("window").width;
-const windowHeight = Dimensions.get("window").height;
+interface TopicCardProps {
+  topicInfo: ForumTopic;
+  canjump: boolean;
+}
 
 export default function TopicCard({
-  id,
-  hash,
-  title,
-  creator,
-  avatar,
-  content,
-  categoryAssigned,
-  tagsAssigned,
-  upvotes,
-  downvotes,
-  assets,
-  closed,
-  createdAt,
-  updatedAt,
-}: ForumTopic) {
+  topicInfo,
+  canjump = true,
+}: TopicCardProps) {
   const navigation =
     useNavigation<StackScreenPropsGeneric<"Main">["navigation"]>();
 
-  const tagIconList: JSX.Element[] = tagsAssigned.map((tag) => {
+  const tagIconList: JSX.Element[] = topicInfo.tagsAssigned.map((tag) => {
     return <TopicTag isCategory={false} tagTitle={tag.name} key={tag.id} />;
   });
 
-  const prop: ForumTopic = {
-    id,
-    hash,
-    title,
-    creator,
-    avatar,
-    content,
-    categoryAssigned,
-    tagsAssigned,
-    upvotes,
-    downvotes,
-    assets,
-    closed,
-    createdAt,
-    updatedAt,
+  const getImageList = (assetList: Asset[]): string[] => {
+    const response: string[] = [];
+    const regular = /image/;
+    for (const item of assetList) {
+      if (regular.test(item.contentType)) {
+        response.push(item.cid);
+      }
+    }
+    return response;
   };
+  const imageList: string[] = getImageList(topicInfo.assets);
 
   return (
     <View style={TopicCardStyle.whole}>
       <View style={TopicCardStyle.topCard}>
-        <TopicTag isCategory={true} tagTitle={categoryAssigned.name}></TopicTag>
-        <Text style={TopicCardStyle.timestyle}>{timeTransfer(createdAt)}</Text>
+        <TopicTag
+          isCategory={true}
+          tagTitle={topicInfo.categoryAssigned.name}
+        ></TopicTag>
+        <Text style={TopicCardStyle.createTime}>
+          {`创建于 ${timeTransfer(topicInfo.createdAt)}`}
+        </Text>
       </View>
       <TouchableOpacity
         testID="TopicCardButton"
-        onPress={() =>
+        onPress={() => {
+          if (!canjump) return;
           navigation.push("Topic", {
             pageSize: 10,
-            topTopic: prop,
-          })
-        }
+            topTopic: topicInfo,
+          });
+        }}
       >
         <CardContent
-          title={title}
-          username={creator.username}
-          userAvatar={creator.avatar}
+          title={topicInfo.title}
+          username={topicInfo.creator.username}
+          userAvatar={topicInfo.creator.avatar}
         >
-          <Text>{content}</Text>
+          <Text>{topicInfo.content}</Text>
         </CardContent>
       </TouchableOpacity>
+      <ImageList imageUri={imageList} />
+      {topicInfo.createdAt !== topicInfo.updatedAt && (
+        <View style={{ flexDirection: "row-reverse" }}>
+          <Text style={TopicCardStyle.updateTime}>{`更新于 ${timeTransfer(
+            topicInfo.updatedAt
+          )}`}</Text>
+        </View>
+      )}
       <View style={TopicCardStyle.bottomCard}>
         <View style={{ flexDirection: "row", flex: 1, flexWrap: "wrap" }}>
           {tagIconList}
@@ -127,7 +121,7 @@ const TopicCardStyle = StyleSheet.create({
     alignItems: "center",
     flexDirection: "row",
   },
-  timestyle: {
+  createTime: {
     alignSelf: "flex-end",
     color: "#FF7256",
   },
@@ -137,13 +131,17 @@ const TopicCardStyle = StyleSheet.create({
     borderBottomWidth: 1,
     borderColor: "rgb(230,230,230)",
     marginHorizontal: "5%",
-    marginTop: 5,
+    paddingVertical: "1%",
   },
   whole: {
     backgroundColor: "white",
-    borderRadius: windowWidth * 0.04,
-    marginLeft: windowWidth * 0.015,
-    marginTop: windowHeight * 0.01,
-    width: windowWidth * 0.97,
+    borderRadius: 20,
+    marginLeft: "1.5%",
+    marginTop: "2%",
+    width: "97%",
+  },
+  updateTime: {
+    paddingRight: "4%",
+    color: "rgb(150,150,150)",
   },
 });

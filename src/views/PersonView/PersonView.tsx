@@ -139,6 +139,16 @@ const PersonView: React.FC<PersonViewProps> = ({
 
           <TouchableOpacity onPress={() => console.log("HI")}>
             <ListItem>
+              <Icon type="feather" name="package" />
+              <ListItem.Content>
+                <ListItem.Title>物品</ListItem.Title>
+              </ListItem.Content>
+              <ListItem.Chevron {...ChevronStyle} />
+            </ListItem>
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => console.log("HI")}>
+            <ListItem>
               <Icon type="antdesign" name="isv" />
               <ListItem.Content>
                 <ListItem.Title>商城</ListItem.Title>

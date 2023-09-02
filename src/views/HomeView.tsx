@@ -3,10 +3,22 @@ import { NavBar } from "@src/components/NavBar";
 import { TopicCard } from "@src/components/PostCard";
 import { getAllTopics } from "@src/services/forum";
 import { useQuery } from "@tanstack/react-query";
-import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  FlatList,
+  Pressable,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { Icon, Skeleton } from "@rneui/themed";
 import { Server } from "miragejs";
 import { startForumServer } from "@src/services/__test__/mirage";
+import { useNavigation } from "@react-navigation/native";
+import {
+  StackScreenPropsGeneric,
+  TabScreenPropsGeneric,
+} from "@src/@types/navigation";
 
 const CustomLinearGradient = () => {
   return <Text style={HomeViewStyle.loadingText}>{"Loading...."}</Text>;
@@ -24,6 +36,8 @@ export const HomeView: React.FC<HomeViewProps> = ({
   tags = "",
 }: HomeViewProps) => {
   const pageNum = 1;
+  const navigation =
+    useNavigation<TabScreenPropsGeneric<"Home">["navigation"]>();
   const mirageRequest = async () => {
     //this will be used when backend is close.
     const server: Server = startForumServer();
@@ -43,6 +57,15 @@ export const HomeView: React.FC<HomeViewProps> = ({
     return await getAllTopics(pageSize, pageNum, category, tags, "", "");
   };
 
+  const pageTitleGenerator = (category: string, tag: string): string => {
+    if (category === "" && tag === "") {
+      return "首页--全部话题";
+    } else if (category !== "") {
+      return `首页--${category}下话题`;
+    } else {
+      return `首页-- ${tag}下话题`;
+    }
+  };
   const {
     isLoading,
     isError,
@@ -54,18 +77,46 @@ export const HomeView: React.FC<HomeViewProps> = ({
     queryFn: mirageRequest,
   });
 
+  const pageTitle = pageTitleGenerator(category, tags);
+
+  const PopButton = () => {
+    return (
+      <View>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("Home", {
+              pageSize: 10,
+              category: "",
+              tags: "",
+            });
+          }}
+        >
+          <Icon type="antdesign" name="left" size={24} />
+        </TouchableOpacity>
+      </View>
+    );
+  };
+
+  const HeaderContent =
+    category === "" && tags === "" ? (
+      <HeaderBarWrapper alignMethod="c">
+        <Text style={HomeViewStyle.pageTitle}>{pageTitle}</Text>
+      </HeaderBarWrapper>
+    ) : (
+      <HeaderBarWrapper alignMethod="lc">
+        <PopButton />
+        <Text style={HomeViewStyle.pageTitle}>{pageTitle}</Text>
+      </HeaderBarWrapper>
+    );
+
   const renderTopicCard = ({ item }: { item: ForumTopic }) => {
-    return <TopicCard {...item} />;
+    return <TopicCard topicInfo={item} canjump={true} />;
   };
   const HomeLoadingView = () => {
     return (
       <View style={HomeViewStyle.whole}>
         <View style={{ backgroundColor: "rgb(225,225,225)" }}>
-          <HeaderBarWrapper alignMethod="c">
-            <Text
-              style={HomeViewStyle.pageTitle}
-            >{`首页 ${category} ${tags}`}</Text>
-          </HeaderBarWrapper>
+          {HeaderContent}
         </View>
         <View style={HomeViewStyle.content}>
           <Skeleton
@@ -81,11 +132,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
     return (
       <View style={HomeViewStyle.whole}>
         <View style={{ backgroundColor: "rgb(225,225,225)" }}>
-          <HeaderBarWrapper alignMethod="c">
-            <Text
-              style={HomeViewStyle.pageTitle}
-            >{`首页 ${category} ${tags}`}</Text>
-          </HeaderBarWrapper>
+          {HeaderContent}
         </View>
         <View style={HomeViewStyle.content}>
           <Pressable
@@ -115,17 +162,19 @@ export const HomeView: React.FC<HomeViewProps> = ({
   const HomeSuccessView = () => {
     return (
       <View style={HomeViewStyle.whole}>
-        <View style={{ backgroundColor: "rgb(225,225,225)" }}>
-          <HeaderBarWrapper alignMethod="c">
-            <Text
-              style={HomeViewStyle.pageTitle}
-            >{`首页 ${category} ${tags}`}</Text>
-          </HeaderBarWrapper>
+        <View style={{ backgroundColor: "rgb(225,225,225)", flex: 1 }}>
+          {HeaderContent}
         </View>
         <View style={HomeViewStyle.content}>
-          <FlatList data={topicList} renderItem={renderTopicCard}></FlatList>
+          <FlatList
+            style={{ height: "100%" }}
+            data={topicList}
+            renderItem={renderTopicCard}
+          ></FlatList>
         </View>
-        <NavBar />
+        <View style={{ flex: 1 }}>
+          <NavBar />
+        </View>
       </View>
     );
   };
@@ -142,7 +191,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
 const HomeViewStyle = StyleSheet.create({
   content: {
     backgroundColor: "rgb(240,240,240)",
-    flex: 8,
+    flex: 7,
     justifyContent: "center",
     alignItems: "center",
   },

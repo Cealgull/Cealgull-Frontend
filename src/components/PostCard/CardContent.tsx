@@ -36,6 +36,7 @@ export const CardContent = ({
 
 const CardContentStyle = StyleSheet.create({
   ChildrenCard: {
+    paddingVertical: 10,
     marginBottom: 3,
     paddingLeft: "5%",
   },
