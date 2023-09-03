@@ -3,14 +3,9 @@
  *
  */
 
+import { type UserInfoPOJO } from "@src/models/User";
+import { request, requestWithCookie } from "./ajax";
 import APIConfig from "./api.config";
-import { requestWithCookie, request } from "./ajax";
-interface createPostProps {
-  content: string;
-  images: string[];
-  replyTo: string;
-  belongTo: string;
-}
 
 export async function createPost(
   content: string,
@@ -18,28 +13,14 @@ export async function createPost(
   replyTo: string,
   belongTo: string
 ): Promise<void> {
-  const requestBody: createPostProps = {
-    content: content,
-    images: images,
-    replyTo: replyTo,
-    belongTo: belongTo,
-  };
   const response = await requestWithCookie({
     method: "POST",
     url: APIConfig["forum.post.create"],
-    body: requestBody,
+    body: { content, images, replyTo, belongTo },
   });
   if (!response.ok) {
     throw "createPost error!";
   }
-}
-
-interface createTopicProps {
-  content: string;
-  images: string[];
-  title: string;
-  category: string;
-  tags: string[];
 }
 
 export async function createTopic(
@@ -49,6 +30,13 @@ export async function createTopic(
   category: string,
   tags: string[]
 ): Promise<void> {
+  interface createTopicProps {
+    content: string;
+    images: string[];
+    title: string;
+    category: string;
+    tags: string[];
+  }
   const requestBody: createTopicProps = {
     content: content,
     images: images,
@@ -79,19 +67,18 @@ export async function getTextIpfs(cid: string): Promise<string> {
   return data;
 }
 
-interface getAllPostsByBelongProps {
-  belongTo: string;
-  creator: string;
-  pageSize: number;
-  pagenum: number;
-}
-
 export async function getAllPostsByBelong(
   belongTo: string,
   creator: string,
   pageSize: number,
   pagenum: number
 ): Promise<ForumTopic[]> {
+  interface getAllPostsByBelongProps {
+    belongTo: string;
+    creator: string;
+    pageSize: number;
+    pagenum: number;
+  }
   const requestBody: getAllPostsByBelongProps = {
     belongTo: belongTo,
     creator: creator,
@@ -110,15 +97,6 @@ export async function getAllPostsByBelong(
   return data;
 }
 
-interface getAllTopicsProps {
-  pageSize: number;
-  pageNum: number;
-  category: string;
-  tags: string;
-  creator: string;
-  sortedBy: string;
-}
-
 export async function getAllTopics(
   pageSize: number,
   pageNum: number,
@@ -127,6 +105,15 @@ export async function getAllTopics(
   creator: string,
   sortedBy: string
 ): Promise<ForumTopic[]> {
+  interface getAllTopicsProps {
+    pageSize: number;
+    pageNum: number;
+    category: string;
+    tags: string;
+    creator: string;
+    sortedBy: string;
+  }
+
   const requestBody: getAllTopicsProps = {
     pageSize: pageSize,
     pageNum: pageNum,
@@ -147,7 +134,11 @@ export async function getAllTopics(
   return data;
 }
 
-export async function getUserInfo(wallet: string): Promise<UserInfo> {
+type UserProfileResponse = UserInfoPOJO;
+
+export async function getUserInfo(
+  wallet: string
+): Promise<UserProfileResponse> {
   const response = await request({
     method: "GET",
     url: `${APIConfig["user.profile"]}?wallet=${wallet}`,
@@ -155,6 +146,6 @@ export async function getUserInfo(wallet: string): Promise<UserInfo> {
   if (!response.ok) {
     throw "getUserInfo error!";
   }
-  const data = (await response.json()) as UserInfo;
+  const data = (await response.json()) as UserProfileResponse;
   return data;
 }

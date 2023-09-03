@@ -26,6 +26,4 @@ export const useSafeAreaFrame = () => ({
   y: 0,
 });
 
-export const EdgeInsets = inset;
-
 export const SafeAreaInsetsContext = React.createContext(inset);
