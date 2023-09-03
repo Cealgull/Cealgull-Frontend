@@ -149,3 +149,66 @@ export async function getUserInfo(
   const data = (await response.json()) as UserProfileResponse;
   return data;
 }
+
+export async function modifyUserInfo(options: {
+  username?: string;
+  avatar?: string;
+  signature?: string;
+  activeRole?: number;
+  activeBadge?: number;
+}): Promise<void> {
+  const response = await request({
+    method: "POST",
+    url: APIConfig["user.profile.modify"],
+    body: options,
+  });
+  if (!response.ok) {
+    throw "modifyUserInfo error!";
+  }
+  return;
+}
+
+export async function uploadAvatarWithBase64(
+  base64Image: string
+): Promise<string> {
+  const requestBody = {
+    payload: base64Image,
+  };
+  type responseBody = {
+    cid: string;
+  };
+  const response = await request({
+    method: "POST",
+    url: APIConfig["upload.avatar"],
+    body: requestBody,
+  });
+  if (!response.ok) {
+    throw "uploadAvatarWithBase64 error!";
+  }
+  const data = (await response.json()) as responseBody;
+  return data.cid;
+}
+
+export async function forumVote(
+  hash: string,
+  option: "up" | "down",
+  type: "Topic" | "Post"
+): Promise<void> {
+  const urlList = {
+    "Topic.up": APIConfig["forum.topic.upvote"],
+    "Topic.down": APIConfig["forum.topic.downvote"],
+    "Post.up": APIConfig["forum.post.upvote"],
+    "Post.down": APIConfig["forum.post.downvote"],
+  };
+
+  const requestUrl: string = urlList[`${type}.${option}`];
+  const requestBody = { Hash: hash, type: type };
+  const response = await request({
+    method: "POST",
+    url: requestUrl,
+    body: requestBody,
+  });
+  if (!response.ok) {
+    throw "forumVote error!";
+  }
+}
