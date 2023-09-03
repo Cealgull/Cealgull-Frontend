@@ -1,6 +1,6 @@
 import { Icon } from "@rneui/themed";
 import { numericCarry } from "@src/utils/numericCarry";
-import React, { useState } from "react";
+import { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { CardContent } from "./CardContent";

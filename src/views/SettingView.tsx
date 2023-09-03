@@ -11,10 +11,14 @@ export const SettingView = () => {
   return (
     <View style={SettingViewStyle.whole}>
       <View style={SettingViewStyle.header}>
-        <HeaderBarWrapper alignMethod="lcr">
-          <Icon type="antdesign" name="left" onPress={() => navigation.pop()} />
+        <HeaderBarWrapper alignMethod="lc">
+          <Icon
+            size={24}
+            type="antdesign"
+            name="left"
+            onPress={() => navigation.pop()}
+          />
           <Text style={SettingViewStyle.headerTitle}>设置</Text>
-          <Icon type="antdesign" name="checkcircleo" />
         </HeaderBarWrapper>
       </View>
 

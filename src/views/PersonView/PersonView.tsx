@@ -1,8 +1,9 @@
 import { useNavigation } from "@react-navigation/native";
-import { Icon, ListItem } from "@rneui/themed";
+import { Icon } from "@rneui/themed";
 import { StackScreenPropsGeneric } from "@src/@types/navigation";
 import HeaderBarWrapper from "@src/components/HeaderBarWrapper";
 import { NavBar } from "@src/components/NavBar";
+import { OptionItem } from "@src/components/OptionItem";
 import { PersonCard } from "@src/components/PersonCard";
 import { UserInfoPOJO, UserStatistics } from "@src/models/User";
 import { startForumServer } from "@src/services/__test__/mirage";
@@ -11,12 +12,12 @@ import { useQuery } from "@tanstack/react-query";
 import { Server } from "miragejs";
 import {
   Pressable,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
 
 export interface PersonViewProps {
   wallet: string;
@@ -128,65 +129,53 @@ const PersonView: React.FC<PersonViewProps> = ({
           {personCard}
           <View style={{ height: 10 }} />
           <TouchableOpacity onPress={() => console.log("HI")}>
-            <ListItem>
-              <Icon type="antdesign" name="copy1" />
-              <ListItem.Content>
-                <ListItem.Title>发帖</ListItem.Title>
-              </ListItem.Content>
-              <ListItem.Chevron {...ChevronStyle} />
-            </ListItem>
+            <OptionItem
+              title={"发帖"}
+              icon={<Icon type="antdesign" name="copy1" />}
+            />
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => console.log("HI")}>
-            <ListItem>
-              <Icon type="feather" name="package" />
-              <ListItem.Content>
-                <ListItem.Title>物品</ListItem.Title>
-              </ListItem.Content>
-              <ListItem.Chevron {...ChevronStyle} />
-            </ListItem>
+            <OptionItem
+              title="藏品"
+              icon={<Icon type="feather" name="package" />}
+            />
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => console.log("HI")}>
-            <ListItem>
-              <Icon type="antdesign" name="isv" />
-              <ListItem.Content>
-                <ListItem.Title>商城</ListItem.Title>
-              </ListItem.Content>
-              <ListItem.Chevron {...ChevronStyle} />
-            </ListItem>
+            <OptionItem
+              title="商城"
+              icon={<Icon type="antdesign" name="isv" />}
+            />
           </TouchableOpacity>
 
           <View style={{ height: 10 }} />
           <TouchableOpacity onPress={() => navigation.push("Setting")}>
-            <ListItem>
-              <Icon type="antdesign" name="setting" />
-              <ListItem.Content>
-                <ListItem.Title>设置</ListItem.Title>
-              </ListItem.Content>
-              <ListItem.Chevron {...ChevronStyle} />
-            </ListItem>
+            <OptionItem
+              title="设置"
+              icon={<Icon type="antdesign" name="setting" />}
+            />
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => navigation.push("Account")}>
-            <ListItem>
-              <Icon type="feather" name="user" />
-              <ListItem.Content>
-                <ListItem.Title>账户</ListItem.Title>
-              </ListItem.Content>
-              <ListItem.Chevron {...ChevronStyle} />
-            </ListItem>
+          <TouchableOpacity
+            onPress={() =>
+              navigation.push("Account", {
+                wallet: wallet,
+              })
+            }
+          >
+            <OptionItem
+              title="账户"
+              icon={<Icon type="feather" name="user" />}
+            />
           </TouchableOpacity>
 
           <View style={{ height: 10 }} />
           <TouchableOpacity onPress={() => console.log("HI")}>
-            <ListItem>
-              <Icon type="antdesign" name="earth" />
-              <ListItem.Content>
-                <ListItem.Title>产品信息</ListItem.Title>
-              </ListItem.Content>
-              <ListItem.Chevron {...ChevronStyle} />
-            </ListItem>
+            <OptionItem
+              title="产品信息"
+              icon={<Icon type="antdesign" name="earth" />}
+            />
           </TouchableOpacity>
         </ScrollView>
       </View>
@@ -194,11 +183,6 @@ const PersonView: React.FC<PersonViewProps> = ({
       <NavBar />
     </View>
   );
-};
-
-const ChevronStyle = {
-  color: "black",
-  size: 20,
 };
 
 const PersonViewStyle = StyleSheet.create({

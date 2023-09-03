@@ -15,10 +15,7 @@ import { Icon, Skeleton } from "@rneui/themed";
 import { Server } from "miragejs";
 import { startForumServer } from "@src/services/__test__/mirage";
 import { useNavigation } from "@react-navigation/native";
-import {
-  StackScreenPropsGeneric,
-  TabScreenPropsGeneric,
-} from "@src/@types/navigation";
+import { TabScreenPropsGeneric } from "@src/@types/navigation";
 
 const CustomLinearGradient = () => {
   return <Text style={HomeViewStyle.loadingText}>{"Loading...."}</Text>;

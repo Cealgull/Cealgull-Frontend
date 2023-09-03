@@ -24,6 +24,24 @@ export default function TopicCard({
     return <TopicTag isCategory={false} tagTitle={tag.name} key={tag.id} />;
   });
 
+  const handleLike = () => {
+    //TODO
+    if (canjump) return;
+    console.log("Like");
+  };
+
+  const handleDislike = () => {
+    //TODO
+    if (canjump) return;
+    console.log("Dislike");
+  };
+
+  const handleComment = () => {
+    //TODO
+    if (canjump) return;
+    console.log("Comment");
+  };
+
   const getImageList = (assetList: Asset[]): string[] => {
     const response: string[] = [];
     const regular = /image/;
@@ -86,16 +104,32 @@ export default function TopicCard({
           }}
         >
           <View style={TopicCardStyle.iconview}>
-            <Icon size={16} color="#8B8989" type="antdesign" name="like2" />
-            <Text style={TopicCardStyle.icontext}>{numericCarry(20101)}</Text>
+            <TouchableOpacity onPress={handleLike}>
+              <Icon size={20} color="#8B8989" type="antdesign" name="like2" />
+              <Text style={TopicCardStyle.icontext}>{numericCarry(20101)}</Text>
+            </TouchableOpacity>
           </View>
           <View style={TopicCardStyle.iconview}>
-            <Icon size={16} color="#8B8989" type="antdesign" name="dislike2" />
-            <Text style={TopicCardStyle.icontext}>{numericCarry(99001)}</Text>
+            <TouchableOpacity onPress={handleDislike}>
+              <Icon
+                size={20}
+                color="#8B8989"
+                type="antdesign"
+                name="dislike2"
+              />
+              <Text style={TopicCardStyle.icontext}>{numericCarry(99001)}</Text>
+            </TouchableOpacity>
           </View>
           <View style={TopicCardStyle.iconview}>
-            <Icon size={16} color="#8B8989" type="antdesign" name="message1" />
-            <Text style={TopicCardStyle.icontext}>{numericCarry(99)}</Text>
+            <TouchableOpacity onPress={handleComment}>
+              <Icon
+                size={20}
+                color="#8B8989"
+                type="antdesign"
+                name="message1"
+              />
+              <Text style={TopicCardStyle.icontext}>{numericCarry(99)}</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </View>
