@@ -61,7 +61,7 @@ The project is built with TypeScript + Expo Go. The structure is quite similar t
   ```
 - Don't push your sensitive information on GitHub. For example, the API configuration shouldn't be add to the repository.
 
-### Test Cealgull.App
+### Test cealgull.app
 
 This repo is configured with Github Action. **On each push**, Github automatically runs every test unit, including lint, prettier and jest.
 
@@ -99,3 +99,13 @@ git commit # input your message, and husky will auto-check it
 ```
 
 With husky successfully installed, it will check this steps automatically.
+
+---
+
+## New Architecture
+
+We've embraced RN's new architecture with cpp module involved to implement runtime webassembly and cryptographic libraries.
+
+To fully build this app, you might need Android SDK >= 24 and suitable XCode settings.
+
+Furthermore, we use `rust-nightly` to build wasm libraries and you should probably install it too.
