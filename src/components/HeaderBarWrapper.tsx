@@ -50,9 +50,15 @@ const HeaderBarWrapper: React.FC<HeaderBarWrapperProps> = ({
   });
   return (
     <View {...props} style={[styles.header, { paddingTop: top }]}>
-      <View style={{ flexDirection: "row" }}>{leftElements}</View>
-      <View style={{ flexDirection: "row" }}>{centerElements}</View>
-      <View style={{ flexDirection: "row" }}>{rightElements}</View>
+      <View style={[styles.header_content, { justifyContent: "flex-start" }]}>
+        {leftElements}
+      </View>
+      <View style={[styles.header_content, { justifyContent: "center" }]}>
+        {centerElements}
+      </View>
+      <View style={[styles.header_content, { justifyContent: "flex-end" }]}>
+        {rightElements}
+      </View>
     </View>
   );
 };
@@ -68,6 +74,11 @@ const styles = StyleSheet.create({
     height: Dimensions.get("screen").height * 0.12, // 4% reserved and 8% content
     justifyContent: "space-between",
     paddingHorizontal: 10,
+  },
+  header_content: {
+    flex: 1,
+    flexDirection: "row",
+    backgroundColor: "red",
   },
 });
 
