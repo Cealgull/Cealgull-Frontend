@@ -1,3 +1,5 @@
 build
 coverage
 .expo
+*.json
+!cealgull.config.json
