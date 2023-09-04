@@ -5,9 +5,9 @@
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "prepare": "husky install",
-    "start": "NODE_ENV=\"develop\" expo start",
-    "android": "NODE_ENV=\"develop\" expo start --android",
-    "ios": "NODE_ENV=\"develop\" expo start --ios",
+    "start": "NODE_ENV=\"development\" expo start",
+    "android": "NODE_ENV=\"development\" expo start --android",
+    "ios": "NODE_ENV=\"development\" expo start --ios",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:ci": "jest --coverage",
