@@ -78,7 +78,6 @@ const styles = StyleSheet.create({
   header_content: {
     flex: 1,
     flexDirection: "row",
-    backgroundColor: "red",
   },
 });
 
