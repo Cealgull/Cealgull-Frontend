@@ -1,16 +1,23 @@
 import { Icon } from "@rneui/themed";
-import { numericCarry } from "@src/utils/numericCarry";
+import { numericCarry } from "@src/utils/forumUtils";
 import { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { CardContent } from "./CardContent";
 import { ImageList } from "../ImageList";
-import { timeTransfer } from "@src/utils/timeTransfer";
+import {
+  timeTransfer,
+  isInVoteList,
+  upvoteColorSelector,
+  downvoteColorSelector,
+} from "@src/utils/forumUtils";
 import { ReplyCard } from "../ReplyCard";
+import Toast from "react-native-toast-message";
 
 interface PostCardProps {
-  level: number;
   postInfo: ForumPost;
+  level: number;
+  loginWallet?: string;
 }
 
 export default function PostCard({
@@ -28,17 +35,64 @@ export default function PostCard({
     belongTo,
   },
   level,
+  loginWallet = "",
 }: PostCardProps) {
   const [isDisplayReply, setIsDisplyReply] = useState<boolean>(false);
+  const [isUpVote, setIsUpVote] = useState<boolean>(
+    isInVoteList(upvotes, loginWallet)
+  );
+  const [isDownVote, setIsDownVote] = useState<boolean>(
+    isInVoteList(downvotes, loginWallet)
+  );
+  const [upvotesNum, setUpvotesNum] = useState<number>(upvotes.length);
+  const [downvotesNum, setDownvotesNum] = useState<number>(downvotes.length);
+
+  const postToastOpen = (
+    isUpvote: boolean,
+    isCancel: boolean,
+    isError: boolean
+  ) => {
+    const voteTitleWord = isUpvote ? "Upvote" : "Downvote";
+    const cancelTitleWord = isCancel ? "Cancel" : "";
+    const errorTitleWord = isError ? "Error" : "Success";
+    const type = isError ? "error" : isCancel ? "info" : "success";
+    const emoji = isError ? "🙁" : isCancel ? "😢" : "🥰";
+    const voteContentWord = isUpvote ? "upvote" : "downvote";
+    const cancelContentWord = isCancel ? "cancel the" : "";
+
+    const title = `${voteTitleWord} ${cancelTitleWord} ${errorTitleWord} ${emoji}`;
+    const content = `You ${cancelContentWord} ${voteContentWord} to Post in level ${level}`;
+    const error = `Maybe something went wrong`;
+    Toast.show({
+      type: type,
+      visibilityTime: 3000,
+      text1: title,
+      text2: isError ? error : content,
+    });
+  };
 
   const handleLike = () => {
-    // TODO like
+    if (isUpVote) {
+      setUpvotesNum(upvotesNum - 1);
+      postToastOpen(true, true, false);
+    } else {
+      setUpvotesNum(upvotesNum + 1);
+      postToastOpen(true, false, false);
+    }
+    setIsUpVote(!isUpVote);
   };
   const handleDislike = () => {
-    // TODO dislike
+    if (isDownVote) {
+      setDownvotesNum(downvotesNum - 1);
+      postToastOpen(false, true, false);
+    } else {
+      setDownvotesNum(downvotesNum + 1);
+      postToastOpen(false, false, false);
+    }
+    setIsDownVote(!isDownVote);
   };
   const handleComment = () => {
-    // TODO comment
+    console.log("Comment");
   };
   const handleDisplayReply = () => {
     setIsDisplyReply(!isDisplayReply);
@@ -108,21 +162,40 @@ export default function PostCard({
       </CardContent>
       <ImageList imageUri={imageList} />
       <TimeInfoCard />
-
       <View style={PostCardStyle.bottomCard}>
         <TouchableOpacity onPress={handleLike}>
           <View testID="goodButton" style={PostCardStyle.iconview}>
-            <Icon size={24} color="#8B8989" type="antdesign" name="like2" />
-            <Text style={PostCardStyle.icontext}>
-              {numericCarry(upvotes.length)}
+            <Icon
+              size={24}
+              color={upvoteColorSelector(isUpVote)}
+              type="antdesign"
+              name="like2"
+            />
+            <Text
+              style={[
+                PostCardStyle.icontext,
+                { color: upvoteColorSelector(isUpVote) },
+              ]}
+            >
+              {numericCarry(upvotesNum)}
             </Text>
           </View>
         </TouchableOpacity>
         <TouchableOpacity onPress={handleDislike}>
           <View testID="badButton" style={PostCardStyle.iconview}>
-            <Icon size={24} color="#8B8989" type="antdesign" name="dislike2" />
-            <Text style={PostCardStyle.icontext}>
-              {numericCarry(downvotes.length)}
+            <Icon
+              size={24}
+              color={downvoteColorSelector(isDownVote)}
+              type="antdesign"
+              name="dislike2"
+            />
+            <Text
+              style={[
+                PostCardStyle.icontext,
+                { color: downvoteColorSelector(isDownVote) },
+              ]}
+            >
+              {numericCarry(downvotesNum)}
             </Text>
           </View>
         </TouchableOpacity>
@@ -143,7 +216,7 @@ const PostCardStyle = StyleSheet.create({
     borderTopWidth: 1,
     flex: 1,
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "space-around",
     marginBottom: 5,
     marginLeft: "5%",
     marginRight: "5%",

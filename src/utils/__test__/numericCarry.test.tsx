@@ -1,4 +1,4 @@
-import { numericCarry } from "../numericCarry";
+import { numericCarry } from "../forumUtils";
 
 describe("numericCarry Test", () => {
   test("0--999", () => {

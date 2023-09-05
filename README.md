@@ -99,3 +99,20 @@ git commit # input your message, and husky will auto-check it
 ```
 
 With husky successfully installed, it will check this steps automatically.
+
+### Libraries Dependence
+
+We need some external libraries before starting the program
+
+1. Day.js: `'https://yarnpkg.com/'`
+2. React Native Elements: `'https://reactnativeelements.com/docs/installation'`
+3. TanStack Query: `'https://tanstack.com/query/v4'`
+4. Mirage: `'https://www.miragejs.cn/'`
+5. Jest: `'https://jestjs.io/'`
+6. Yarn: `'https://dayjs.gitee.io/docs/en/installation/node-js'`
+7. React Native Navigation: `'https://reactnavigation.org/docs/getting-started/'`
+8. Expo: `'https://docs.expo.dev/'`
+9. Dotenv: `'https://www.dotenv.org/docs/'`
+10. react-native-toast-message: `'https://www.npmjs.com/package/react-native-toast-message'`
+
+You can use Yarn to install other libraries

@@ -1,43 +1,100 @@
 import { useNavigation } from "@react-navigation/native";
 import { Icon } from "@rneui/themed";
 import { StackScreenPropsGeneric } from "@src/@types/navigation";
-import { numericCarry } from "@src/utils/numericCarry";
-import { timeTransfer } from "@src/utils/timeTransfer";
+import {
+  numericCarry,
+  timeTransfer,
+  isInVoteList,
+  upvoteColorSelector,
+  downvoteColorSelector,
+} from "@src/utils/forumUtils";
+import {} from "@src/utils/forumUtils";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { CardContent } from "./CardContent";
 import { TopicTag } from "./TopicTag";
 import { ImageList } from "../ImageList";
+import { useState } from "react";
+import Toast from "react-native-toast-message";
 
 interface TopicCardProps {
   topicInfo: ForumTopic;
   canjump: boolean;
+  loginWallet?: string;
 }
 
 export default function TopicCard({
   topicInfo,
   canjump = true,
+  loginWallet = "",
 }: TopicCardProps) {
   const navigation =
     useNavigation<StackScreenPropsGeneric<"Main">["navigation"]>();
+  const [isUpVote, setIsUpVote] = useState<boolean>(
+    isInVoteList(topicInfo.upvotes, loginWallet)
+  );
+  const [isDownVote, setIsDownVote] = useState<boolean>(
+    isInVoteList(topicInfo.downvotes, loginWallet)
+  );
+  const [upvotesNum, setUpvotesNum] = useState<number>(
+    topicInfo.upvotes.length
+  );
+  const [downvotesNum, setDownvotesNum] = useState<number>(
+    topicInfo.downvotes.length
+  );
 
   const tagIconList: JSX.Element[] = topicInfo.tagsAssigned.map((tag) => {
     return <TopicTag isCategory={false} tagTitle={tag.name} key={tag.id} />;
   });
 
+  const topicToastOpen = (
+    isUpvote: boolean,
+    isCancel: boolean,
+    isError: boolean
+  ) => {
+    const voteTitleWord = isUpvote ? "Upvote" : "Downvote";
+    const cancelTitleWord = isCancel ? "Cancel" : "";
+    const errorTitleWord = isError ? "Error" : "Success";
+    const type = isError ? "error" : isCancel ? "info" : "success";
+    const emoji = isError ? "🙁" : isCancel ? "😢" : "🥰";
+    const voteContentWord = isUpvote ? "upvote" : "downvote";
+    const cancelContentWord = isCancel ? "cancel the" : "";
+
+    const title = `${voteTitleWord} ${cancelTitleWord} ${errorTitleWord} ${emoji}`;
+    const content = `You ${cancelContentWord} ${voteContentWord} to Topic: ${topicInfo.title}`;
+    const error = `Maybe something went wrong`;
+    Toast.show({
+      type: type,
+      visibilityTime: 3000,
+      text1: title,
+      text2: isError ? error : content,
+    });
+  };
+
   const handleLike = () => {
-    //TODO
     if (canjump) return;
-    console.log("Like");
+    if (isUpVote) {
+      setUpvotesNum(upvotesNum - 1);
+      topicToastOpen(true, true, false);
+    } else {
+      setUpvotesNum(upvotesNum + 1);
+      topicToastOpen(true, false, false);
+    }
+    setIsUpVote(!isUpVote);
   };
 
   const handleDislike = () => {
-    //TODO
     if (canjump) return;
-    console.log("Dislike");
+    if (isDownVote) {
+      setDownvotesNum(downvotesNum - 1);
+      topicToastOpen(false, true, false);
+    } else {
+      setDownvotesNum(downvotesNum + 1);
+      topicToastOpen(false, false, false);
+    }
+    setIsDownVote(!isDownVote);
   };
 
   const handleComment = () => {
-    //TODO
     if (canjump) return;
     console.log("Comment");
   };
@@ -92,45 +149,55 @@ export default function TopicCard({
         </View>
       )}
       <View style={TopicCardStyle.bottomCard}>
-        <View style={{ flexDirection: "row", flex: 1, flexWrap: "wrap" }}>
-          {tagIconList}
-        </View>
-        <View
-          style={{
-            alignItems: "flex-start",
-            flex: 1,
-            flexDirection: "row",
-            justifyContent: "space-between",
-          }}
-        >
-          <View style={TopicCardStyle.iconview}>
-            <TouchableOpacity onPress={handleLike}>
-              <Icon size={20} color="#8B8989" type="antdesign" name="like2" />
-              <Text style={TopicCardStyle.icontext}>{numericCarry(20101)}</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={TopicCardStyle.iconview}>
-            <TouchableOpacity onPress={handleDislike}>
+        <View style={TopicCardStyle.bottomTags}>{tagIconList}</View>
+        <View style={TopicCardStyle.bottomOptions}>
+          <TouchableOpacity onPress={handleLike}>
+            <View style={TopicCardStyle.iconview}>
               <Icon
-                size={20}
-                color="#8B8989"
+                size={22}
+                color={upvoteColorSelector(isUpVote)}
+                type="antdesign"
+                name="like2"
+              />
+              <Text
+                style={[
+                  TopicCardStyle.icontext,
+                  { color: upvoteColorSelector(isUpVote) },
+                ]}
+              >
+                {numericCarry(upvotesNum)}
+              </Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleDislike}>
+            <View style={TopicCardStyle.iconview}>
+              <Icon
+                color={downvoteColorSelector(isDownVote)}
+                size={22}
                 type="antdesign"
                 name="dislike2"
               />
-              <Text style={TopicCardStyle.icontext}>{numericCarry(99001)}</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={TopicCardStyle.iconview}>
-            <TouchableOpacity onPress={handleComment}>
+              <Text
+                style={[
+                  TopicCardStyle.icontext,
+                  { color: downvoteColorSelector(isDownVote) },
+                ]}
+              >
+                {numericCarry(downvotesNum)}
+              </Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleComment}>
+            <View style={TopicCardStyle.iconview}>
               <Icon
-                size={20}
+                size={22}
                 color="#8B8989"
                 type="antdesign"
                 name="message1"
               />
               <Text style={TopicCardStyle.icontext}>{numericCarry(99)}</Text>
-            </TouchableOpacity>
-          </View>
+            </View>
+          </TouchableOpacity>
         </View>
       </View>
     </View>
@@ -138,6 +205,17 @@ export default function TopicCard({
 }
 
 const TopicCardStyle = StyleSheet.create({
+  bottomTags: {
+    flexDirection: "row",
+    flex: 1,
+    flexWrap: "wrap",
+  },
+  bottomOptions: {
+    alignItems: "flex-start",
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-around",
+  },
   bottomCard: {
     borderColor: "rgb(230,230,230)",
     borderTopWidth: 1,

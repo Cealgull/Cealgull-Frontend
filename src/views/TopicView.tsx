@@ -2,7 +2,6 @@ import { useNavigation } from "@react-navigation/native";
 import { Icon, Skeleton } from "@rneui/themed";
 import { StackScreenPropsGeneric } from "@src/@types/navigation";
 import HeaderBarWrapper from "@src/components/HeaderBarWrapper";
-import { NavBar } from "@src/components/NavBar";
 import { PostCard, TopicCard } from "@src/components/PostCard";
 import { startForumServer } from "@src/services/__test__/mirage";
 import { getAllPostsByBelong } from "@src/services/forum";
@@ -17,12 +16,6 @@ import {
   View,
 } from "react-native";
 
-type renderDataType = {
-  isTop: boolean;
-  obj: ForumPost | ForumTopic;
-  level: number;
-};
-
 const CustomLinearGradient = () => {
   return <Text style={TopicViewStyle.loadingText}>{"Loading...."}</Text>;
 };
@@ -30,11 +23,13 @@ const CustomLinearGradient = () => {
 export interface TopicViewProps {
   pageSize: number;
   topTopic: ForumTopic;
+  loginWallet?: string;
 }
 
 export const TopicView: React.FC<TopicViewProps> = ({
   pageSize,
   topTopic,
+  loginWallet = "",
 }: TopicViewProps) => {
   const navigation =
     useNavigation<StackScreenPropsGeneric<"Topic">["navigation"]>();
@@ -85,6 +80,11 @@ export const TopicView: React.FC<TopicViewProps> = ({
     queryFn: mirageRequest,
   });
 
+  type renderDataType = {
+    isTop: boolean;
+    obj: ForumPost | ForumTopic;
+    level: number;
+  };
   const renderPost: renderDataType[] | undefined = postList?.map(
     (post, index) => {
       return { isTop: false, obj: post, level: index + 1 };
@@ -97,7 +97,13 @@ export const TopicView: React.FC<TopicViewProps> = ({
   const renderTopicCard = ({ item }: { item: renderDataType }): JSX.Element => {
     if (item.isTop) {
       const cardProp = item.obj as ForumTopic;
-      return <TopicCard topicInfo={cardProp} canjump={false} />;
+      return (
+        <TopicCard
+          loginWallet={loginWallet}
+          topicInfo={cardProp}
+          canjump={false}
+        />
+      );
     } else {
       const cardProp = item.obj as ForumPost;
       return <PostCard postInfo={cardProp} level={item.level} />;

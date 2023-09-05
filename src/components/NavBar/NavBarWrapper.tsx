@@ -1,4 +1,3 @@
-import { useRoute } from "@react-navigation/native";
 import React from "react";
 import { Dimensions, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";

@@ -25,12 +25,14 @@ export interface HomeViewProps {
   pageSize: number;
   category: string;
   tags: string;
+  loginWallet?: string;
 }
 
 export const HomeView: React.FC<HomeViewProps> = ({
   pageSize,
   category = "",
   tags = "",
+  loginWallet = "",
 }: HomeViewProps) => {
   const pageNum = 1;
   const navigation =
@@ -60,7 +62,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
     } else if (category !== "") {
       return `首页--${category}下话题`;
     } else {
-      return `首页-- ${tag}下话题`;
+      return `首页--${tag}下话题`;
     }
   };
   const {
@@ -107,7 +109,9 @@ export const HomeView: React.FC<HomeViewProps> = ({
     );
 
   const renderTopicCard = ({ item }: { item: ForumTopic }) => {
-    return <TopicCard topicInfo={item} canjump={true} />;
+    return (
+      <TopicCard loginWallet={loginWallet} topicInfo={item} canjump={true} />
+    );
   };
   const HomeLoadingView = () => {
     return (

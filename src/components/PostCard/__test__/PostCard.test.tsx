@@ -1,5 +1,4 @@
 import { render, screen } from "@testing-library/react-native";
-import { Text } from "react-native";
 import PostCard from "../PostCard";
 import * as componentTestData from "../../../../__test__/response/componentTestData.json";
 

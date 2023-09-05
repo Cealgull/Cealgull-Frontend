@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
-import { tagColorSwitcher } from "@src/utils/tagColor";
+import { tagColorSwitcher } from "@src/utils/forumUtils";
 import { useNavigation } from "@react-navigation/native";
 import { TabScreenPropsGeneric } from "@src/@types/navigation";
 
