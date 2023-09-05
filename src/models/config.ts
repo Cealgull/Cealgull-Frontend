@@ -6,8 +6,8 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const storageName = {
-  userCount: "user-count",
-  isFirstLaunch: "FIRST-LAUNCH",
+  userCount: "user-count", // initial: 0
+  isFirstLaunch: "FIRST-LAUNCH", // initial: false
   userId: (id: number) => `user-${id}`,
 };
 
@@ -31,10 +31,10 @@ async function initializeGlobal() {
 
 /**
  * Initialize the APP's storage system.
+ * Must be called at the App's very top.
  */
-async function configure() {
+export default async function configure(): Promise<void> {
   await initializeGlobal();
 }
 
-export default configure;
 export { storageName };

@@ -9,10 +9,13 @@ import { WordSelectedContext } from "./WordSelectContext";
 import { selectConfig, selectLength } from "./select.config";
 
 export default function WordSelectView() {
+  // The selected words
   const [wordList, setWordList] = useState<string[]>([]);
+  // The current page index
   const [index, setIndex] = useState<number>(0);
+  // The visibility of `CompleteDialog`
   const [isDialogVisible, setIsDialogVisible] = useState(false);
-  // Fake state to trigger re-renders for `WordSelectList`
+  // A Fake state to trigger re-renders for `WordSelectList`
   const [restartTimes, setRestartTimes] = useState<number>(0);
   const navigation =
     useNavigation<LoginTabScreenPropsGeneric<"WordSelect">["navigation"]>();
