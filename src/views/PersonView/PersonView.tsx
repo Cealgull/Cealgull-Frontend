@@ -98,7 +98,7 @@ const PersonView: React.FC<PersonViewProps> = ({
       </View>
     );
   };
-  let personCard;
+  let personCard, settingList;
 
   if (isError) {
     return <PersonErrorView />;
@@ -111,9 +111,63 @@ const PersonView: React.FC<PersonViewProps> = ({
         isLoading={true}
       />
     );
+    settingList = <></>;
   }
   if (isSuccess) {
     personCard = <PersonCard {...userReturnData} isLoading={false} />;
+    settingList = (
+      <View>
+        <TouchableOpacity onPress={() => console.log("HI")}>
+          <OptionItem
+            title={"发帖"}
+            icon={<Icon type="antdesign" name="copy1" />}
+          />
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => console.log("HI")}>
+          <OptionItem
+            title="藏品"
+            icon={<Icon type="feather" name="package" />}
+          />
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => console.log("HI")}>
+          <OptionItem
+            title="商城"
+            icon={<Icon type="antdesign" name="isv" />}
+          />
+        </TouchableOpacity>
+
+        <View style={{ height: 10 }} />
+        <TouchableOpacity onPress={() => navigation.push("Setting")}>
+          <OptionItem
+            title="设置"
+            icon={<Icon type="antdesign" name="setting" />}
+          />
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={() =>
+            navigation.push("Account", {
+              wallet: wallet,
+              userName: userReturnData.userInfo.username,
+              userSignature: userReturnData.userInfo.signature,
+              userAvatar: userReturnData.userInfo.avatar,
+            })
+          }
+        >
+          <OptionItem title="账户" icon={<Icon type="feather" name="user" />} />
+        </TouchableOpacity>
+
+        <View style={{ height: 10 }} />
+        <TouchableOpacity onPress={() => console.log("HI")}>
+          <OptionItem
+            title="产品信息"
+            icon={<Icon type="antdesign" name="earth" />}
+          />
+        </TouchableOpacity>
+      </View>
+    );
   }
 
   return (
@@ -128,58 +182,9 @@ const PersonView: React.FC<PersonViewProps> = ({
         <ScrollView>
           {personCard}
           <View style={{ height: 10 }} />
-          <TouchableOpacity onPress={() => console.log("HI")}>
-            <OptionItem
-              title={"发帖"}
-              icon={<Icon type="antdesign" name="copy1" />}
-            />
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={() => console.log("HI")}>
-            <OptionItem
-              title="藏品"
-              icon={<Icon type="feather" name="package" />}
-            />
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={() => console.log("HI")}>
-            <OptionItem
-              title="商城"
-              icon={<Icon type="antdesign" name="isv" />}
-            />
-          </TouchableOpacity>
-
-          <View style={{ height: 10 }} />
-          <TouchableOpacity onPress={() => navigation.push("Setting")}>
-            <OptionItem
-              title="设置"
-              icon={<Icon type="antdesign" name="setting" />}
-            />
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            onPress={() =>
-              navigation.push("Account", {
-                wallet: wallet,
-              })
-            }
-          >
-            <OptionItem
-              title="账户"
-              icon={<Icon type="feather" name="user" />}
-            />
-          </TouchableOpacity>
-
-          <View style={{ height: 10 }} />
-          <TouchableOpacity onPress={() => console.log("HI")}>
-            <OptionItem
-              title="产品信息"
-              icon={<Icon type="antdesign" name="earth" />}
-            />
-          </TouchableOpacity>
+          {settingList}
         </ScrollView>
       </View>
-
       <NavBar />
     </View>
   );
