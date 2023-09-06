@@ -2,9 +2,13 @@
  * @author Bojun Ren
  * @data 2023/07/07
  */
+import SAMPLE_USERINFO from "@root/assets/sample/userInfo.json";
+import { User, jsonToUserInfoPOJO } from "@src/models/User";
+import configure from "@src/models/config";
 import { fireEvent, render, screen } from "@testing-library/react-native";
 import { ReactTestInstance } from "react-test-renderer";
 import LoginView from "../LoginView";
+
 const mockedNavigate = jest.fn();
 jest.mock("@react-navigation/native", () => {
   const actualNav = jest.requireActual("@react-navigation/native");
@@ -16,34 +20,40 @@ jest.mock("@react-navigation/native", () => {
   };
 });
 
-jest.mock("../userInfo.ts", () => ({
-  __esModule: true,
-  default: [
-    { userName: "Dean Chambers", email: "tih@fe.gi" },
-    { userName: "Celia Reyes", email: "pegri@ubudeoj.ai" },
-    { userName: "Anne West", email: "bogid@merjibpa.ni" },
-  ],
-}));
-
 describe("Test LoginView", () => {
-  test("render correctly", () => {
+  test("render correctly", async () => {
+    await configure();
+    // Persist one user.
+    await new User(
+      "private",
+      "cert",
+      jsonToUserInfoPOJO(SAMPLE_USERINFO)
+    ).persist();
     render(<LoginView />);
-    const userCards = screen.getAllByRole("checkbox");
-    screen.getByText("Dean Chambers");
-    screen.getByText("Celia Reyes");
-    screen.getByText("Anne West");
-    expect(userCards.length).toBeGreaterThanOrEqual(1);
+    await screen.findByText(SAMPLE_USERINFO.username);
+    expect(screen.getAllByText("添加用户")).toHaveLength(2);
+    expect(screen).toMatchSnapshot();
   });
 
-  test("select user correctly", () => {
+  test("select user correctly", async () => {
+    await configure();
+    // Persist three users
+    for (let i = 0; i < 3; ++i) {
+      await new User(
+        "private",
+        "cert",
+        jsonToUserInfoPOJO(SAMPLE_USERINFO)
+      ).persist();
+    }
+
+    render(<LoginView />);
+
     function testOpacityToBe(x: number, value: number) {
       const checkIcon = screen.getAllByTestId("check_icon").at(x);
       expect(checkIcon?.props.style.at(-1).opacity).toBe(value);
     }
 
-    render(<LoginView />);
-
-    const userCards = screen.getAllByRole("checkbox");
+    const userCards = await screen.findAllByRole("checkbox");
     testOpacityToBe(0, 0);
     testOpacityToBe(1, 0);
     testOpacityToBe(2, 0);

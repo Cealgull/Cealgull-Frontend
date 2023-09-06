@@ -1,6 +1,6 @@
 // TODO error handler
 import { type UserInfoPOJO } from "@src/models/User";
-import { handleMnemonics, signAndEncode } from "@src/utils/bip/tools";
+import { signAndEncode } from "@src/utils/bip/tools";
 import { request } from "./ajax";
 import APIConfig from "./api.config";
 
@@ -54,8 +54,8 @@ async function verifyEmail(account: string, verifyCode: string) {
 
 /**
  *
- * @param signature received by email verifying, no need to care the format
  * @param publicKey hex
+ * @param signature received by email verifying, no need to care the format
  * @returns the cert
  */
 async function queryCert(publicKey: string, signature = "HACK") {
@@ -100,14 +100,4 @@ async function login(privateKey: string, cert: string): Promise<LoginResponse> {
   return await _login(cert, sig);
 }
 
-/**
- * Use mnemonics to register a new user.
- * @param mnemonics
- */
-async function register(mnemonics: string) {
-  const { privateKey, publicKey } = handleMnemonics(mnemonics);
-  const cert = await queryCert(publicKey);
-  // TODO persist the user
-}
-
-export { login, queryEmail, register, verifyEmail };
+export { login, queryCert, queryEmail, verifyEmail };

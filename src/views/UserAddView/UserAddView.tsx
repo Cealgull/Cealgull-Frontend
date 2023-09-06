@@ -1,6 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import { Button, ButtonProps, Icon, Text } from "@rneui/themed";
 import { LoginTabScreenPropsGeneric } from "@src/@types/navigation";
+import HeaderBarWrapper from "@src/components/HeaderBarWrapper";
 import { isValidMnemonics } from "@src/utils/bip";
 import React, { useState } from "react";
 import {
@@ -30,31 +31,45 @@ export default function UserAddScreen() {
     navigation.navigate("WordSelect");
   };
 
+  const goBackLogin = () => {
+    navigation.navigate("UserLogin");
+  };
+
   return (
-    <Pressable style={{ flex: 1 }} onPress={Keyboard.dismiss}>
-      <View style={styles.container}>
-        <Text h1 h1Style={{ fontWeight: "700" }}>
+    <>
+      <HeaderBarWrapper alignMethod="lc">
+        <Icon
+          name="chevron-back-outline"
+          type={"ionicon"}
+          size={40}
+          onPress={goBackLogin}
+        />
+        <Text h4 h4Style={{ fontWeight: "700" }}>
           添加用户
         </Text>
-        <KeyboardAvoidingView behavior="position">
-          <Text h4 style={styles.prompt_mnemonics}>
-            输入助记词（用空格分隔）
-          </Text>
-          <TextInput
-            style={styles.input}
-            placeholder="请注意助记词的顺序"
-            placeholderTextColor={"rgba(0,0,0,0.2)"}
-            value={wordInput}
-            onChangeText={setWordInput}
-          />
-          <MnemonicsChecker valid={valid} onSubmit={handleSubmit} />
-        </KeyboardAvoidingView>
-        <View style={{ alignItems: "center" }}>
-          <Text style={styles.prompt_select}>或者...还没有助记词？</Text>
-          <IntoSelectButton onPress={goToSelect} />
+      </HeaderBarWrapper>
+      <Pressable style={{ flex: 1 }} onPress={Keyboard.dismiss}>
+        <View style={styles.container}>
+          <KeyboardAvoidingView behavior="position">
+            <Text h4 style={styles.prompt_mnemonics}>
+              输入助记词（用空格分隔）
+            </Text>
+            <TextInput
+              style={styles.input}
+              placeholder="请注意助记词的顺序"
+              placeholderTextColor={"rgba(0,0,0,0.2)"}
+              value={wordInput}
+              onChangeText={setWordInput}
+            />
+            <MnemonicsChecker valid={valid} onSubmit={handleSubmit} />
+          </KeyboardAvoidingView>
+          <View style={{ alignItems: "center" }}>
+            <Text style={styles.prompt_select}>或者...还没有助记词？</Text>
+            <IntoSelectButton onPress={goToSelect} />
+          </View>
         </View>
-      </View>
-    </Pressable>
+      </Pressable>
+    </>
   );
 }
 
@@ -121,7 +136,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "space-evenly",
+    justifyContent: "space-around",
   },
   prompt_mnemonics: {
     marginBottom: 16,

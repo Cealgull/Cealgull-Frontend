@@ -7,6 +7,8 @@
 import { type Badge } from "./Badge";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { storageName } from "./config";
+import { login, queryCert } from "@src/services/auth";
+import { fixMnemonics, handleMnemonics } from "@src/utils/bip";
 
 /**
  * The canonical response POJO of the user information.
@@ -58,10 +60,16 @@ export class User {
   private _profile: Readonly<_UserInfo> = null;
 
   public constructor(privateKey: string, cert: string);
+  public constructor(privateKey: string, cert: string, profile: _UserInfo);
 
-  public constructor(privateKey: string, cert: string) {
+  public constructor(
+    privateKey: string,
+    cert: string,
+    profile: _UserInfo = null
+  ) {
     this.privateKey = privateKey;
     this.cert = cert;
+    this._profile = profile;
   }
 
   public set profile(userInfo: _UserInfo) {
@@ -93,7 +101,11 @@ export class User {
     await Promise.all([
       AsyncStorage.setItem(
         storageName.userId(userCount),
-        JSON.stringify({ privateKey: this.privateKey, cert: this.cert })
+        JSON.stringify({
+          privateKey: this.privateKey,
+          cert: this.cert,
+          profile: this._profile,
+        })
       ),
       AsyncStorage.setItem(storageName.userCount, (userCount + 1).toString()),
     ]);
@@ -109,14 +121,47 @@ export class User {
     if (id >= userCount || id < 0) {
       throw "Invalid id!";
     }
-    const { cert, privateKey } = JSON.parse(
+    const { cert, privateKey, profile } = JSON.parse(
       (await AsyncStorage.getItem(storageName.userId(id))) as string
     ) as {
       cert: string;
       privateKey: string;
+      profile: _UserInfo;
     };
-    const resUser = new User(cert, privateKey);
+    const resUser = new User(privateKey, cert, profile);
     resUser.user_id = id;
     return resUser;
+  }
+
+  /**
+   * Get profile information from the service, if it's null.
+   * @returns boolean indicates whether the profile is successfully retained.
+   */
+  public async retainProfile(): Promise<boolean> {
+    if (this._profile !== null) {
+      // If the profile already exists
+      return true;
+    }
+    // Try to ask for profile from the backend (by login)
+    try {
+      const userInfo = await login(this.privateKey, this.cert);
+      this._profile = userInfo;
+    } catch (err) {
+      console.error(err);
+      return false;
+    }
+    return true;
+  }
+
+  /**
+   * Register/Restore an user with the word list.
+   * @param wordList must be **incomplete** or can be combined to a valid mnemonic sentence.
+   */
+  public static async fromMnemonic(wordList: string[]) {
+    // If wordList is complete and invalid, the next line throws.
+    const mnemonic = fixMnemonics(wordList.join(" "));
+    const { privateKey, publicKey } = handleMnemonics(mnemonic);
+    const cert = await queryCert(publicKey);
+    return new User(privateKey, cert);
   }
 }

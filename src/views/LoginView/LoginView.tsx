@@ -1,22 +1,21 @@
+import { useNavigation } from "@react-navigation/native";
 import { Button, ButtonProps } from "@rneui/themed";
-import React, { useState } from "react";
+import { StackScreenPropsGeneric } from "@src/@types/navigation";
+import { Loadable } from "@src/components/Loadable";
+import config from "@src/config";
+import { User } from "@src/models/User";
+import React, { useCallback, useEffect, useState } from "react";
 import { Dimensions, Pressable, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import UserCard, { UserAddCard } from "./UserCard";
-// TODO 0 <= user.length <= 3
-import user from "./userInfo";
-import config from "@src/config";
-import { useNavigation } from "@react-navigation/native";
-import { StackScreenPropsGeneric } from "@src/@types/navigation";
 
 const userLengthMax = config["login.user.max"];
-/**
- * Entering the screen iff `user.length > 0`.
- */
+
 export default function LoginView() {
   const [selected, setSelected] = useState<number | undefined>(undefined);
   const navigation =
     useNavigation<StackScreenPropsGeneric<"Login">["navigation"]>();
+  const [userList, setUserList] = useState<User[] | undefined>(undefined);
 
   const handleDeleteUser = () => {
     // TODO Delete user
@@ -24,32 +23,73 @@ export default function LoginView() {
   const handleAddUser = () => {
     // TODO add user
   };
-  return (
-    <SafeAreaView style={styles.page}>
-      <Text style={styles.welcome}>欢迎回来！</Text>
-      <View style={styles.user_list}>
-        {user.map(({ userName, email }, i) => (
+
+  useEffect(() => {
+    async function createUserList() {
+      const userCount = await User.getUserCount();
+      const res: Array<User> = [];
+      for (let i = 0; i < userCount; ++i) {
+        // Get the user from local storage
+        const user = await User.getUser(i);
+        // Try to retain the user's profile
+        if (await user.retainProfile()) {
+          res.push(user);
+        }
+      }
+      return res;
+    }
+    createUserList().then((res) => {
+      setUserList(res);
+    });
+  }, []);
+
+  const createUserCardList = useCallback(
+    (userList: User[], selected?: number) => {
+      const userCardList: React.ReactElement[] = [];
+      userList.forEach((user, i) => {
+        const { username, signature } = user.profile as NonNullable<
+          typeof user.profile
+        >;
+        userCardList.push(
           <Pressable
             key={`user_login${i}`}
             onPress={() => setSelected(i)}
             accessibilityRole="checkbox"
           >
-            <UserCard {...{ userName, email }} selected={selected === i} />
+            <UserCard
+              username={username}
+              signature={signature}
+              selected={selected === i}
+            />
           </Pressable>
-        ))}
-        {user.length === userLengthMax
-          ? null
-          : Array(userLengthMax - user.length)
-              .fill("")
-              .map((_, i) => (
-                <Pressable
-                  key={`user_add${i}`}
-                  onPress={handleAddUser}
-                  accessibilityRole="button"
-                >
-                  <UserAddCard />
-                </Pressable>
-              ))}
+        );
+      });
+
+      for (let i = userList.length; i < userLengthMax; ++i) {
+        userCardList.push(
+          <Pressable
+            key={`user_login${i}`}
+            onPress={handleAddUser}
+            accessibilityRole="button"
+          >
+            <UserAddCard />
+          </Pressable>
+        );
+      }
+      return userCardList;
+    },
+    []
+  );
+
+  return (
+    <SafeAreaView style={styles.page}>
+      {/* A '！' (U+FF01) is ugly, since it make the text bias */}
+      <Text style={styles.welcome}>欢迎回来</Text>
+      <View style={styles.user_list}>
+        <Loadable
+          generator={(_userList) => createUserCardList(_userList, selected)}
+          maybeProp={userList}
+        />
       </View>
       <View>
         <LoginButton

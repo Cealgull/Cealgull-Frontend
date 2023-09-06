@@ -13,12 +13,16 @@ import {
 } from "react-native";
 
 interface UserCardProps {
-  userName: string;
-  email: string;
+  username: string;
+  signature: string;
   selected: boolean;
 }
 
-export default function UserCard({ userName, email, selected }: UserCardProps) {
+export default function UserCard({
+  username,
+  signature,
+  selected,
+}: UserCardProps) {
   const checkIconStyle = useMemo<StyleProp<ViewStyle>>(
     () => [styles.check_container, { opacity: selected ? 100 : 0 }],
     [selected]
@@ -28,11 +32,11 @@ export default function UserCard({ userName, email, selected }: UserCardProps) {
     <View style={styles.card}>
       <View style={styles.content_container}>
         <View style={{ flex: 0 }}>
-          <UserCardAvatar alt={userName} />
+          <UserCardAvatar alt={username} />
         </View>
         <View style={styles.info_container}>
-          <Text style={[styles.text, styles.text_username]}>{userName}</Text>
-          <Text style={styles.text}>{email}</Text>
+          <Text style={[styles.text, styles.text_username]}>{username}</Text>
+          <Text style={styles.text}>{signature}</Text>
         </View>
       </View>
       <View style={checkIconStyle} testID="check_icon">
