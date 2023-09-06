@@ -5,9 +5,12 @@
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "prepare": "husky install",
+    "prestart": "dotenv-vault pull",
     "start": "NODE_ENV=\"development\" expo start",
+    "poststart": "rm -f .env",
     "android": "NODE_ENV=\"development\" expo start --android",
     "ios": "NODE_ENV=\"development\" expo start --ios",
+    "pretest": "if ls .env >/dev/null 2>&1; then echo $'\\nFound .env, it may damage the test!\\n'; exit 1; fi",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:ci": "jest --coverage",
