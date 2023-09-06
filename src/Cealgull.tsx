@@ -23,6 +23,9 @@ import {
   UserAddScreen,
 } from "./views/LoginTabScreens";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useState } from "react";
+import { User } from "./models/User";
+import { UserContext } from "./hooks/useUser";
 
 const queryClient = new QueryClient();
 const LoginTab = createBottomTabNavigator<LoginTabParamList>();
@@ -61,39 +64,42 @@ const ForumTabsScreen = () => {
 };
 
 export default function Cealgull() {
+  const userContext = useState<User>();
   return (
-    <QueryClientProvider client={queryClient}>
-      <SafeAreaProvider>
-        <NavigationContainer>
-          <RootStack.Navigator
-            screenOptions={{
-              headerShown: false,
-            }}
-          >
-            <RootStack.Screen name="Login" component={LoginTabsScreen} />
-            <RootStack.Screen
-              name="Main"
-              component={ForumTabsScreen}
-              options={{ gestureEnabled: false }}
-            />
-            <RootStack.Screen
-              name="Publish"
-              options={{
-                gestureDirection: "vertical",
-                cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
+    <UserContext.Provider value={userContext}>
+      <QueryClientProvider client={queryClient}>
+        <SafeAreaProvider>
+          <NavigationContainer>
+            <RootStack.Navigator
+              screenOptions={{
+                headerShown: false,
               }}
-              component={PublishScreen}
-            />
-            <RootStack.Screen
-              name="Topic"
-              initialParams={{ id: "" }}
-              component={TopicScreen}
-            />
-            <RootStack.Screen name="Setting" component={SettingScreen} />
-            <RootStack.Screen name="Account" component={AccountScreen} />
-          </RootStack.Navigator>
-        </NavigationContainer>
-      </SafeAreaProvider>
-    </QueryClientProvider>
+            >
+              <RootStack.Screen name="Login" component={LoginTabsScreen} />
+              <RootStack.Screen
+                name="Main"
+                component={ForumTabsScreen}
+                options={{ gestureEnabled: false }}
+              />
+              <RootStack.Screen
+                name="Publish"
+                options={{
+                  gestureDirection: "vertical",
+                  cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
+                }}
+                component={PublishScreen}
+              />
+              <RootStack.Screen
+                name="Topic"
+                initialParams={{ id: "" }}
+                component={TopicScreen}
+              />
+              <RootStack.Screen name="Setting" component={SettingScreen} />
+              <RootStack.Screen name="Account" component={AccountScreen} />
+            </RootStack.Navigator>
+          </NavigationContainer>
+        </SafeAreaProvider>
+      </QueryClientProvider>
+    </UserContext.Provider>
   );
 }
