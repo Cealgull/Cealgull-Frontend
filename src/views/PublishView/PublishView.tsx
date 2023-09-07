@@ -47,11 +47,26 @@ const PublishButton: React.FC<PublishButtonProps> = ({ enabled, onPress }) => {
   );
 };
 
+interface PublishMedia {
+  imageUrl: string[];
+}
+type PublishHandler = (
+  title: string,
+  content: string,
+  media: PublishMedia
+) => Promise<void>;
+
 interface PublishViewProps {
   onClose: () => void;
+  onPublish: PublishHandler;
 }
 
-export default function PublishView({ onClose }: PublishViewProps) {
+/**
+ * The view to publish a topic.
+ * @param onClose callback to execute when click the close button.
+ * @param onPublish callback to execute when click the publish button.
+ */
+export default function PublishView({ onClose, onPublish }: PublishViewProps) {
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
   const [imageUriList, setImageUriList] = useState<string[]>([]);
@@ -83,9 +98,8 @@ export default function PublishView({ onClose }: PublishViewProps) {
     },
   };
 
-  // TODO publish logic
   const handlePublish = async () => {
-    onClose();
+    await onPublish(title, content, { imageUrl: imageUriList });
   };
 
   const publishBtnEnabled = useMemo<boolean>(() => {
@@ -94,7 +108,7 @@ export default function PublishView({ onClose }: PublishViewProps) {
 
   return (
     <>
-      <Pressable onPress={Keyboard.dismiss}>
+      <Pressable onPress={Keyboard.dismiss} style={{ flex: 1 }}>
         <View style={styles.container}>
           {/* HeaderBar is inflexible */}
           <HeaderBarWrapper alignMethod="lr">
@@ -145,6 +159,6 @@ const styles = StyleSheet.create({
     marginRight: 4,
   },
   container: {
-    flex: 1,
+    flexGrow: 1,
   },
 });
