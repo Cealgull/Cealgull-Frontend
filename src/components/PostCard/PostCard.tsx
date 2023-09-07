@@ -13,6 +13,7 @@ import {
 } from "@src/utils/forumUtils";
 import { ReplyCard } from "../ReplyCard";
 import Toast from "react-native-toast-message";
+import { getImageIpfsPath } from "@src/services/forum";
 
 interface PostCardProps {
   postInfo: ForumPost;
@@ -22,7 +23,6 @@ interface PostCardProps {
 
 export default function PostCard({
   postInfo: {
-    id,
     hash,
     creator,
     content,
@@ -103,10 +103,9 @@ export default function PostCard({
     return (
       <TouchableOpacity onPress={handleDisplayReply}>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <Icon color="#00BFFF" type="fontawesome5" name="reply" size={20} />
           <Text
             style={PostCardStyle.simpleReply}
-          >{`@${replyTo.creator.username}`}</Text>
+          >{`@ ${replyTo.creator.username}`}</Text>
         </View>
       </TouchableOpacity>
     );
@@ -143,7 +142,7 @@ export default function PostCard({
     const regular = /image/;
     for (const item of assetList) {
       if (regular.test(item.contentType)) {
-        response.push(item.cid);
+        response.push(getImageIpfsPath(item.cid));
       }
     }
     return response;

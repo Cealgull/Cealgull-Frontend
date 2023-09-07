@@ -3,6 +3,8 @@ import { Icon, Skeleton } from "@rneui/themed";
 import { StackScreenPropsGeneric } from "@src/@types/navigation";
 import HeaderBarWrapper from "@src/components/HeaderBarWrapper";
 import { PostCard, TopicCard } from "@src/components/PostCard";
+import useUser from "@src/hooks/useUser";
+import { User } from "@src/models/User";
 import { startForumServer } from "@src/services/__test__/mirage";
 import { getAllPostsByBelong } from "@src/services/forum";
 import { useQuery } from "@tanstack/react-query";
@@ -23,16 +25,29 @@ const CustomLinearGradient = () => {
 export interface TopicViewProps {
   pageSize: number;
   topTopic: ForumTopic;
-  loginWallet?: string;
 }
 
 export const TopicView: React.FC<TopicViewProps> = ({
   pageSize,
   topTopic,
-  loginWallet = "",
 }: TopicViewProps) => {
   const navigation =
     useNavigation<StackScreenPropsGeneric<"Topic">["navigation"]>();
+
+  const getLoginUserWallet = (user: Readonly<User | undefined>) => {
+    if (!user) {
+      console.log("User undefined");
+      return "";
+    }
+    if (!user.profile) {
+      console.log("User profile undefined");
+      return "";
+    }
+    return user.profile.wallet;
+  };
+  const user = useUser();
+  const loginWallet = getLoginUserWallet(user);
+
   const mirageRequest = async () => {
     //this will be used when backend is close.
     const server: Server = startForumServer();
@@ -109,7 +124,7 @@ export const TopicView: React.FC<TopicViewProps> = ({
       return <PostCard postInfo={cardProp} level={item.level} />;
     }
   };
-  const pageTitle = `话题--${topTopic.title}`;
+  const pageTitle = `${topTopic.title}`;
 
   const TopicLoadingView = () => {
     return (
@@ -208,6 +223,7 @@ const TopicViewStyle = StyleSheet.create({
     flex: 1,
   },
   pageTitle: {
+    textAlign: "center",
     fontSize: 16,
     fontWeight: "bold",
   },

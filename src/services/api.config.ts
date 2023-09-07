@@ -9,6 +9,7 @@ for (const [key, value] of Object.entries(APIUri)) {
   } else {
     APIConfig[key] = `${FORUM_API}${value}`;
   }
+  // console.log(APIConfig[key])
 }
 
 export default APIConfig as Record<keyof typeof APIUri, string>;

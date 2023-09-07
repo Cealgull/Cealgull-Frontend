@@ -27,6 +27,7 @@ import { useState } from "react";
 import { User } from "./models/User";
 import { UserContext } from "./hooks/useUser";
 import WelcomeScreen from "./views/RootStackScreens/WelcomeScreen";
+import { ProductionInfoScreen } from "./views/ForumTabScreens/ProductInfoScreen";
 
 const queryClient = new QueryClient();
 const LoginTab = createBottomTabNavigator<LoginTabParamList>();
@@ -88,6 +89,10 @@ const RootStackScreen: React.FC = () => {
       <RootStack.Screen name="Topic" component={TopicScreen} />
       <RootStack.Screen name="Setting" component={SettingScreen} />
       <RootStack.Screen name="Account" component={AccountScreen} />
+      <RootStack.Screen
+        name="ProductionInfo"
+        component={ProductionInfoScreen}
+      />
       <RootStack.Screen name="Welcome" component={WelcomeScreen} />
     </RootStack.Navigator>
   );

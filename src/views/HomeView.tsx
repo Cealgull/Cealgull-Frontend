@@ -16,6 +16,8 @@ import { Server } from "miragejs";
 import { startForumServer } from "@src/services/__test__/mirage";
 import { useNavigation } from "@react-navigation/native";
 import { TabScreenPropsGeneric } from "@src/@types/navigation";
+import useUser from "@src/hooks/useUser";
+import { User } from "@src/models/User";
 
 const CustomLinearGradient = () => {
   return <Text style={HomeViewStyle.loadingText}>{"Loading...."}</Text>;
@@ -24,19 +26,32 @@ const CustomLinearGradient = () => {
 export interface HomeViewProps {
   pageSize: number;
   category: string;
-  tags: string;
-  loginWallet?: string;
+  tags: string[];
 }
 
 export const HomeView: React.FC<HomeViewProps> = ({
   pageSize,
   category = "",
-  tags = "",
-  loginWallet = "",
+  tags = [],
 }: HomeViewProps) => {
   const pageNum = 1;
   const navigation =
     useNavigation<TabScreenPropsGeneric<"Home">["navigation"]>();
+
+  const getLoginUserWallet = (user: Readonly<User | undefined>) => {
+    if (!user) {
+      console.log("User undefined");
+      return "";
+    }
+    if (!user.profile) {
+      console.log("User profile undefined");
+      return "";
+    }
+    return user.profile.wallet;
+  };
+  const user = useUser();
+  const loginWallet = getLoginUserWallet(user);
+
   const mirageRequest = async () => {
     //this will be used when backend is close.
     const server: Server = startForumServer();
@@ -56,13 +71,13 @@ export const HomeView: React.FC<HomeViewProps> = ({
     return await getAllTopics(pageSize, pageNum, category, tags, "", "");
   };
 
-  const pageTitleGenerator = (category: string, tag: string): string => {
-    if (category === "" && tag === "") {
-      return "首页--全部话题";
+  const pageTitleGenerator = (category: string, tag: string[]): string => {
+    if (category === "" && tag.length == 0) {
+      return "首页";
     } else if (category !== "") {
-      return `首页--${category}下话题`;
+      return `首页 ${category}`;
     } else {
-      return `首页--${tag}下话题`;
+      return `首页 ${tag[0]}`;
     }
   };
   const {
@@ -86,7 +101,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
             navigation.navigate("Home", {
               pageSize: 10,
               category: "",
-              tags: "",
+              tags: [],
             });
           }}
         >
@@ -97,7 +112,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
   };
 
   const HeaderContent =
-    category === "" && tags === "" ? (
+    category === "" && tags.length == 0 ? (
       <HeaderBarWrapper alignMethod="c">
         <Text style={HomeViewStyle.pageTitle}>{pageTitle}</Text>
       </HeaderBarWrapper>
@@ -202,6 +217,7 @@ const HomeViewStyle = StyleSheet.create({
     fontSize: 18,
   },
   pageTitle: {
+    textAlign: "center",
     fontSize: 16,
     fontWeight: "bold",
   },

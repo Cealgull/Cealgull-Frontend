@@ -15,6 +15,7 @@ import { TopicTag } from "./TopicTag";
 import { ImageList } from "../ImageList";
 import { useState } from "react";
 import Toast from "react-native-toast-message";
+import { getImageIpfsPath } from "@src/services/forum";
 
 interface TopicCardProps {
   topicInfo: ForumTopic;
@@ -43,7 +44,7 @@ export default function TopicCard({
   );
 
   const tagIconList: JSX.Element[] = topicInfo.tagsAssigned.map((tag) => {
-    return <TopicTag isCategory={false} tagTitle={tag.name} key={tag.id} />;
+    return <TopicTag isCategory={false} tagTitle={tag.Name} key={tag.Name} />;
   });
 
   const topicToastOpen = (
@@ -104,7 +105,7 @@ export default function TopicCard({
     const regular = /image/;
     for (const item of assetList) {
       if (regular.test(item.contentType)) {
-        response.push(item.cid);
+        response.push(getImageIpfsPath(item.cid));
       }
     }
     return response;
@@ -116,7 +117,8 @@ export default function TopicCard({
       <View style={TopicCardStyle.topCard}>
         <TopicTag
           isCategory={true}
-          tagTitle={topicInfo.categoryAssigned.name}
+          tagTitle={topicInfo.categoryAssigned.Name}
+          color={topicInfo.categoryAssigned.Color}
         ></TopicTag>
         <Text style={TopicCardStyle.createTime}>
           {`创建于 ${timeTransfer(topicInfo.createdAt)}`}
@@ -211,7 +213,7 @@ const TopicCardStyle = StyleSheet.create({
     flexWrap: "wrap",
   },
   bottomOptions: {
-    alignItems: "flex-start",
+    alignItems: "center",
     flex: 1,
     flexDirection: "row",
     justifyContent: "space-around",

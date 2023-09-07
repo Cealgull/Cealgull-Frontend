@@ -6,23 +6,21 @@ export function timeTransfer(timeData: string | Date): string {
 }
 
 export const tagColorSwitcher = (tagText: string) => {
-  switch (tagText) {
-    case "1": {
-      return "red";
-    }
-    case "2": {
-      return "blue";
-    }
-    case "3": {
-      return "green";
-    }
-    case "4": {
-      return "yellow";
-    }
-    default: {
-      return "grey";
-    }
+  const length = tagText.length;
+  if (length <= 2) {
+    return "red";
+  } else if (length <= 4) {
+    return "blue";
+  } else if (length <= 6) {
+    return "#32CD32";
+  } else if (length <= 8) {
+    return "orange";
+  } else if (length <= 10) {
+    return "pink";
+  } else if (length <= 12) {
+    return "#9370DB";
   }
+  return "grey";
 };
 
 export function numericCarry(num: number): string {

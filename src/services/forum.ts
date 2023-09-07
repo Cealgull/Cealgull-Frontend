@@ -106,7 +106,7 @@ export async function getAllTopics(
   pageSize: number,
   pageNum: number,
   category: string,
-  tags: string,
+  tags: string[],
   creator: string,
   sortedBy: string
 ): Promise<ForumTopic[]> {
@@ -114,7 +114,7 @@ export async function getAllTopics(
     pageSize: number;
     pageNum: number;
     category: string;
-    tags: string;
+    tags: string[];
     creator: string;
     sortedBy: string;
   }
@@ -131,7 +131,6 @@ export async function getAllTopics(
     url: APIConfig["forum.topic.list"],
     body: requestBody,
   });
-
   if (!request.ok) {
     throw "getAllTopics error!";
   }
@@ -161,7 +160,7 @@ export async function getUserStatistics(
 ): Promise<UserStatisticResponse> {
   const response = await request({
     method: "GET",
-    url: `${APIConfig["forum.user.statistics"]}?wallet=${wallet}`,
+    url: `${APIConfig["forum.user.statistics"]}`,
   });
   if (!response.ok) {
     throw "getUserStatistics error!";
@@ -229,7 +228,7 @@ export async function forumVote(
   };
 
   const requestUrl: string = urlList[`${type}.${option}`];
-  const requestBody = { Hash: hash, type: type };
+  const requestBody = { Hash: hash };
   const response = await request({
     method: "POST",
     url: requestUrl,

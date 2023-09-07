@@ -5,7 +5,7 @@ import HeaderBarWrapper from "@src/components/HeaderBarWrapper";
 import { NavBar } from "@src/components/NavBar";
 import { OptionItem } from "@src/components/OptionItem";
 import { PersonCard } from "@src/components/PersonCard";
-import { UserInfoPOJO, UserStatistics } from "@src/models/User";
+import { User, UserInfoPOJO, UserStatistics } from "@src/models/User";
 import { startForumServer } from "@src/services/__test__/mirage";
 import { getUserInfo, getUserStatistics } from "@src/services/forum";
 import { useQuery } from "@tanstack/react-query";
@@ -18,16 +18,27 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import useUser from "@src/hooks/useUser";
 
-export interface PersonViewProps {
-  wallet: string;
-}
+// export interface PersonViewProps {
 
-const PersonView: React.FC<PersonViewProps> = ({
-  wallet = "",
-}: PersonViewProps) => {
+export const PersonView: React.FC = () => {
   const navigation =
     useNavigation<StackScreenPropsGeneric<"Main">["navigation"]>();
+
+  const getLoginUserWallet = (user: Readonly<User | undefined>) => {
+    if (!user) {
+      console.log("User undefined");
+      return "";
+    }
+    if (!user.profile) {
+      console.log("User profile undefined");
+      return "";
+    }
+    return user.profile.wallet;
+  };
+  const user = useUser();
+  const loginWallet = getLoginUserWallet(user);
 
   interface UserResponseObject {
     userInfo: UserInfoPOJO;
@@ -43,13 +54,13 @@ const PersonView: React.FC<PersonViewProps> = ({
   const mirageRequest = async () => {
     //this will be used when backend is close.
     const server: Server = startForumServer();
-    const response = await userRequest(wallet);
+    const response = await userRequest(loginWallet);
     server.shutdown();
     return response;
   };
   const normalRequest = async () => {
     //this will be used in official Version.
-    return await userRequest(wallet);
+    return await userRequest(loginWallet);
   };
 
   const {
@@ -59,7 +70,7 @@ const PersonView: React.FC<PersonViewProps> = ({
     data: userReturnData,
     refetch: refetchUser,
   } = useQuery<UserResponseObject>({
-    queryKey: ["userInfo", "userStatistics", wallet],
+    queryKey: ["userInfo", "userStatistics", loginWallet],
     // queryFn:normalRequest
     queryFn: mirageRequest,
   });
@@ -104,13 +115,7 @@ const PersonView: React.FC<PersonViewProps> = ({
     return <PersonErrorView />;
   }
   if (isLoading) {
-    personCard = (
-      <PersonCard
-        userInfo={{} as UserInfoPOJO}
-        userStatistics={{} as UserStatistics}
-        isLoading={true}
-      />
-    );
+    personCard = <PersonCard userInfo={{} as UserInfoPOJO} isLoading={true} />;
     settingList = <></>;
   }
   if (isSuccess) {
@@ -119,37 +124,30 @@ const PersonView: React.FC<PersonViewProps> = ({
       <View>
         <TouchableOpacity onPress={() => console.log("HI")}>
           <OptionItem
-            title={"发帖"}
+            title="发帖"
             icon={<Icon type="antdesign" name="copy1" />}
           />
         </TouchableOpacity>
 
         <TouchableOpacity onPress={() => console.log("HI")}>
           <OptionItem
-            title="藏品"
-            icon={<Icon type="feather" name="package" />}
-          />
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={() => console.log("HI")}>
-          <OptionItem
-            title="商城"
-            icon={<Icon type="antdesign" name="isv" />}
+            title="统计"
+            icon={<Icon type="antdesign" name="linechart" />}
           />
         </TouchableOpacity>
 
         <View style={{ height: 10 }} />
-        <TouchableOpacity onPress={() => navigation.push("Setting")}>
+        {/* <TouchableOpacity onPress={() => navigation.push("Setting")}>
           <OptionItem
             title="设置"
             icon={<Icon type="antdesign" name="setting" />}
           />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
         <TouchableOpacity
           onPress={() =>
             navigation.push("Account", {
-              wallet: wallet,
+              wallet: loginWallet,
               userName: userReturnData.userInfo.username,
               userSignature: userReturnData.userInfo.signature,
               userAvatar: userReturnData.userInfo.avatar,
@@ -160,7 +158,7 @@ const PersonView: React.FC<PersonViewProps> = ({
         </TouchableOpacity>
 
         <View style={{ height: 10 }} />
-        <TouchableOpacity onPress={() => console.log("HI")}>
+        <TouchableOpacity onPress={() => navigation.push("ProductionInfo")}>
           <OptionItem
             title="产品信息"
             icon={<Icon type="antdesign" name="earth" />}

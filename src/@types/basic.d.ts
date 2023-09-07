@@ -7,9 +7,8 @@
  */
 
 interface Category {
-  id: number;
-  name: string;
-  color: number;
+  Name: string;
+  Color: string;
 }
 
 interface Tag {
@@ -58,15 +57,14 @@ interface ForumTopic {
  *
  */
 interface ForumPost {
-  id: number;
   hash: string;
   creator: SimpleUser;
   content: string;
-  createAt: string;
-  updateAt: string;
+  belongTo: string;
   replyTo: ForumPost | null;
-  assets: Asset[];
   upvotes: string[];
   downvotes: string[];
-  belongTo: string;
+  createAt: string;
+  updateAt: string;
+  assets: Asset[];
 }

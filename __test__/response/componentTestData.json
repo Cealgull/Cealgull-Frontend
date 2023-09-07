@@ -13,18 +13,17 @@
     "avatar": "https://example.com/topic_avatar.jpg",
     "content": "This is the content of the topic.",
     "categoryAssigned": {
-      "id": 456,
-      "name": "Technology",
-      "color": 16777215
+      "Name": "Technology",
+      "Color": "pink"
     },
     "tagsAssigned": [
       {
-        "id": 789,
-        "name": "programming"
+        "Name": "programming",
+        "Description": ""
       },
       {
-        "id": 890,
-        "name": "software"
+        "Name": "software",
+        "Description": ""
       }
     ],
     "upvotes": ["0x1234567890abcdef", "0xfedcba0987654321"],
