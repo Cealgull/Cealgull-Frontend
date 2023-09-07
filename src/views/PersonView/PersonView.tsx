@@ -19,7 +19,6 @@ import {
   View,
 } from "react-native";
 import useUser from "@src/hooks/useUser";
-
 // export interface PersonViewProps {
 
 export const PersonView: React.FC = () => {
@@ -129,10 +128,23 @@ export const PersonView: React.FC = () => {
           />
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => console.log("HI")}>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.push("Statistics", {
+              userStatistics: userReturnData.userStatistics,
+            });
+          }}
+        >
           <OptionItem
             title="统计"
             icon={<Icon type="antdesign" name="linechart" />}
+          />
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => console.log("HI")}>
+          <OptionItem
+            title="荣誉"
+            icon={<Icon type="antdesign" name="Trophy" />}
           />
         </TouchableOpacity>
 

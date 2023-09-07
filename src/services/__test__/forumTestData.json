@@ -322,10 +322,7 @@
     "upvotesRecieved": 123,
     "postsCreated": 12344,
     "topicsCreated": 123456,
-    "uptime": "2023-01-15T12:30:45Z",
-    "lastSeen": "2023-01-15T12:30:45Z",
-    "registerDate": "2023-01-15T12:30:45Z",
-    "postsViewed": 43423
+    "registerDate": "2023-01-15T12:30:45Z"
   },
   "upload.avatar": "test cid"
 }

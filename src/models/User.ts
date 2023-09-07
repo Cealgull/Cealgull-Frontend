@@ -24,10 +24,7 @@ export interface UserStatistics {
   upvotesRecieved: number;
   postsCreated: number;
   topicsCreated: number;
-  uptime: Date;
-  lastSeen: Date;
   registerDate: Date;
-  postsViewed: number;
 }
 
 /**
@@ -41,8 +38,6 @@ export function jsonToUserStatistics(
 ): UserStatistics {
   const res = {} as UserStatistics;
   Object.assign(res, json);
-  res.uptime = new Date(json.uptime as string);
-  res.lastSeen = new Date(json.lastSeen as string);
   res.registerDate = new Date(json.registerDate as string);
   return res;
 }

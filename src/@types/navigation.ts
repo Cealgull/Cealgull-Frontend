@@ -12,6 +12,7 @@ import {
   TopicScreenProps,
 } from "@src/views/RootStackScreens";
 import { WelcomeViewProps } from "@src/views/WelcomeView";
+import { StatisticsScreenProps } from "@src/views/ForumTabScreens/StatisticsScreen";
 
 /**
  * The root stack of cealgull.app
@@ -25,6 +26,7 @@ export type RootStackParamList = {
   Account: AccountScreenProps;
   Setting: SettingScreenProps;
   ProductionInfo: ProductionInfoScreenProps;
+  Statistics: StatisticsScreenProps;
 };
 
 export type MainTabParamList = {
