@@ -1,6 +1,6 @@
 // TODO error handler
 import { type UserInfoPOJO } from "@src/models/User";
-import { signAndEncode } from "@src/utils/bip/tools";
+import { handlePrivateKey, signAndEncode } from "@src/utils/bip/tools";
 import { request } from "./ajax";
 import APIConfig from "./api.config";
 
@@ -60,7 +60,7 @@ async function verifyEmail(account: string, verifyCode: string) {
  */
 async function queryCert(publicKey: string, signature = "HACK") {
   const res = await request({
-    url: APIConfig["auth.cert.query"],
+    url: APIConfig["auth.cert.sign"],
     method: "POST",
     headers: {
       signature,
@@ -69,6 +69,25 @@ async function queryCert(publicKey: string, signature = "HACK") {
   });
   const data = (await res.json()) as { cert: string };
   return data.cert;
+}
+
+/**
+ * @param privateKey hex
+ * @returns the cert
+ */
+async function restoreCert(privateKey: string) {
+  const { publicKey } = handlePrivateKey(privateKey);
+  const base64Pk = Buffer.from(publicKey, "hex").toString("base64");
+  // signature: public key -> base64 -> signed by private key -> base64
+  const signature = signAndEncode(base64Pk, privateKey);
+  const res = await request({
+    url: APIConfig["auth.cert.resign"],
+    method: "POST",
+    headers: { signature },
+    body: { pub: base64Pk },
+  });
+  const data = (await res.json()) as { cert: string };
+  return data.cert as Readonly<string>;
 }
 
 type LoginResponse = UserInfoPOJO;
@@ -100,4 +119,4 @@ async function login(privateKey: string, cert: string): Promise<LoginResponse> {
   return await _login(cert, sig);
 }
 
-export { login, queryCert, queryEmail, verifyEmail };
+export { login, queryCert, queryEmail, verifyEmail, restoreCert };

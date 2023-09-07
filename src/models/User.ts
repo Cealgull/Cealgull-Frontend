@@ -7,8 +7,12 @@
 import { type Badge } from "./Badge";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { storageName } from "./config";
-import { login, queryCert } from "@src/services/auth";
-import { fixMnemonics, handleMnemonics } from "@src/utils/bip";
+import { login, queryCert, restoreCert } from "@src/services/auth";
+import {
+  fixMnemonics,
+  handleMnemonics,
+  isValidMnemonics,
+} from "@src/utils/bip";
 
 /**
  * The canonical response POJO of the user information.
@@ -154,14 +158,33 @@ export class User {
   }
 
   /**
-   * Register/Restore an user with the word list.
-   * @param wordList must be **incomplete** or can be combined to a valid mnemonic sentence.
+   * Register an user with the word list.
+   * @param wordList must be **incomplete**.
    */
-  public static async fromMnemonic(wordList: string[]) {
+  public static async registerFromMnemonic(wordList: string[]) {
     // If wordList is complete and invalid, the next line throws.
+    if (wordList.length === 12) {
+      throw (
+        "The word list is complete (with length 12), it can't be used for register." +
+        "Do you mean restoreFromMnemonic?"
+      );
+    }
     const mnemonic = fixMnemonics(wordList.join(" "));
     const { privateKey, publicKey } = handleMnemonics(mnemonic);
     const cert = await queryCert(publicKey);
+    return new User(privateKey, cert);
+  }
+
+  /**
+   * Restore an user with the mnemonic sentence.
+   * @param mnemonic the mnemonic sentence
+   */
+  public static async restoreFromMnemonic(mnemonic: string) {
+    if (!isValidMnemonics(mnemonic)) {
+      throw "Invalid mnemonic sentence!";
+    }
+    const { privateKey } = handleMnemonics(mnemonic);
+    const cert = await restoreCert(privateKey);
     return new User(privateKey, cert);
   }
 }

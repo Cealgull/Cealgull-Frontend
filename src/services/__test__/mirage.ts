@@ -14,7 +14,7 @@ export function startAuthServer() {
         message: "ok",
       }));
       this.post(APIConfig["auth.email.verify"], () => ({}));
-      this.post(APIConfig["auth.cert.query"], (_schema, request) => {
+      this.post(APIConfig["auth.cert.sign"], (_schema, request) => {
         if (request.requestHeaders["signature"] === "hack") {
           return {
             cert: sampleCert,
