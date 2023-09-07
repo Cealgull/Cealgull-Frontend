@@ -5,19 +5,20 @@
 import { Button, Icon } from "@rneui/themed";
 import HeaderBarWrapper from "@src/components/HeaderBarWrapper";
 import useImagePicker from "@src/hooks/useImagePicker";
+import useTextInput from "@src/hooks/useTextInput";
 import React, { useMemo, useState } from "react";
 import {
   Dimensions,
   Keyboard,
   Platform,
   Pressable,
+  ScrollView,
   StyleSheet,
   Text,
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import ImageList from "./ImageList";
-import MultilineInput, { InputControlProps } from "./MultilineInput";
 
 interface PublishButtonProps {
   enabled: boolean;
@@ -67,8 +68,14 @@ interface PublishViewProps {
  * @param onPublish callback to execute when click the publish button.
  */
 export default function PublishView({ onClose, onPublish }: PublishViewProps) {
-  const [title, setTitle] = useState<string>("");
-  const [content, setContent] = useState<string>("");
+  const [title, titleInputComponent] = useTextInput(styles.input_title, {
+    text: "标题",
+    color: titlePlhColor,
+  });
+  const [content, contentInputComponent] = useTextInput(styles.input_content, {
+    text: "正文内容",
+    color: contentPlhColor,
+  });
   const [imageUriList, setImageUriList] = useState<string[]>([]);
   const imagePicker = useImagePicker((options) => {
     return {
@@ -85,17 +92,6 @@ export default function PublishView({ onClose, onPublish }: PublishViewProps) {
       return;
     }
     setImageUriList(assets.map((asset) => asset.uri));
-  };
-
-  const inputProps: InputControlProps = {
-    title,
-    content,
-    onContentChangeText(text) {
-      setContent(text);
-    },
-    onTitleChangeText(text) {
-      setTitle(text);
-    },
   };
 
   const handlePublish = async () => {
@@ -120,7 +116,12 @@ export default function PublishView({ onClose, onPublish }: PublishViewProps) {
           </HeaderBarWrapper>
           {/* flex: 1 */}
           <View style={styles.container}>
-            <MultilineInput {...inputProps} />
+            <View>
+              <ScrollView keyboardDismissMode="on-drag">
+                {titleInputComponent}
+                {contentInputComponent}
+              </ScrollView>
+            </View>
             <ImageList uris={imageUriList} />
           </View>
           {/* Bottom menu is inflexible */}
@@ -161,4 +162,17 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
   },
+  input_content: {
+    fontSize: 18, // default
+    marginBottom: 20,
+  },
+  input_title: {
+    fontSize: 28,
+    fontWeight: "700",
+    marginBottom: 24,
+    marginTop: 16,
+  },
 });
+
+const titlePlhColor = "#b3b3b3";
+const contentPlhColor = "#ccc";
