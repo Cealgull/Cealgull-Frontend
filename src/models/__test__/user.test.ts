@@ -2,8 +2,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { _userInfo_sample } from "@root/assets/sample";
 import { User } from "../User";
 import configure, { storageName } from "../config";
+import { startAuthServer } from "@src/services/__test__/mirage";
 
-describe("User class unit test", () => {
+describe("User class basic test", () => {
   beforeEach(async () => {
     await configure();
     jest.clearAllMocks();
@@ -48,5 +49,35 @@ describe("User class unit test", () => {
       /invalid/i
     );
     await expect(User.getUser(-1)).rejects.toMatch(/invalid/i);
+  });
+});
+
+describe("User static factory test", () => {
+  const mnemonic10 = "铝 北 肠 泼 舞 京 墙 色 谐 养";
+  const mnemonic12 = "铝 北 肠 泼 舞 京 墙 色 谐 养 园 暗";
+  const mnemonic_invalid = "的 的 的 的 的 的 的 的 的 的 的 的";
+
+  it("register: reject complete mnemonic", () => {
+    return expect(
+      User.registerFromMnemonic(mnemonic12.split(" "))
+    ).rejects.toMatch(/do you mean/i);
+  });
+
+  it("restore: reject invalid mnemonic", () => {
+    return expect(User.restoreFromMnemonic(mnemonic_invalid)).rejects.toMatch(
+      /invalid/i
+    );
+  });
+
+  it("register: success", () => {
+    const server = startAuthServer();
+    return User.registerFromMnemonic(mnemonic10.split(" ")).then(() =>
+      server.shutdown()
+    );
+  });
+
+  it("restore: success", () => {
+    const server = startAuthServer();
+    return User.restoreFromMnemonic(mnemonic12).then(() => server.shutdown());
   });
 });

@@ -22,6 +22,9 @@ export function startAuthServer() {
         }
         return {};
       });
+      this.post(APIConfig["auth.cert.resign"], () => ({
+        cert: sampleCert,
+      }));
     },
   });
 }
