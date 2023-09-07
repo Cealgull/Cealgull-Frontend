@@ -121,12 +121,12 @@ export const PersonView: React.FC = () => {
     personCard = <PersonCard {...userReturnData} isLoading={false} />;
     settingList = (
       <View>
-        <TouchableOpacity onPress={() => console.log("HI")}>
+        {/* <TouchableOpacity onPress={() => console.log("HI")}>
           <OptionItem
             title="发帖"
             icon={<Icon type="antdesign" name="copy1" />}
           />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
         <TouchableOpacity
           onPress={() => {
@@ -141,12 +141,12 @@ export const PersonView: React.FC = () => {
           />
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => console.log("HI")}>
+        {/* <TouchableOpacity onPress={() => console.log("HI")}>
           <OptionItem
             title="荣誉"
             icon={<Icon type="antdesign" name="Trophy" />}
           />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
         <View style={{ height: 10 }} />
         {/* <TouchableOpacity onPress={() => navigation.push("Setting")}>

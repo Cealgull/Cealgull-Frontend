@@ -7,7 +7,7 @@ import { PostEditor } from "@src/components/PostEditor";
 import useUser from "@src/hooks/useUser";
 import { User } from "@src/models/User";
 import { startForumServer } from "@src/services/__test__/mirage";
-import { getAllPostsByBelong } from "@src/services/forum";
+import { createPost, getAllPostsByBelong } from "@src/services/forum";
 import { useQuery } from "@tanstack/react-query";
 import { Server } from "miragejs";
 import { useEffect, useRef, useState } from "react";
@@ -20,6 +20,8 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import Toast from "react-native-toast-message";
+
 const CustomLinearGradient = () => {
   return <Text style={TopicViewStyle.loadingText}>{"Loading...."}</Text>;
 };
@@ -50,6 +52,7 @@ export const TopicView: React.FC<TopicViewProps> = ({
     Replyhash: "",
     ReplyUser: topTopic.creator.username,
   });
+  const [count, setCount] = useState<number>(1);
   const pageTitle = `${topTopic.title}`;
   const inputRef = useRef<TextInput>(null);
 
@@ -146,9 +149,31 @@ export const TopicView: React.FC<TopicViewProps> = ({
     }
   };
 
-  const handlePublishPost = (content: string): void => {
-    console.log(content, replyInfo);
+  const handlePublishPost = async (content: string) => {
+    try {
+      await createPost(content, [], replyInfo.Replyhash, topTopic.hash);
+      refetchPostList();
+      Toast.show({
+        type: "success",
+        text1: "Publish Post Succeed 🥰",
+        text2: "have fun there",
+      });
+    } catch (error) {
+      Toast.show({
+        type: "error",
+        text1: "Publish Post Failed 🙁",
+        text2: "Please check your network",
+      });
+    }
   };
+
+  useEffect(() => {
+    if (count == 1) {
+      setCount(count + 1);
+    } else {
+      inputRef.current?.focus();
+    }
+  }, [replyInfo]);
 
   const TopicLoadingView = () => {
     return (
@@ -224,9 +249,6 @@ export const TopicView: React.FC<TopicViewProps> = ({
     );
   };
 
-  useEffect(() => {
-    inputRef.current?.focus();
-  }, [replyInfo]);
   if (isLoading) {
     return <TopicLoadingView />;
   }

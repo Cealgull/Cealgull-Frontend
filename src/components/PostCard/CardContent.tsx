@@ -2,12 +2,16 @@ import { Avatar } from "@rneui/themed";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import APIConfig from "@src/services/api.config";
+import { Badge, Image } from "@rneui/base";
+import { getImageIpfsPath } from "@src/services/forum";
 
 interface CardContentProps {
   children?: React.ReactNode;
   title?: string;
   username: string;
   userAvatar: string;
+  activeBadge?: string;
+  activeRole?: string;
 }
 
 export const CardContent = ({
@@ -15,6 +19,8 @@ export const CardContent = ({
   title,
   username,
   userAvatar,
+  activeBadge,
+  activeRole,
 }: CardContentProps) => {
   const avatarPath = `${APIConfig["getIpfsSource"]}/${userAvatar}`;
 
@@ -23,19 +29,40 @@ export const CardContent = ({
       <View style={CardContentStyle.personCard}>
         <Avatar rounded size={40} source={{ uri: avatarPath }} />
         <Text style={CardContentStyle.personCardName}>{username}</Text>
+        {activeBadge ? (
+          <Image
+            style={CardContentStyle.badge}
+            source={{ uri: getImageIpfsPath(activeBadge) }}
+          />
+        ) : null}
+        {activeRole ? (
+          <Text style={CardContentStyle.role}>{activeRole}</Text>
+        ) : null}
       </View>
 
       <View style={CardContentStyle.titleCard}>
         {title && <Text style={CardContentStyle.titleText}>{title}</Text>}
       </View>
 
-      <View style={CardContentStyle.ChildrenCard}>{children}</View>
+      <View style={CardContentStyle.childrenCard}>{children}</View>
     </View>
   );
 };
 
 const CardContentStyle = StyleSheet.create({
-  ChildrenCard: {
+  badge: {
+    aspectRatio: 1,
+    height: 30,
+    marginLeft: 10,
+    borderRadius: 10,
+  },
+  role: {
+    fontWeight: "bold",
+    color: "#696969",
+    marginLeft: 10,
+    textDecorationLine: "underline",
+  },
+  childrenCard: {
     paddingVertical: 10,
     marginBottom: 3,
     paddingLeft: "5%",

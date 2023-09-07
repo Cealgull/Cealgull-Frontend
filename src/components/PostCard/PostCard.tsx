@@ -14,7 +14,6 @@ import {
 import { ReplyCard } from "../ReplyCard";
 import Toast from "react-native-toast-message";
 import { getImageIpfsPath } from "@src/services/forum";
-import { TextInput } from "react-native";
 import { ReplyToInfo } from "@src/views/TopicView";
 
 interface PostCardProps {
@@ -160,7 +159,12 @@ export default function PostCard({
         <SimpleReply />
       </View>
       <ReplyCard replyInfo={replyTo} isDisplay={isDisplayReply} />
-      <CardContent username={creator.username} userAvatar={creator.avatar}>
+      <CardContent
+        username={creator.username}
+        userAvatar={creator.avatar}
+        activeBadge={creator.badge}
+        activeRole={creator.role}
+      >
         <Text>{content}</Text>
       </CardContent>
       <ImageList imageUri={imageList} />
@@ -215,15 +219,13 @@ export default function PostCard({
 
 const PostCardStyle = StyleSheet.create({
   bottomCard: {
-    borderColor: "rgb(230,230,230)",
-    borderTopWidth: 1,
     flex: 1,
     flexDirection: "row",
     justifyContent: "space-around",
     marginBottom: 5,
     marginLeft: "5%",
-    marginRight: "5%",
-    paddingTop: 5,
+    width: "45%",
+    paddingTop: 10,
   },
   icontext: {
     color: "#8B8989",

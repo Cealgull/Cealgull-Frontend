@@ -150,6 +150,8 @@ export default function TopicCard({
           title={topicInfo.title}
           username={topicInfo.creator.username}
           userAvatar={topicInfo.creator.avatar}
+          activeBadge={topicInfo.creator.badge}
+          activeRole={topicInfo.creator.role}
         >
           <Text>{topicInfo.content}</Text>
         </CardContent>

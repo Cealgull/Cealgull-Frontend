@@ -1,7 +1,6 @@
-import { UserInfoPOJO, UserStatistics } from "@src/models/User";
+import { UserInfoPOJO } from "@src/models/User";
 import { View, Text, StyleSheet } from "react-native";
-import { Avatar, Icon } from "@rneui/themed";
-import { numericCarry } from "@src/utils/forumUtils";
+import { Avatar } from "@rneui/themed";
 import { Dimensions } from "react-native";
 import { getImageIpfsPath } from "@src/services/forum";
 
