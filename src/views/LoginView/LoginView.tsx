@@ -31,10 +31,8 @@ export default function LoginView() {
       for (let i = 0; i < userCount; ++i) {
         // Get the user from local storage
         const user = await User.getUser(i);
-        // Try to retain the user's profile
-        if (await user.retainProfile()) {
-          res.push(user);
-        }
+        // Examine if the user's profile is persisted
+        user.hasProfile() ? res.push(user) : user.detach();
       }
       return res;
     }

@@ -7,7 +7,7 @@
 import { type Badge } from "./Badge";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { storageName } from "./config";
-import { login, queryCert, restoreCert } from "@src/services/auth";
+import { queryCert, restoreCert } from "@src/services/auth";
 import {
   fixMnemonics,
   handleMnemonics,
@@ -76,11 +76,20 @@ export class User {
     this._profile = profile;
   }
 
-  public set profile(userInfo: _UserInfo) {
-    this._profile = userInfo;
-  }
-  public get profile(): _UserInfo {
+  /**
+   * This getter should only be used inside the forum (after login).
+   *
+   * The user instance obtained from `UserContext` is supposed to have non-null profile.
+   */
+  public get profile(): NonNullable<_UserInfo> {
+    if (this._profile === null) {
+      throw "Critical Error: No profile persisted locally!";
+    }
     return this._profile;
+  }
+
+  public hasProfile(): boolean {
+    return this._profile !== null;
   }
 
   /**
@@ -116,6 +125,35 @@ export class User {
     this.user_id = userCount;
   }
 
+  public async detach(): Promise<void> {
+    if (
+      (await AsyncStorage.getItem(storageName.userId(this.user_id))) === null
+    ) {
+      this.user_id = -1;
+      return;
+    }
+    const userCount = await User.getUserCount();
+    if (this.user_id === userCount - 1) {
+      await Promise.all([
+        AsyncStorage.removeItem(storageName.userId(this.user_id)),
+        AsyncStorage.setItem(storageName.userCount, (userCount - 1).toString()),
+      ]);
+      this.user_id = -1;
+      return;
+    }
+    for (let i = this.user_id + 1; i < userCount; ++i) {
+      const value = (await AsyncStorage.getItem(
+        storageName.userId(i)
+      )) as string;
+      await AsyncStorage.setItem(storageName.userId(i - 1), value);
+    }
+    this.user_id = -1;
+    await AsyncStorage.setItem(
+      storageName.userCount,
+      (userCount - 1).toString()
+    );
+  }
+
   /**
    * Get the user stored locally with the specified id.
    * @param id
@@ -135,26 +173,6 @@ export class User {
     const resUser = new User(privateKey, cert, profile);
     resUser.user_id = id;
     return resUser;
-  }
-
-  /**
-   * Get profile information from the service, if it's null.
-   * @returns boolean indicates whether the profile is successfully retained.
-   */
-  public async retainProfile(): Promise<boolean> {
-    if (this._profile !== null) {
-      // If the profile already exists
-      return true;
-    }
-    // Try to ask for profile from the backend (by login)
-    try {
-      const userInfo = await login(this.privateKey, this.cert);
-      this._profile = userInfo;
-    } catch (err) {
-      console.error(err);
-      return false;
-    }
-    return true;
   }
 
   /**

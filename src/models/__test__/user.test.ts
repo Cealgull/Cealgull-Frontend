@@ -1,8 +1,8 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { _userInfo_sample } from "@root/assets/sample";
-import { User } from "../User";
-import configure, { storageName } from "../config";
 import { startAuthServer } from "@src/services/__test__/mirage";
+import { User, UserInfoPOJO } from "../User";
+import configure, { storageName } from "../config";
 
 describe("User class basic test", () => {
   beforeEach(async () => {
@@ -13,11 +13,12 @@ describe("User class basic test", () => {
     await AsyncStorage.clear();
     jest.clearAllMocks();
   });
-  it("setter/getter", () => {
-    const user = new User("", "");
-    expect(user.profile).toBeNull();
-    user.profile = _userInfo_sample;
+  it("setter/getter", async () => {
+    let user: User;
+    user = new User("", "", _userInfo_sample as UserInfoPOJO);
     expect(user.profile.muted).toBe(true);
+    user = new User("", "");
+    expect(() => user.profile).toThrow(/critical error/i);
   });
 
   it("Interact with async storage", async () => {
@@ -34,6 +35,42 @@ describe("User class basic test", () => {
     await User.getUser(0);
     getItemTimes += 2;
     expect(AsyncStorage.getItem).toBeCalledTimes(getItemTimes);
+  });
+
+  it("Detach an user", async () => {
+    const users = Array(3)
+      .fill(0)
+      .map(
+        (_v, i) => new User("", "", { username: i.toString() } as UserInfoPOJO)
+      );
+    await users[0]
+      .persist()
+      .then(() => User.getUserCount())
+      .then((userCount) => expect(userCount).toBe(1));
+    await new User("", "")
+      .detach()
+      .then(() => User.getUserCount())
+      .then((val) => expect(val).toBe(1));
+    await users[1].persist();
+    await users[2]
+      .persist()
+      .then(() => User.getUserCount())
+      .then((val) => expect(val).toBe(3));
+    await User.getUser(0).then((user) =>
+      expect(user.profile.username).toBe("0")
+    );
+    await users[0]
+      .detach()
+      .then(() => User.getUserCount())
+      .then((val) => expect(val).toBe(2));
+    await User.getUser(0).then((user) =>
+      expect(user.profile.username).toBe("1")
+    );
+    await User.getUser(2).catch((reason) => expect(reason).toMatch(/invalid/i));
+    await User.getUser(1)
+      .then((user) => user.detach())
+      .then(() => User.getUserCount())
+      .then((val) => expect(val).toBe(1));
   });
 
   it("Bad user-count storage", () => {
