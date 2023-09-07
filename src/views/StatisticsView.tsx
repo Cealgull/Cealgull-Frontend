@@ -4,7 +4,7 @@ import { StackScreenPropsGeneric } from "@src/@types/navigation";
 import HeaderBarWrapper from "@src/components/HeaderBarWrapper";
 import { UserStatistics } from "@src/models/User";
 import { numericCarry, timeTransfer } from "@src/utils/forumUtils";
-import { FlatList, ScrollView, StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 export interface StatisticsViewProps {

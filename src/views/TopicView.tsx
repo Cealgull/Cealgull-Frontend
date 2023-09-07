@@ -3,23 +3,36 @@ import { Icon, Skeleton } from "@rneui/themed";
 import { StackScreenPropsGeneric } from "@src/@types/navigation";
 import HeaderBarWrapper from "@src/components/HeaderBarWrapper";
 import { PostCard, TopicCard } from "@src/components/PostCard";
+import { PostEditor } from "@src/components/PostEditor";
 import useUser from "@src/hooks/useUser";
 import { User } from "@src/models/User";
 import { startForumServer } from "@src/services/__test__/mirage";
 import { getAllPostsByBelong } from "@src/services/forum";
 import { useQuery } from "@tanstack/react-query";
 import { Server } from "miragejs";
+import { useEffect, useRef, useState } from "react";
 import {
   FlatList,
   Pressable,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
-
 const CustomLinearGradient = () => {
   return <Text style={TopicViewStyle.loadingText}>{"Loading...."}</Text>;
+};
+
+export type ReplyToInfo = {
+  Replyhash: string;
+  ReplyUser: string;
+};
+
+type renderDataType = {
+  isTop: boolean;
+  obj: ForumPost | ForumTopic;
+  level: number;
 };
 
 export interface TopicViewProps {
@@ -33,6 +46,12 @@ export const TopicView: React.FC<TopicViewProps> = ({
 }: TopicViewProps) => {
   const navigation =
     useNavigation<StackScreenPropsGeneric<"Topic">["navigation"]>();
+  const [replyInfo, setReplyInfo] = useState<ReplyToInfo>({
+    Replyhash: "",
+    ReplyUser: topTopic.creator.username,
+  });
+  const pageTitle = `${topTopic.title}`;
+  const inputRef = useRef<TextInput>(null);
 
   const getLoginUserWallet = (user: Readonly<User | undefined>) => {
     if (!user) {
@@ -95,11 +114,6 @@ export const TopicView: React.FC<TopicViewProps> = ({
     queryFn: mirageRequest,
   });
 
-  type renderDataType = {
-    isTop: boolean;
-    obj: ForumPost | ForumTopic;
-    level: number;
-  };
   const renderPost: renderDataType[] | undefined = postList?.map(
     (post, index) => {
       return { isTop: false, obj: post, level: index + 1 };
@@ -117,14 +131,24 @@ export const TopicView: React.FC<TopicViewProps> = ({
           loginWallet={loginWallet}
           topicInfo={cardProp}
           canjump={false}
+          setReplyInfo={setReplyInfo}
         />
       );
     } else {
       const cardProp = item.obj as ForumPost;
-      return <PostCard postInfo={cardProp} level={item.level} />;
+      return (
+        <PostCard
+          setReplyInfo={setReplyInfo}
+          postInfo={cardProp}
+          level={item.level}
+        />
+      );
     }
   };
-  const pageTitle = `${topTopic.title}`;
+
+  const handlePublishPost = (content: string): void => {
+    console.log(content, replyInfo);
+  };
 
   const TopicLoadingView = () => {
     return (
@@ -191,10 +215,18 @@ export const TopicView: React.FC<TopicViewProps> = ({
         <View style={TopicViewStyle.content}>
           <FlatList data={renderData} renderItem={renderTopicCard} />
         </View>
+        <PostEditor
+          replyTo={replyInfo.ReplyUser}
+          inputRef={inputRef}
+          publish={handlePublishPost}
+        />
       </View>
     );
   };
 
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, [replyInfo]);
   if (isLoading) {
     return <TopicLoadingView />;
   }
@@ -207,7 +239,7 @@ export const TopicView: React.FC<TopicViewProps> = ({
 const TopicViewStyle = StyleSheet.create({
   content: {
     backgroundColor: "rgb(240,240,240)",
-    flex: 8,
+    flex: 7,
     justifyContent: "center",
     alignItems: "center",
   },

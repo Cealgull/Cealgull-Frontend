@@ -14,11 +14,14 @@ import {
 import { ReplyCard } from "../ReplyCard";
 import Toast from "react-native-toast-message";
 import { getImageIpfsPath } from "@src/services/forum";
+import { TextInput } from "react-native";
+import { ReplyToInfo } from "@src/views/TopicView";
 
 interface PostCardProps {
   postInfo: ForumPost;
   level: number;
   loginWallet?: string;
+  setReplyInfo: React.Dispatch<React.SetStateAction<ReplyToInfo>>;
 }
 
 export default function PostCard({
@@ -36,6 +39,7 @@ export default function PostCard({
   },
   level,
   loginWallet = "",
+  setReplyInfo,
 }: PostCardProps) {
   const [isDisplayReply, setIsDisplyReply] = useState<boolean>(false);
   const [isUpVote, setIsUpVote] = useState<boolean>(
@@ -92,7 +96,7 @@ export default function PostCard({
     setIsDownVote(!isDownVote);
   };
   const handleComment = () => {
-    console.log("Comment");
+    setReplyInfo({ ReplyUser: creator.username, Replyhash: hash });
   };
   const handleDisplayReply = () => {
     setIsDisplyReply(!isDisplayReply);

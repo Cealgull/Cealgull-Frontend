@@ -9,24 +9,33 @@ import {
   downvoteColorSelector,
 } from "@src/utils/forumUtils";
 import {} from "@src/utils/forumUtils";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { CardContent } from "./CardContent";
 import { TopicTag } from "./TopicTag";
 import { ImageList } from "../ImageList";
 import { useState } from "react";
 import Toast from "react-native-toast-message";
 import { getImageIpfsPath } from "@src/services/forum";
+import { ReplyToInfo } from "@src/views/TopicView";
 
 interface TopicCardProps {
   topicInfo: ForumTopic;
   canjump: boolean;
   loginWallet?: string;
+  setReplyInfo?: React.Dispatch<React.SetStateAction<ReplyToInfo>>;
 }
 
 export default function TopicCard({
   topicInfo,
   canjump = true,
   loginWallet = "",
+  setReplyInfo = () => ({}),
 }: TopicCardProps) {
   const navigation =
     useNavigation<StackScreenPropsGeneric<"Main">["navigation"]>();
@@ -97,7 +106,10 @@ export default function TopicCard({
 
   const handleComment = () => {
     if (canjump) return;
-    console.log("Comment");
+    setReplyInfo({
+      Replyhash: topicInfo.hash,
+      ReplyUser: topicInfo.creator.username,
+    });
   };
 
   const getImageList = (assetList: Asset[]): string[] => {
