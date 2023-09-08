@@ -11,6 +11,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Dimensions, Pressable, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import UserCard, { UserAddCard } from "./UserCard";
+import { useSetUser } from "@src/hooks/useUser";
 
 const userLengthMax = config["login.user.max"];
 
@@ -21,12 +22,20 @@ export default function LoginView() {
   const loginNavigation =
     useNavigation<LoginTabScreenPropsGeneric<"UserLogin">["navigation"]>();
   const [userList, setUserList] = useState<User[] | undefined>(undefined);
+  const setUser = useSetUser();
 
+  const handleLogin = () => {
+    // FIXME the type declaration
+    setUser((userList as User[])[selected as number]);
+    rootNavigation.navigate("Main");
+  };
   const handleDeleteUser = async () => {
+    // FIXME the type declaration
     await (userList as User[])[selected as number].detach();
     // After one user is detached, the other users' id are changed.
     // Therefore, we reset the state `userList`.
     setUserList(undefined);
+    setSelected(undefined);
     setUserList(await createUserList());
   };
   const handleAddUser = useCallback(() => {
@@ -95,12 +104,7 @@ export default function LoginView() {
         />
       </View>
       <View>
-        <LoginButton
-          onPress={() => {
-            rootNavigation.navigate("Main");
-          }}
-          disabled={selected === undefined}
-        />
+        <LoginButton onPress={handleLogin} disabled={selected === undefined} />
         <DelUserButton
           onPress={handleDeleteUser}
           disabled={selected === undefined}

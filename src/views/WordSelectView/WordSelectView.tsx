@@ -12,7 +12,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import WordCardList from "./WordCardList";
 import { WordSelectedContext } from "./WordSelectContext";
 import { selectConfig, selectLength } from "./select.config";
-import { fixMnemonics } from "@src/utils/bip";
 
 export default function WordSelectView() {
   // The selected words
@@ -50,12 +49,9 @@ export default function WordSelectView() {
   const toggleDialog = useCallback(() => setIsDialogVisible((f) => !f), []);
 
   const handleSelectOK = async () => {
-    // TODO implement register success logic
-    // const [user, mnemonic] = await User.registerFromMnemonic(wordList);
-    // await user.login();
-    // await user.persist();
-    const user = new User("", "");
-    const mnemonic = fixMnemonics(wordList.join(" "));
+    const [user, mnemonic] = await User.registerFromMnemonic(wordList);
+    await user.login();
+    await user.persist();
     rootNavigation.navigate("Welcome", { mnemonic, user });
     setIsDialogVisible(false);
   };
@@ -110,6 +106,7 @@ export default function WordSelectView() {
             selectRestart();
             setIsDialogVisible(false);
           }}
+          // FIXME button lock
           onComplete={handleSelectOK}
           wordList={wordList}
         />

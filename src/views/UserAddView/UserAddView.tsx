@@ -29,13 +29,15 @@ export default function UserAddScreen() {
     () => isValidMnemonics(wordInput, "chinese_simplified"),
     [wordInput]
   );
+  const [disableSubmit, setDisableSubmit] = useState(false);
 
   const handleSubmit = async () => {
+    setDisableSubmit(true);
     const user = await User.restoreFromMnemonic(wordInput);
+    // TODO repeat user?
     await user.login();
-    user.persist();
-    // TODO set user context
-    rootNavigation.navigate("Main");
+    user.persist().then(() => setDisableSubmit(false));
+    rootNavigation.navigate("Welcome", { mnemonic: wordInput, user });
   };
 
   const goToSelect = () => {
@@ -72,7 +74,11 @@ export default function UserAddScreen() {
               value={wordInput}
               onChangeText={setWordInput}
             />
-            <MnemonicsChecker valid={valid} onSubmit={handleSubmit} />
+            <MnemonicsChecker
+              valid={valid}
+              onSubmit={handleSubmit}
+              forceDisabled={disableSubmit}
+            />
           </KeyboardAvoidingView>
           <View style={{ alignItems: "center" }}>
             <Text style={styles.prompt_select}>或者...还没有助记词？</Text>
@@ -113,6 +119,7 @@ const MnemonicsCorrectnessAwareIcon: React.FC<{ valid: boolean }> = ({
 interface MnemonicsCheckerProps {
   valid: boolean;
   onSubmit?: () => void;
+  forceDisabled?: boolean;
 }
 /**
  * Checked information, button to submit
@@ -120,6 +127,7 @@ interface MnemonicsCheckerProps {
 const MnemonicsChecker: React.FC<MnemonicsCheckerProps> = ({
   valid,
   onSubmit,
+  forceDisabled = false,
 }) => {
   return (
     <>
@@ -133,7 +141,7 @@ const MnemonicsChecker: React.FC<MnemonicsCheckerProps> = ({
       </View>
       <Button
         title={"提交"}
-        disabled={!valid}
+        disabled={forceDisabled || !valid}
         radius={"md"}
         onPress={onSubmit}
       />
