@@ -1,6 +1,9 @@
 import { useNavigation } from "@react-navigation/native";
 import { Button, ButtonProps } from "@rneui/themed";
-import { StackScreenPropsGeneric } from "@src/@types/navigation";
+import {
+  LoginTabScreenPropsGeneric,
+  StackScreenPropsGeneric,
+} from "@src/@types/navigation";
 import { Loadable } from "@src/components/Loadable";
 import config from "@src/config";
 import { User } from "@src/models/User";
@@ -13,29 +16,35 @@ const userLengthMax = config["login.user.max"];
 
 export default function LoginView() {
   const [selected, setSelected] = useState<number | undefined>(undefined);
-  const navigation =
+  const rootNavigation =
     useNavigation<StackScreenPropsGeneric<"Login">["navigation"]>();
+  const loginNavigation =
+    useNavigation<LoginTabScreenPropsGeneric<"UserLogin">["navigation"]>();
   const [userList, setUserList] = useState<User[] | undefined>(undefined);
 
-  const handleDeleteUser = () => {
-    // TODO Delete user
+  const handleDeleteUser = async () => {
+    await (userList as User[])[selected as number].detach();
+    // After one user is detached, the other users' id are changed.
+    // Therefore, we reset the state `userList`.
+    setUserList(undefined);
+    setUserList(await createUserList());
   };
-  const handleAddUser = () => {
-    // TODO add user
-  };
+  const handleAddUser = useCallback(() => {
+    loginNavigation.navigate("UserAdd");
+  }, [loginNavigation]);
 
-  useEffect(() => {
-    async function createUserList() {
-      const userCount = await User.getUserCount();
-      const res: Array<User> = [];
-      for (let i = 0; i < userCount; ++i) {
-        // Get the user from local storage
-        const user = await User.getUser(i);
-        // Examine if the user's profile is persisted
-        user.hasProfile() ? res.push(user) : user.detach();
-      }
-      return res;
+  async function createUserList() {
+    const userCount = await User.getUserCount();
+    const res: Array<User> = [];
+    for (let i = 0; i < userCount; ++i) {
+      // Get the user from local storage
+      const user = await User.getUser(i);
+      // Examine if the user's profile is persisted
+      user.hasProfile() ? res.push(user) : user.detach();
     }
+    return res;
+  }
+  useEffect(() => {
     createUserList().then((res) => {
       setUserList(res);
     });
@@ -76,7 +85,7 @@ export default function LoginView() {
       }
       return userCardList;
     },
-    []
+    [handleAddUser]
   );
 
   return (
@@ -92,7 +101,7 @@ export default function LoginView() {
       <View>
         <LoginButton
           onPress={() => {
-            navigation.navigate("Main");
+            rootNavigation.navigate("Main");
           }}
           disabled={selected === undefined}
         />

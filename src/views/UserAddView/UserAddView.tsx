@@ -1,9 +1,13 @@
 import { useNavigation } from "@react-navigation/native";
 import { Button, ButtonProps, Icon, Text } from "@rneui/themed";
-import { LoginTabScreenPropsGeneric } from "@src/@types/navigation";
+import {
+  LoginTabScreenPropsGeneric,
+  StackScreenPropsGeneric,
+} from "@src/@types/navigation";
 import HeaderBarWrapper from "@src/components/HeaderBarWrapper";
+import { User } from "@src/models/User";
 import { isValidMnemonics } from "@src/utils/bip";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import {
   Dimensions,
   Keyboard,
@@ -16,23 +20,30 @@ import {
 
 export default function UserAddScreen() {
   const [wordInput, setWordInput] = useState<string>("");
-  const navigation =
+  const loginNavigation =
     useNavigation<LoginTabScreenPropsGeneric<"UserAdd">["navigation"]>();
+  const rootNavigation =
+    useNavigation<StackScreenPropsGeneric<"Login">["navigation"]>();
 
-  const valid = isValidMnemonics(wordInput, "chinese_simplified");
+  const valid = useMemo(
+    () => isValidMnemonics(wordInput, "chinese_simplified"),
+    [wordInput]
+  );
 
-  const handleSubmit = () => {
-    // TODO submit mnemonics
-    navigation.navigate("UserLogin");
+  const handleSubmit = async () => {
+    const user = await User.restoreFromMnemonic(wordInput);
+    await user.login();
+    user.persist();
+    // TODO set user context
+    rootNavigation.navigate("Main");
   };
 
   const goToSelect = () => {
-    // TODO go to selection view
-    navigation.navigate("WordSelect");
+    loginNavigation.navigate("WordSelect");
   };
 
   const goBackLogin = () => {
-    navigation.navigate("UserLogin");
+    loginNavigation.navigate("UserLogin");
   };
 
   return (

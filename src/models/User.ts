@@ -7,7 +7,7 @@
 import { type Badge } from "./Badge";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { storageName } from "./config";
-import { queryCert, restoreCert } from "@src/services/auth";
+import { login as authLogin, queryCert, restoreCert } from "@src/services/auth";
 import {
   fixMnemonics,
   handleMnemonics,
@@ -178,8 +178,11 @@ export class User {
   /**
    * Register an user with the word list.
    * @param wordList must be **incomplete**.
+   * @returns [user, fixedMnemonic]
    */
-  public static async registerFromMnemonic(wordList: string[]) {
+  public static async registerFromMnemonic(
+    wordList: string[]
+  ): Promise<[User, string]> {
     // If wordList is complete and invalid, the next line throws.
     if (wordList.length === 12) {
       throw (
@@ -190,7 +193,7 @@ export class User {
     const mnemonic = fixMnemonics(wordList.join(" "));
     const { privateKey, publicKey } = handleMnemonics(mnemonic);
     const cert = await queryCert(publicKey);
-    return new User(privateKey, cert);
+    return [new User(privateKey, cert), mnemonic];
   }
 
   /**
@@ -204,5 +207,13 @@ export class User {
     const { privateKey } = handleMnemonics(mnemonic);
     const cert = await restoreCert(privateKey);
     return new User(privateKey, cert);
+  }
+
+  /**
+   * Login to the forum. Backend will establish a session.
+   */
+  public async login(): Promise<void> {
+    const userInfo = await authLogin(this.privateKey, this.cert);
+    this._profile = userInfo;
   }
 }
