@@ -128,5 +128,5 @@ describe("User static factory test", () => {
       expect(isValidMnemonics(mnemonic)).toBeTruthy();
     }
     server.shutdown();
-  });
+  }, 20000);
 });

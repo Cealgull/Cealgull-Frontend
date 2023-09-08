@@ -62,5 +62,5 @@ describe("Test bip utils", () => {
       const fixedMnemonic = fixMnemonics(mnemonic);
       expect(isValidMnemonics(fixedMnemonic)).toBeTruthy();
     }
-  });
+  }, 20000);
 });

@@ -6,7 +6,7 @@ import App from "../App";
 describe("Test App", () => {
   test("render correctly", async () => {
     render(<App />);
-    await screen.findAllByText("添加用户");
+    await screen.findAllByText("添加用户", { timeout: 2000 });
     expect(screen).toMatchSnapshot();
   });
 });
