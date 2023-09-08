@@ -1,13 +1,15 @@
+/**
+ * Type declaration of react-navigation.
+ */
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { HomeScreenProps, PersonScreenProps } from "@src/views/ForumTabScreens";
 import {
-  HomeScreenProps,
-  PersonScreenProps,
-  PublishScreenProps,
-  TopicScreenProps,
   AccountScreenProps,
+  PublishScreenProps,
   SettingScreenProps,
-} from "@src/views/BottomTabScreen";
+  TopicScreenProps,
+} from "@src/views/RootStackScreens";
 
 type RootTabParamList = {
   Home: HomeScreenProps;
