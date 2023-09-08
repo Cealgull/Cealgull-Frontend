@@ -58,17 +58,13 @@ export default function LoginView() {
           typeof user.profile
         >;
         userCardList.push(
-          <Pressable
+          <UserCard
             key={`user_login${i}`}
+            username={username}
+            signature={signature}
+            selected={selected === i}
             onPress={() => setSelected(i)}
-            accessibilityRole="checkbox"
-          >
-            <UserCard
-              username={username}
-              signature={signature}
-              selected={selected === i}
-            />
-          </Pressable>
+          />
         );
       });
 
