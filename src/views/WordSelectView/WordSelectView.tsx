@@ -167,7 +167,6 @@ interface CompleteDialogProps {
   onComplete: () => void;
 }
 
-// TODO more user-friendly notification
 const CompleteDialog: React.FC<CompleteDialogProps> = ({
   isVisible,
   toggleVisible,

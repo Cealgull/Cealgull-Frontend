@@ -41,7 +41,6 @@ async function verifyEmail(account: string, verifyCode: string) {
   if (verifyCode.length !== 6) {
     throw "Verify code must have length 6!";
   }
-  // TODO waiting for the backend logic
   await request({
     method: "POST",
     url: APIConfig["auth.email.query"],
