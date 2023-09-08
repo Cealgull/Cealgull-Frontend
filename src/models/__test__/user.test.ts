@@ -1,6 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { _userInfo_sample } from "@root/assets/sample";
 import { startAuthServer } from "@src/services/__test__/mirage";
+import { isValidMnemonics } from "@src/utils/bip";
 import { User, UserInfoPOJO } from "../User";
 import configure, { storageName } from "../config";
 
@@ -116,5 +117,16 @@ describe("User static factory test", () => {
   it("restore: success", () => {
     const server = startAuthServer();
     return User.restoreFromMnemonic(mnemonic12).then(() => server.shutdown());
+  });
+
+  it("Violent test: register with valid mnemonic", async () => {
+    const server = startAuthServer();
+    for (let i = 0; i < 100; ++i) {
+      const [, mnemonic] = await User.registerFromMnemonic(
+        mnemonic10.split(" ")
+      );
+      expect(isValidMnemonics(mnemonic)).toBeTruthy();
+    }
+    server.shutdown();
   });
 });

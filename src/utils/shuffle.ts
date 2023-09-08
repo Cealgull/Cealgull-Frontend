@@ -5,7 +5,10 @@
  * @see https://bost.ocks.org/mike/shuffle
  * @see https://stackoverflow.com/a/2450976/17838999
  */
-export default function shuffle(array: Array<unknown>) {
+export default function shuffle<T>(_array: Array<T>): Array<T> {
+  // Use `Array.from` to obtain a shallow copy of the array.
+  // Otherwise, the word list will be shuffled globally, which causes a subtle bug.
+  const array = Array.from(_array);
   let currentIndex = array.length;
   let randomIndex: number;
 

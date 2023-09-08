@@ -314,53 +314,58 @@ exports[`Test App render correctly 1`] = `
                                       onStartShouldSetResponder={[Function]}
                                     >
                                       <View
-                                        accessibilityState={
+                                        style={
                                           {
-                                            "busy": undefined,
-                                            "checked": undefined,
-                                            "disabled": undefined,
-                                            "expanded": undefined,
-                                            "selected": undefined,
+                                            "backgroundColor": "white",
+                                            "borderColor": "rgba(0,0,0,0.7)",
+                                            "borderRadius": 10,
+                                            "borderWidth": 3,
+                                            "height": 166.75,
+                                            "margin": 16,
+                                            "shadowColor": "black",
+                                            "shadowOffset": {
+                                              "height": 8,
+                                              "width": 8,
+                                            },
+                                            "shadowOpacity": 0.1,
+                                            "shadowRadius": 6,
+                                            "width": 670,
                                           }
                                         }
-                                        accessibilityValue={
-                                          {
-                                            "max": undefined,
-                                            "min": undefined,
-                                            "now": undefined,
-                                            "text": undefined,
-                                          }
-                                        }
-                                        accessible={true}
-                                        collapsable={false}
-                                        focusable={true}
-                                        onBlur={[Function]}
-                                        onClick={[Function]}
-                                        onFocus={[Function]}
-                                        onResponderGrant={[Function]}
-                                        onResponderMove={[Function]}
-                                        onResponderRelease={[Function]}
-                                        onResponderTerminate={[Function]}
-                                        onResponderTerminationRequest={[Function]}
-                                        onStartShouldSetResponder={[Function]}
                                       >
                                         <View
+                                          accessibilityState={
+                                            {
+                                              "busy": undefined,
+                                              "checked": undefined,
+                                              "disabled": undefined,
+                                              "expanded": undefined,
+                                              "selected": undefined,
+                                            }
+                                          }
+                                          accessibilityValue={
+                                            {
+                                              "max": undefined,
+                                              "min": undefined,
+                                              "now": undefined,
+                                              "text": undefined,
+                                            }
+                                          }
+                                          accessible={true}
+                                          collapsable={false}
+                                          focusable={true}
+                                          onBlur={[Function]}
+                                          onClick={[Function]}
+                                          onFocus={[Function]}
+                                          onResponderGrant={[Function]}
+                                          onResponderMove={[Function]}
+                                          onResponderRelease={[Function]}
+                                          onResponderTerminate={[Function]}
+                                          onResponderTerminationRequest={[Function]}
+                                          onStartShouldSetResponder={[Function]}
                                           style={
                                             {
-                                              "backgroundColor": "white",
-                                              "borderColor": "rgba(0,0,0,0.7)",
-                                              "borderRadius": 10,
-                                              "borderWidth": 3,
-                                              "height": 166.75,
-                                              "margin": 16,
-                                              "shadowColor": "black",
-                                              "shadowOffset": {
-                                                "height": 8,
-                                                "width": 8,
-                                              },
-                                              "shadowOpacity": 0.1,
-                                              "shadowRadius": 6,
-                                              "width": 670,
+                                              "flex": 1,
                                             }
                                           }
                                         >
@@ -496,53 +501,58 @@ exports[`Test App render correctly 1`] = `
                                       onStartShouldSetResponder={[Function]}
                                     >
                                       <View
-                                        accessibilityState={
+                                        style={
                                           {
-                                            "busy": undefined,
-                                            "checked": undefined,
-                                            "disabled": undefined,
-                                            "expanded": undefined,
-                                            "selected": undefined,
+                                            "backgroundColor": "white",
+                                            "borderColor": "rgba(0,0,0,0.7)",
+                                            "borderRadius": 10,
+                                            "borderWidth": 3,
+                                            "height": 166.75,
+                                            "margin": 16,
+                                            "shadowColor": "black",
+                                            "shadowOffset": {
+                                              "height": 8,
+                                              "width": 8,
+                                            },
+                                            "shadowOpacity": 0.1,
+                                            "shadowRadius": 6,
+                                            "width": 670,
                                           }
                                         }
-                                        accessibilityValue={
-                                          {
-                                            "max": undefined,
-                                            "min": undefined,
-                                            "now": undefined,
-                                            "text": undefined,
-                                          }
-                                        }
-                                        accessible={true}
-                                        collapsable={false}
-                                        focusable={true}
-                                        onBlur={[Function]}
-                                        onClick={[Function]}
-                                        onFocus={[Function]}
-                                        onResponderGrant={[Function]}
-                                        onResponderMove={[Function]}
-                                        onResponderRelease={[Function]}
-                                        onResponderTerminate={[Function]}
-                                        onResponderTerminationRequest={[Function]}
-                                        onStartShouldSetResponder={[Function]}
                                       >
                                         <View
+                                          accessibilityState={
+                                            {
+                                              "busy": undefined,
+                                              "checked": undefined,
+                                              "disabled": undefined,
+                                              "expanded": undefined,
+                                              "selected": undefined,
+                                            }
+                                          }
+                                          accessibilityValue={
+                                            {
+                                              "max": undefined,
+                                              "min": undefined,
+                                              "now": undefined,
+                                              "text": undefined,
+                                            }
+                                          }
+                                          accessible={true}
+                                          collapsable={false}
+                                          focusable={true}
+                                          onBlur={[Function]}
+                                          onClick={[Function]}
+                                          onFocus={[Function]}
+                                          onResponderGrant={[Function]}
+                                          onResponderMove={[Function]}
+                                          onResponderRelease={[Function]}
+                                          onResponderTerminate={[Function]}
+                                          onResponderTerminationRequest={[Function]}
+                                          onStartShouldSetResponder={[Function]}
                                           style={
                                             {
-                                              "backgroundColor": "white",
-                                              "borderColor": "rgba(0,0,0,0.7)",
-                                              "borderRadius": 10,
-                                              "borderWidth": 3,
-                                              "height": 166.75,
-                                              "margin": 16,
-                                              "shadowColor": "black",
-                                              "shadowOffset": {
-                                                "height": 8,
-                                                "width": 8,
-                                              },
-                                              "shadowOpacity": 0.1,
-                                              "shadowRadius": 6,
-                                              "width": 670,
+                                              "flex": 1,
                                             }
                                           }
                                         >
@@ -678,53 +688,58 @@ exports[`Test App render correctly 1`] = `
                                       onStartShouldSetResponder={[Function]}
                                     >
                                       <View
-                                        accessibilityState={
+                                        style={
                                           {
-                                            "busy": undefined,
-                                            "checked": undefined,
-                                            "disabled": undefined,
-                                            "expanded": undefined,
-                                            "selected": undefined,
+                                            "backgroundColor": "white",
+                                            "borderColor": "rgba(0,0,0,0.7)",
+                                            "borderRadius": 10,
+                                            "borderWidth": 3,
+                                            "height": 166.75,
+                                            "margin": 16,
+                                            "shadowColor": "black",
+                                            "shadowOffset": {
+                                              "height": 8,
+                                              "width": 8,
+                                            },
+                                            "shadowOpacity": 0.1,
+                                            "shadowRadius": 6,
+                                            "width": 670,
                                           }
                                         }
-                                        accessibilityValue={
-                                          {
-                                            "max": undefined,
-                                            "min": undefined,
-                                            "now": undefined,
-                                            "text": undefined,
-                                          }
-                                        }
-                                        accessible={true}
-                                        collapsable={false}
-                                        focusable={true}
-                                        onBlur={[Function]}
-                                        onClick={[Function]}
-                                        onFocus={[Function]}
-                                        onResponderGrant={[Function]}
-                                        onResponderMove={[Function]}
-                                        onResponderRelease={[Function]}
-                                        onResponderTerminate={[Function]}
-                                        onResponderTerminationRequest={[Function]}
-                                        onStartShouldSetResponder={[Function]}
                                       >
                                         <View
+                                          accessibilityState={
+                                            {
+                                              "busy": undefined,
+                                              "checked": undefined,
+                                              "disabled": undefined,
+                                              "expanded": undefined,
+                                              "selected": undefined,
+                                            }
+                                          }
+                                          accessibilityValue={
+                                            {
+                                              "max": undefined,
+                                              "min": undefined,
+                                              "now": undefined,
+                                              "text": undefined,
+                                            }
+                                          }
+                                          accessible={true}
+                                          collapsable={false}
+                                          focusable={true}
+                                          onBlur={[Function]}
+                                          onClick={[Function]}
+                                          onFocus={[Function]}
+                                          onResponderGrant={[Function]}
+                                          onResponderMove={[Function]}
+                                          onResponderRelease={[Function]}
+                                          onResponderTerminate={[Function]}
+                                          onResponderTerminationRequest={[Function]}
+                                          onStartShouldSetResponder={[Function]}
                                           style={
                                             {
-                                              "backgroundColor": "white",
-                                              "borderColor": "rgba(0,0,0,0.7)",
-                                              "borderRadius": 10,
-                                              "borderWidth": 3,
-                                              "height": 166.75,
-                                              "margin": 16,
-                                              "shadowColor": "black",
-                                              "shadowOffset": {
-                                                "height": 8,
-                                                "width": 8,
-                                              },
-                                              "shadowOpacity": 0.1,
-                                              "shadowRadius": 6,
-                                              "width": 670,
+                                              "flex": 1,
                                             }
                                           }
                                         >

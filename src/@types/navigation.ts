@@ -10,6 +10,7 @@ import {
   SettingScreenProps,
   TopicScreenProps,
 } from "@src/views/RootStackScreens";
+import { WelcomeViewProps } from "@src/views/WelcomeView";
 
 /**
  * The root stack of cealgull.app
@@ -17,6 +18,7 @@ import {
 export type RootStackParamList = {
   Login: undefined;
   Main: undefined;
+  Welcome: WelcomeViewProps;
   Publish: PublishScreenProps;
   Topic: TopicScreenProps;
   Account: AccountScreenProps;

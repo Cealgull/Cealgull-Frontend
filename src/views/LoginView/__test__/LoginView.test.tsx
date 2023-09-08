@@ -19,6 +19,11 @@ jest.mock("@react-navigation/native", () => {
     }),
   };
 });
+jest.mock("@src/hooks/useUser", () => ({
+  __esModule: true,
+  default: () => undefined,
+  useSetUser: () => undefined,
+}));
 
 describe("Test LoginView", () => {
   test("render correctly", async () => {

@@ -41,7 +41,6 @@ async function verifyEmail(account: string, verifyCode: string) {
   if (verifyCode.length !== 6) {
     throw "Verify code must have length 6!";
   }
-  // TODO waiting for the backend logic
   await request({
     method: "POST",
     url: APIConfig["auth.email.query"],
@@ -68,7 +67,7 @@ async function queryCert(publicKey: string, signature = "HACK") {
     body: { pub: Buffer.from(publicKey, "hex").toString("base64") },
   });
   const data = (await res.json()) as { cert: string };
-  return data.cert;
+  return data.cert as Readonly<string>;
 }
 
 /**
@@ -90,7 +89,7 @@ async function restoreCert(privateKey: string) {
   return data.cert as Readonly<string>;
 }
 
-type LoginResponse = UserInfoPOJO;
+type LoginResponse = Readonly<UserInfoPOJO>;
 
 async function _login(cert: string, signature: string): Promise<LoginResponse> {
   const res = await request({
