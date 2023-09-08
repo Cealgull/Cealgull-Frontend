@@ -11,9 +11,12 @@ const UserContext = createContext<
  * But in most cases, it's safe to use.
  * @returns the current user instance
  */
-export default function useUser(): User | undefined {
+export default function useUser(): User {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const [user] = useContext(UserContext)!;
+  if (user === undefined) {
+    throw "useUser must be invoked inside UserContext!";
+  }
   return user;
 }
 
