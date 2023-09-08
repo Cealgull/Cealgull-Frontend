@@ -11,12 +11,10 @@ import {
   TopicScreenProps,
 } from "@src/views/RootStackScreens";
 
-type RootTabParamList = {
-  Home: HomeScreenProps;
-  Person: PersonScreenProps;
-};
-
-type RootStackParamList = {
+/**
+ * The root stack of cealgull.app
+ */
+export type RootStackParamList = {
   Login: undefined;
   Main: undefined;
   Publish: PublishScreenProps;
@@ -25,18 +23,23 @@ type RootStackParamList = {
   Setting: SettingScreenProps;
 };
 
-type LoginTabParamList = {
+export type MainTabParamList = {
+  Home: HomeScreenProps;
+  Person: PersonScreenProps;
+};
+
+export type LoginTabParamList = {
   UserLogin: undefined;
   UserAdd: undefined;
   WordSelect: undefined;
 };
 
-type TabScreenList = keyof RootTabParamList;
+type TabScreenList = keyof MainTabParamList;
 type StackScreenList = keyof RootStackParamList;
 type LoginTabScreenList = keyof LoginTabParamList;
 
-export type TabScreenPropsGeneric<Screen extends TabScreenList> =
-  BottomTabScreenProps<RootTabParamList, Screen>;
+export type MainScreenPropsGeneric<Screen extends TabScreenList> =
+  BottomTabScreenProps<MainTabParamList, Screen>;
 
 export type StackScreenPropsGeneric<Screen extends StackScreenList> =
   NativeStackScreenProps<RootStackParamList, Screen>;

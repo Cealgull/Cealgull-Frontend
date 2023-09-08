@@ -2,13 +2,13 @@ import { useNavigation } from "@react-navigation/native";
 import { Icon } from "@rneui/themed";
 import {
   StackScreenPropsGeneric,
-  TabScreenPropsGeneric,
+  MainScreenPropsGeneric,
 } from "@src/@types/navigation";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export const NavMyIcon = () => {
   const navigation =
-    useNavigation<TabScreenPropsGeneric<"Person">["navigation"]>();
+    useNavigation<MainScreenPropsGeneric<"Person">["navigation"]>();
   return (
     <TouchableOpacity
       onPress={() => navigation.navigate("Person")}
@@ -44,7 +44,7 @@ export const NavPublishIcon = () => {
 
 export const NavHomeIcon = () => {
   const navigation =
-    useNavigation<TabScreenPropsGeneric<"Home">["navigation"]>();
+    useNavigation<MainScreenPropsGeneric<"Home">["navigation"]>();
   return (
     <TouchableOpacity
       style={NavbarIcon.wrapper}
