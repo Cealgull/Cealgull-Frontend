@@ -1,10 +1,10 @@
-import type { TabScreenPropsGeneric } from "@src/@types/navigation";
+import type { MainScreenPropsGeneric } from "@src/@types/navigation";
 import { HomeView } from "../HomeView";
 
 export type HomeScreenProps = undefined;
 
 export default function HomeScreen({
   route: { params },
-}: TabScreenPropsGeneric<"Home">) {
+}: MainScreenPropsGeneric<"Home">) {
   return <HomeView {...(params ?? {})} />;
 }

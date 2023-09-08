@@ -7,7 +7,7 @@ import {
 import {
   LoginTabParamList,
   RootStackParamList,
-  RootTabParamList,
+  MainTabParamList,
 } from "@src/@types/navigation";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { HomeScreen, PersonScreen } from "./views/ForumTabScreens";
@@ -29,7 +29,7 @@ import { UserContext } from "./hooks/useUser";
 
 const queryClient = new QueryClient();
 const LoginTab = createBottomTabNavigator<LoginTabParamList>();
-const ForumTab = createBottomTabNavigator<RootTabParamList>();
+const ForumTab = createBottomTabNavigator<MainTabParamList>();
 const RootStack = createStackNavigator<RootStackParamList>();
 
 const LoginTabsScreen = () => {

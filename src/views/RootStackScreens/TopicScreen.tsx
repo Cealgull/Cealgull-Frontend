@@ -1,9 +1,7 @@
 import type { StackScreenPropsGeneric } from "@src/@types/navigation";
-import { TopicView } from "../TopicView";
+import { TopicView, TopicViewProps } from "../TopicView";
 
-export type TopicScreenProps = {
-  id: string; // The topic id
-};
+export type TopicScreenProps = TopicViewProps;
 
 export default function TopicScreen({
   route: { params },
