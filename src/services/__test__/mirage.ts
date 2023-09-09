@@ -63,6 +63,12 @@ export function startForumServer() {
       this.get(APIConfig["forum.user.statistics"], () => {
         return forumTestData["forum.user.statistics"];
       });
+      this.get(APIConfig["forum.topic.categories"], () => []);
+      this.get(APIConfig["forum.topic.tags"], () => []);
+      this.post(APIConfig["forum.post.downvote"], () => ({}));
+      this.post(APIConfig["forum.post.upvote"], () => ({}));
+      this.post(APIConfig["forum.topic.downvote"], () => ({}));
+      this.post(APIConfig["forum.topic.upvote"], () => ({}));
     },
   });
 }
