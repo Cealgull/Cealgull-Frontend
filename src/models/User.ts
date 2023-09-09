@@ -38,6 +38,14 @@ export interface UserInfoPOJO {
   updateAt: Date;
 }
 
+type _ChangeableProperty =
+  | "username"
+  | "avatar"
+  | "signature"
+  | "activeBadge"
+  | "activeRole";
+export type UserInfoChangeable = Pick<UserInfoPOJO, _ChangeableProperty>;
+
 /**
  * Convert a json object to the UserInfoPOJO
  * @param json The json object
@@ -231,7 +239,7 @@ export class User {
   }
 
   public async updateProfile(
-    form: Parameters<typeof modifyUserInfo>[0]
+    form: Partial<UserInfoChangeable>
   ): Promise<boolean> {
     try {
       await modifyUserInfo(form);
