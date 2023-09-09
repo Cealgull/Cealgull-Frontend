@@ -1,6 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
-import { Avatar, Icon, Image } from "@rneui/themed";
+import { Icon, Image } from "@rneui/themed";
 import { LoginTabScreenPropsGeneric } from "@src/@types/navigation";
+import UserAvatar from "@src/components/UserAvatar";
 import React, { useMemo } from "react";
 import {
   Dimensions,
@@ -16,6 +17,7 @@ interface UserCardProps {
   username: string;
   signature: string;
   selected: boolean;
+  avatar?: string;
   onPress: () => void;
 }
 
@@ -23,6 +25,7 @@ export default function UserCard({
   username,
   signature,
   selected,
+  avatar,
   onPress,
 }: UserCardProps) {
   const checkIconStyle = useMemo<StyleProp<ViewStyle>>(
@@ -39,7 +42,7 @@ export default function UserCard({
       >
         <View style={styles.content_container}>
           <View style={{ flex: 0 }}>
-            <UserCardAvatar alt={username} />
+            <UserAvatar alt={username} uri={avatar || undefined} />
           </View>
           <View style={styles.info_container}>
             <Text style={[styles.text, styles.text_username]}>{username}</Text>
@@ -90,20 +93,6 @@ const CheckIcon: React.FC = () => {
   return (
     <Image source={require(checkMarkIconPath)} style={styles.check_icon} />
   );
-};
-
-interface UserCardAvatarProps {
-  size?: ("small" | "medium" | "large" | "xlarge") | number;
-  uri?: string;
-  alt?: string;
-}
-
-const UserCardAvatar: React.FC<UserCardAvatarProps> = ({
-  size = 80,
-  uri = "https://randomuser.me/api/portraits/men/36.jpg",
-  alt,
-}) => {
-  return <Avatar rounded size={size} source={{ uri }} imageProps={{ alt }} />;
 };
 
 const { height: screenHeight, width: screenWidth } = Dimensions.get("screen");

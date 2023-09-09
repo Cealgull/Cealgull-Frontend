@@ -72,14 +72,13 @@ export default function LoginView() {
     (userList: User[], selected?: number) => {
       const userCardList: React.ReactElement[] = [];
       userList.forEach((user, i) => {
-        const { username, signature } = user.profile as NonNullable<
-          typeof user.profile
-        >;
+        const { username, signature, avatar } = user.profile;
         userCardList.push(
           <UserCard
             key={`user_login${i}`}
             username={username}
             signature={signature}
+            avatar={avatar || undefined}
             selected={selected === i}
             onPress={() => setSelected(i)}
           />
