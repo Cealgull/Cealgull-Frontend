@@ -212,3 +212,31 @@ export async function forumVote(
     throw "forumVote error!";
   }
 }
+
+export const getImageIpfsPath = (cid: string): string => {
+  return `${APIConfig["getIpfsSource"]}/${cid}`;
+};
+
+export async function getAllCategories(): Promise<Category[]> {
+  const response = await request({
+    method: "GET",
+    url: APIConfig["forum.topic.categories"],
+  });
+  if (!response.ok) {
+    throw "getAllCategories error!";
+  }
+  const data = (await response.json()) as Category[];
+  return data;
+}
+
+export async function getAllTags(): Promise<Tag[]> {
+  const response = await request({
+    method: "GET",
+    url: APIConfig["forum.topic.tags"],
+  });
+  if (!response.ok) {
+    throw "getAllTags error!";
+  }
+  const data = (await response.json()) as Tag[];
+  return data;
+}
