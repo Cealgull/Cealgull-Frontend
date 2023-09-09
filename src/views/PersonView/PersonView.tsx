@@ -19,7 +19,6 @@ import {
   View,
 } from "react-native";
 import useUser from "@src/hooks/useUser";
-// export interface PersonViewProps {
 
 export const PersonView: React.FC = () => {
   const navigation =

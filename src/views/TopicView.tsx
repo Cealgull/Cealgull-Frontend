@@ -118,7 +118,7 @@ export const TopicView: React.FC<TopicViewProps> = ({
   });
 
   const renderPost: renderDataType[] | undefined = postList?.map(
-    (post, index) => {
+    (post, index: number) => {
       return { isTop: false, obj: post, level: index + 1 };
     }
   );

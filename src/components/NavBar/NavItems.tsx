@@ -112,7 +112,7 @@ export const NavHomeIcon = ({ focused }: NavHomeIconProps) => {
         navigation.navigate("Home", {
           pageSize: 10,
           category: "",
-          tags: "",
+          tags: [],
         })
       }
     >

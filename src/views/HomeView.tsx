@@ -15,9 +15,9 @@ import { Icon, Skeleton } from "@rneui/themed";
 import { Server } from "miragejs";
 import { startForumServer } from "@src/services/__test__/mirage";
 import { useNavigation } from "@react-navigation/native";
-import { TabScreenPropsGeneric } from "@src/@types/navigation";
 import useUser from "@src/hooks/useUser";
 import { User } from "@src/models/User";
+import { MainScreenPropsGeneric } from "@src/@types/navigation";
 
 const CustomLinearGradient = () => {
   return <Text style={HomeViewStyle.loadingText}>{"Loading...."}</Text>;
@@ -36,7 +36,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
 }: HomeViewProps) => {
   const pageNum = 1;
   const navigation =
-    useNavigation<TabScreenPropsGeneric<"Home">["navigation"]>();
+    useNavigation<MainScreenPropsGeneric<"Home">["navigation"]>();
 
   const getLoginUserWallet = (user: Readonly<User | undefined>) => {
     if (!user) {
