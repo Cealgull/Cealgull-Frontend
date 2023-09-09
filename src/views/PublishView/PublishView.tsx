@@ -2,11 +2,14 @@
  * @author Bojun Ren
  * @data 2023/07/06
  */
-import { Button, Icon } from "@rneui/themed";
+import { Button, ButtonGroup, Icon } from "@rneui/themed";
 import HeaderBarWrapper from "@src/components/HeaderBarWrapper";
+import { Loadable } from "@src/components/Loadable";
 import useImagePicker from "@src/hooks/useImagePicker";
 import useTextInput from "@src/hooks/useTextInput";
-import React, { useMemo, useState } from "react";
+import { getAllTags } from "@src/services/forum";
+import { useQuery } from "@tanstack/react-query";
+import React, { useCallback, useMemo, useState } from "react";
 import {
   Dimensions,
   Keyboard,
@@ -54,6 +57,7 @@ interface PublishMedia {
 type PublishHandler = (
   title: string,
   content: string,
+  tagList: Tag[],
   media: PublishMedia
 ) => Promise<void>;
 
@@ -85,6 +89,7 @@ export default function PublishView({ onClose, onPublish }: PublishViewProps) {
     };
   });
   const { bottom } = useSafeAreaInsets();
+  const [selectedTagIndexes, setSelectedTagIndexes] = useState<number[]>([]);
 
   const handleSelectImage = async () => {
     const assets = await imagePicker();
@@ -95,25 +100,68 @@ export default function PublishView({ onClose, onPublish }: PublishViewProps) {
   };
 
   const handlePublish = async () => {
-    await onPublish(title, content, { imageUrl: imageUriList });
+    await onPublish(
+      title,
+      content,
+      (tagList as Tag[]).filter(
+        (_tag, i) => selectedTagIndexes.find((index) => index === i) !== null
+      ),
+      { imageUrl: imageUriList }
+    );
   };
 
   const publishBtnEnabled = useMemo<boolean>(() => {
-    return title.trim().length !== 0 && content.trim().length !== 0;
-  }, [title, content]);
+    return (
+      title.trim().length !== 0 &&
+      content.trim().length !== 0 &&
+      selectedTagIndexes.length !== 0
+    );
+  }, [title, content, selectedTagIndexes]);
+
+  const { data: tagList } = useQuery<Tag[]>({
+    queryKey: ["publish", "tag list"],
+    queryFn: async () => {
+      return await getAllTags();
+    },
+  });
+
+  const createTagList = useCallback(
+    (tagList: Tag[]) => {
+      return (
+        <ButtonGroup
+          buttons={tagList.map((tag) => tag.name)}
+          selectMultiple
+          selectedIndexes={selectedTagIndexes}
+          onPress={(value) => {
+            setSelectedTagIndexes(value);
+          }}
+          containerStyle={{ margin: 6, borderWidth: 0 }}
+          innerBorderStyle={{ width: 10, color: "rgba(0,0,0,0.05)" }}
+          buttonStyle={{
+            borderWidth: 1,
+            borderColor: "#ddd",
+            borderRadius: 4,
+          }}
+        />
+      );
+    },
+    [selectedTagIndexes]
+  );
 
   return (
     <>
       <Pressable onPress={Keyboard.dismiss} style={{ flex: 1 }}>
         <View style={styles.container}>
           {/* HeaderBar is inflexible */}
-          <HeaderBarWrapper alignMethod="lr">
+          <HeaderBarWrapper alignMethod="lcr">
             <Icon name="close" type="antdesign" size={30} onPress={onClose} />
+            <Text style={styles.header}>创建新话题</Text>
             <PublishButton
               enabled={publishBtnEnabled}
               onPress={handlePublish}
             />
           </HeaderBarWrapper>
+          <Loadable maybeProp={tagList} generator={createTagList} />
           {/* flex: 1 */}
           <View style={styles.container}>
             <View>
@@ -140,6 +188,10 @@ export default function PublishView({ onClose, onPublish }: PublishViewProps) {
 }
 
 const styles = StyleSheet.create({
+  header: {
+    fontSize: 22,
+    fontWeight: "500",
+  },
   bottom_container: {
     borderTopColor: "rgba(0,0,0,0.1)",
     borderTopWidth: 0.8,
