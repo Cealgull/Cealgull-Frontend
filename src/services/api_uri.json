@@ -6,10 +6,20 @@
 
   "user.login": "/auth/login",
   "user.profile": "/api/users/query/profile",
+  "user.profile.modify": "/api/users/update/profile",
 
   "forum.topic.list": "/api/topic/query/list",
   "forum.post.list": "/api/post/query/list",
   "forum.topic.create": "/api/topic/invoke/create",
   "forum.post.create": "/api/post/invoke/create",
-  "getIpfsSource": "/ipfs"
+  "forum.user.statistics": "/api/user/query/statistics",
+  "forum.post.upvote": "/api/post/invoke/upvote",
+  "forum.post.downvote": "/api/post/invoke/downvote",
+  "forum.topic.upvote": "/api/topic/invoke/upvote",
+  "forum.topic.downvote": "/api/topic/invoke/downvote",
+  "forum.topic.categories":"/api/topic/query/categories",
+  "forum.topic.tags":"/api/topic/query/tags",
+
+  "getIpfsSource": "/ipfs",
+  "upload.avatar": "/api/upload"
 }

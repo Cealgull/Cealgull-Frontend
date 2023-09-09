@@ -33,21 +33,31 @@ export function startForumServer() {
   return createServer({
     environment: "test",
     routes() {
+      this.post(APIConfig["user.profile.modify"], () => ({}));
       this.post(APIConfig["user.login"], () => ({}));
       this.get(APIConfig["user.profile"], () => {
         return forumTestData["user.profile"];
       });
+
       this.post(APIConfig["forum.topic.list"], () => {
         return forumTestData["forum.topic.list"];
       });
       this.post(APIConfig["forum.post.list"], () => {
         return forumTestData["forum.post.list"];
       });
+      this.post(APIConfig["forum.topic.create"], () => ({}));
+      this.post(APIConfig["forum.post.create"], () => ({}));
+      this.get(APIConfig["forum.user.statistics"], () => {
+        return forumTestData["forum.user.statistics"];
+      });
+      this.post(APIConfig["forum.post.upvote"], () => ({}));
+
       this.get(`${APIConfig["getIpfsSource"]}/*path`, () => {
         return forumTestData["getIpfsText"];
       });
-      this.post(APIConfig["forum.topic.create"], () => ({}));
-      this.post(APIConfig["forum.post.create"], () => ({}));
+      this.post(APIConfig["upload.avatar"], () => {
+        return forumTestData["upload.avatar"];
+      });
     },
   });
 }
