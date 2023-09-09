@@ -5,8 +5,8 @@
   "auth.cert.resign": "/cert/resign",
 
   "user.login": "/auth/login",
-  "user.profile": "/api/users/query/profile",
-  "user.profile.modify": "/api/users/update/profile",
+  "user.profile": "/api/user/query/profile",
+  "user.profile.modify": "/api/user/update/profile",
 
   "forum.topic.list": "/api/topic/query/list",
   "forum.post.list": "/api/post/query/list",
