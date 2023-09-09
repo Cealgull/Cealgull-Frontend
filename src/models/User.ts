@@ -107,6 +107,18 @@ export class User {
    * The `privateKey` and `cert` properties must be defined.
    */
   public async persist(): Promise<void> {
+    // If the user is already persisted, update it.
+    if (this.user_id !== -1) {
+      await AsyncStorage.setItem(
+        storageName.userId(this.user_id),
+        JSON.stringify({
+          privateKey: this.privateKey,
+          cert: this.cert,
+          profile: this._profile,
+        })
+      );
+      return;
+    }
     const userCount = await User.getUserCount();
     if (Number.isNaN(userCount)) {
       throw `Can't parse the ${storageName.userCount} key`;
