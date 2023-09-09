@@ -5,6 +5,7 @@ import {
   StackScreenPropsGeneric,
 } from "@src/@types/navigation";
 import HeaderBarWrapper from "@src/components/HeaderBarWrapper";
+import { useSetUser } from "@src/hooks/useUser";
 import { User } from "@src/models/User";
 import { isValidMnemonics } from "@src/utils/bip";
 import React, { useMemo, useState } from "react";
@@ -30,6 +31,7 @@ export default function UserAddScreen() {
     [wordInput]
   );
   const [disableSubmit, setDisableSubmit] = useState(false);
+  const setUser = useSetUser();
 
   const handleSubmit = async () => {
     setDisableSubmit(true);
@@ -37,8 +39,10 @@ export default function UserAddScreen() {
       const user = await User.restoreFromMnemonic(wordInput);
       // TODO repeat user?
       await user.login();
-      user.persist().finally(() => setDisableSubmit(false));
-      rootNavigation.navigate("Welcome", { mnemonic: wordInput, user });
+      await user.persist();
+      setUser(user);
+      // TODO dialog
+      rootNavigation.navigate("Main");
     } catch (err) {
       console.error(err);
     } finally {

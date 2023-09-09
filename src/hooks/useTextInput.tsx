@@ -20,6 +20,13 @@ interface PlaceHolderStyle {
   text?: string;
   color?: ColorValue;
 }
+
+/**
+ *
+ * @param inputStyle - the style property of {@link TextInputProps}
+ * @param plhStyle - an object indicating the placeholder's text and color
+ * @returns the inner text state, and the element to represent
+ */
 export default function useTextInput(
   inputStyle: StyleProp<TextStyle>,
   plhStyle: PlaceHolderStyle
