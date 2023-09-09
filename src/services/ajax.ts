@@ -31,7 +31,12 @@ export async function request(props: FetchProps) {
   return response;
 }
 
-// TODO cookie
-export async function requestWithCookie(props: FetchProps, userId?: number) {
+/**
+ * This function is an alias of {@link request} , since React Native automatically
+ * handles the cookie.
+ * @param props see {@link request}
+ * @returns see {@link request}
+ */
+export async function requestWithCookie(props: FetchProps) {
   return await request(props);
 }
