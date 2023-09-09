@@ -52,7 +52,7 @@ const PublishButton: React.FC<PublishButtonProps> = ({ enabled, onPress }) => {
 };
 
 interface PublishMedia {
-  imageUrl: string[];
+  imageBase64List: string[];
 }
 type PublishHandler = (
   title: string,
@@ -80,7 +80,7 @@ export default function PublishView({ onClose, onPublish }: PublishViewProps) {
     text: "正文内容",
     color: contentPlhColor,
   });
-  const [imageUriList, setImageUriList] = useState<string[]>([]);
+  const [imageBase64List, setImageBase64List] = useState<string[]>([]);
   const imagePicker = useImagePicker((options) => {
     return {
       ...options,
@@ -96,7 +96,7 @@ export default function PublishView({ onClose, onPublish }: PublishViewProps) {
     if (assets === null) {
       return;
     }
-    setImageUriList(assets.map((asset) => asset.uri));
+    setImageBase64List(assets.map((asset) => asset.base64 as string));
   };
 
   const handlePublish = async () => {
@@ -106,7 +106,7 @@ export default function PublishView({ onClose, onPublish }: PublishViewProps) {
       (tagList as Tag[]).filter(
         (_tag, i) => selectedTagIndexes.find((index) => index === i) !== null
       ),
-      { imageUrl: imageUriList }
+      { imageBase64List }
     );
   };
 
@@ -170,7 +170,7 @@ export default function PublishView({ onClose, onPublish }: PublishViewProps) {
                 {contentInputComponent}
               </ScrollView>
             </View>
-            <ImageList uris={imageUriList} />
+            <ImageList base64s={imageBase64List} />
           </View>
           {/* Bottom menu is inflexible */}
           <View style={[styles.bottom_container, { marginBottom: bottom }]}>

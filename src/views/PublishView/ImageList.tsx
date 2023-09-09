@@ -3,15 +3,18 @@ import React from "react";
 import { Dimensions, StyleSheet, View } from "react-native";
 
 interface ImageDisplayProps extends Omit<ImageProps, "source"> {
-  uri: string;
+  base64: string;
 }
 
-const ImageDisplay: React.FC<ImageDisplayProps> = ({ uri, ...imageProps }) => {
+const ImageDisplay: React.FC<ImageDisplayProps> = ({
+  base64,
+  ...imageProps
+}) => {
   return (
     <>
       <View style={styles.image_container}>
         <Image
-          source={{ uri }}
+          source={{ uri: "data:image/jpeg;base64," + base64 }}
           style={styles.image}
           {...imageProps}
           resizeMode="cover"
@@ -22,17 +25,17 @@ const ImageDisplay: React.FC<ImageDisplayProps> = ({ uri, ...imageProps }) => {
 };
 
 export interface ImageListProps {
-  uris: string[];
+  base64s: string[];
 }
 
-const ImageList: React.FC<ImageListProps> = ({ uris }) => {
-  if (uris.length === 0) {
+const ImageList: React.FC<ImageListProps> = ({ base64s }) => {
+  if (base64s.length === 0) {
     return null;
   }
   return (
     <View style={styles.image_list_container}>
-      {uris.map((uri) => (
-        <ImageDisplay uri={uri} key={uri} />
+      {base64s.map((base64) => (
+        <ImageDisplay base64={base64} key={base64} />
       ))}
     </View>
   );
