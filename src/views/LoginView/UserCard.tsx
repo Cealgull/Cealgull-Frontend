@@ -13,12 +13,18 @@ import {
 } from "react-native";
 
 interface UserCardProps {
-  userName: string;
-  email: string;
+  username: string;
+  signature: string;
   selected: boolean;
+  onPress: () => void;
 }
 
-export default function UserCard({ userName, email, selected }: UserCardProps) {
+export default function UserCard({
+  username,
+  signature,
+  selected,
+  onPress,
+}: UserCardProps) {
   const checkIconStyle = useMemo<StyleProp<ViewStyle>>(
     () => [styles.check_container, { opacity: selected ? 100 : 0 }],
     [selected]
@@ -26,18 +32,24 @@ export default function UserCard({ userName, email, selected }: UserCardProps) {
 
   return (
     <View style={styles.card}>
-      <View style={styles.content_container}>
-        <View style={{ flex: 0 }}>
-          <UserCardAvatar alt={userName} />
+      <Pressable
+        onPress={onPress}
+        accessibilityRole="checkbox"
+        style={{ flex: 1 }}
+      >
+        <View style={styles.content_container}>
+          <View style={{ flex: 0 }}>
+            <UserCardAvatar alt={username} />
+          </View>
+          <View style={styles.info_container}>
+            <Text style={[styles.text, styles.text_username]}>{username}</Text>
+            <Text style={styles.text}>{signature}</Text>
+          </View>
         </View>
-        <View style={styles.info_container}>
-          <Text style={[styles.text, styles.text_username]}>{userName}</Text>
-          <Text style={styles.text}>{email}</Text>
+        <View style={checkIconStyle} testID="check_icon">
+          <CheckIcon />
         </View>
-      </View>
-      <View style={checkIconStyle} testID="check_icon">
-        <CheckIcon />
-      </View>
+      </Pressable>
     </View>
   );
 }
@@ -50,12 +62,13 @@ export function UserAddCard() {
     useNavigation<LoginTabScreenPropsGeneric<"UserLogin">["navigation"]>();
 
   return (
-    <Pressable
-      onPress={() => {
-        navigation.navigate("UserAdd");
-      }}
-    >
-      <View style={styles.card}>
+    <View style={styles.card}>
+      <Pressable
+        onPress={() => {
+          navigation.navigate("UserAdd");
+        }}
+        style={{ flex: 1 }}
+      >
         <View style={styles.content_container}>
           <View style={{ flex: 0 }}>
             <Icon name="adduser" type="antdesign" size={72} />
@@ -64,8 +77,8 @@ export function UserAddCard() {
             <Text style={{ fontSize: 20 }}>添加用户</Text>
           </View>
         </View>
-      </View>
-    </Pressable>
+      </Pressable>
+    </View>
   );
 }
 

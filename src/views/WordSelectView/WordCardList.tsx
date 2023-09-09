@@ -27,8 +27,7 @@ export default function WordCardList({
    * Therefore a re-sort will trigger.
    */
   const wordList = useMemo<string[]>(() => {
-    const wordListChinese = mnemonicWordLists["chinese_simplified"];
-    shuffle(wordListChinese);
+    const wordListChinese = shuffle(mnemonicWordLists["chinese_simplified"]);
     return wordListChinese.slice(0, 36);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [restartTimes]);

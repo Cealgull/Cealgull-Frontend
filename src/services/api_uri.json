@@ -1,7 +1,8 @@
 {
   "auth.email.query": "/email/sign",
   "auth.email.verify": "/email/verify",
-  "auth.cert.query": "/cert/sign",
+  "auth.cert.sign": "/cert/sign",
+  "auth.cert.resign": "/cert/resign",
 
   "user.login": "/auth/login",
   "user.profile": "/api/users/query/profile",

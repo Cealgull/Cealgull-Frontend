@@ -1,6 +1,6 @@
 // TODO error handler
 import { type UserInfoPOJO } from "@src/models/User";
-import { handleMnemonics, signAndEncode } from "@src/utils/bip/tools";
+import { handlePrivateKey, signAndEncode } from "@src/utils/bip/tools";
 import { request } from "./ajax";
 import APIConfig from "./api.config";
 
@@ -41,7 +41,6 @@ async function verifyEmail(account: string, verifyCode: string) {
   if (verifyCode.length !== 6) {
     throw "Verify code must have length 6!";
   }
-  // TODO waiting for the backend logic
   await request({
     method: "POST",
     url: APIConfig["auth.email.query"],
@@ -54,13 +53,13 @@ async function verifyEmail(account: string, verifyCode: string) {
 
 /**
  *
- * @param signature received by email verifying, no need to care the format
  * @param publicKey hex
+ * @param signature received by email verifying, no need to care the format
  * @returns the cert
  */
 async function queryCert(publicKey: string, signature = "HACK") {
   const res = await request({
-    url: APIConfig["auth.cert.query"],
+    url: APIConfig["auth.cert.sign"],
     method: "POST",
     headers: {
       signature,
@@ -68,10 +67,29 @@ async function queryCert(publicKey: string, signature = "HACK") {
     body: { pub: Buffer.from(publicKey, "hex").toString("base64") },
   });
   const data = (await res.json()) as { cert: string };
-  return data.cert;
+  return data.cert as Readonly<string>;
 }
 
-type LoginResponse = UserInfoPOJO;
+/**
+ * @param privateKey hex
+ * @returns the cert
+ */
+async function restoreCert(privateKey: string) {
+  const { publicKey } = handlePrivateKey(privateKey);
+  const base64Pk = Buffer.from(publicKey, "hex").toString("base64");
+  // signature: public key -> base64 -> signed by private key -> base64
+  const signature = signAndEncode(base64Pk, privateKey);
+  const res = await request({
+    url: APIConfig["auth.cert.resign"],
+    method: "POST",
+    headers: { signature },
+    body: { pub: base64Pk },
+  });
+  const data = (await res.json()) as { cert: string };
+  return data.cert as Readonly<string>;
+}
+
+type LoginResponse = Readonly<UserInfoPOJO>;
 
 async function _login(cert: string, signature: string): Promise<LoginResponse> {
   const res = await request({
@@ -100,14 +118,4 @@ async function login(privateKey: string, cert: string): Promise<LoginResponse> {
   return await _login(cert, sig);
 }
 
-/**
- * Use mnemonics to register a new user.
- * @param mnemonics
- */
-async function register(mnemonics: string) {
-  const { privateKey, publicKey } = handleMnemonics(mnemonics);
-  const cert = await queryCert(publicKey);
-  // TODO persist the user
-}
-
-export { login, queryEmail, register, verifyEmail };
+export { login, queryCert, queryEmail, verifyEmail, restoreCert };

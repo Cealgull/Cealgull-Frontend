@@ -78,7 +78,7 @@ You can never take care of the mock during regular development. To implement an 
 
 With [dotenv](https://www.dotenv.org/) installed, Node will search for _.env_ file at the project root and inject the specified environment variables. Here list of the environment variables in the project scope.
 
-- `NODE_ENV`: one of `'develop'`, `'production'` and `'test'`. **This variable should never be set manually.** During development (launch the project with `yarn start`), `NODE_ENV` is set to `'develop'`; Jest automatically sets it to `'test'`; after the App is built and running on users' devices, `NODE_ENV` is set to `'production'`.
+- `NODE_ENV`: one of `'development'`, `'production'` and `'test'`. **This variable should never be set manually.** During development (launch the project with `yarn start`), `NODE_ENV` is set to `'develop'`; Jest automatically sets it to `'test'`; after the App is built and running on users' devices, `NODE_ENV` is set to `'production'`.
 - `AUTH_API`: the API of the authentication center. Example: `'http://localhost:8080'`. Should be set as secret.
 - `FORUM_API`: the API of the main backend service. Example: `'http://localhost:8080'`. Should be set as secret.
 

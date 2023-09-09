@@ -1,8 +1,13 @@
 import { useNavigation } from "@react-navigation/native";
 import { Button, ButtonProps, Icon, Text } from "@rneui/themed";
-import { LoginTabScreenPropsGeneric } from "@src/@types/navigation";
+import {
+  LoginTabScreenPropsGeneric,
+  StackScreenPropsGeneric,
+} from "@src/@types/navigation";
+import HeaderBarWrapper from "@src/components/HeaderBarWrapper";
+import { User } from "@src/models/User";
 import { isValidMnemonics } from "@src/utils/bip";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import {
   Dimensions,
   Keyboard,
@@ -15,46 +20,73 @@ import {
 
 export default function UserAddScreen() {
   const [wordInput, setWordInput] = useState<string>("");
-  const navigation =
+  const loginNavigation =
     useNavigation<LoginTabScreenPropsGeneric<"UserAdd">["navigation"]>();
+  const rootNavigation =
+    useNavigation<StackScreenPropsGeneric<"Login">["navigation"]>();
 
-  const valid = isValidMnemonics(wordInput, "chinese_simplified");
+  const valid = useMemo(
+    () => isValidMnemonics(wordInput, "chinese_simplified"),
+    [wordInput]
+  );
+  const [disableSubmit, setDisableSubmit] = useState(false);
 
-  const handleSubmit = () => {
-    // TODO submit mnemonics
-    navigation.navigate("UserLogin");
+  const handleSubmit = async () => {
+    setDisableSubmit(true);
+    const user = await User.restoreFromMnemonic(wordInput);
+    // TODO repeat user?
+    await user.login();
+    user.persist().then(() => setDisableSubmit(false));
+    rootNavigation.navigate("Welcome", { mnemonic: wordInput, user });
   };
 
   const goToSelect = () => {
-    // TODO go to selection view
-    navigation.navigate("WordSelect");
+    loginNavigation.navigate("WordSelect");
+  };
+
+  const goBackLogin = () => {
+    loginNavigation.navigate("UserLogin");
   };
 
   return (
-    <Pressable style={{ flex: 1 }} onPress={Keyboard.dismiss}>
-      <View style={styles.container}>
-        <Text h1 h1Style={{ fontWeight: "700" }}>
+    <>
+      <HeaderBarWrapper alignMethod="lc">
+        <Icon
+          name="chevron-back-outline"
+          type={"ionicon"}
+          size={40}
+          onPress={goBackLogin}
+        />
+        <Text h4 h4Style={{ fontWeight: "700" }}>
           添加用户
         </Text>
-        <KeyboardAvoidingView behavior="position">
-          <Text h4 style={styles.prompt_mnemonics}>
-            输入助记词（用空格分隔）
-          </Text>
-          <TextInput
-            style={styles.input}
-            placeholder="请注意助记词的顺序"
-            placeholderTextColor={"rgba(0,0,0,0.2)"}
-            value={wordInput}
-            onChangeText={setWordInput}
-          />
-          <MnemonicsChecker valid={valid} onSubmit={handleSubmit} />
-        </KeyboardAvoidingView>
-        <View style={{ alignItems: "center" }}>
-          <Text style={styles.prompt_select}>或者...还没有助记词？</Text>
-          <IntoSelectButton onPress={goToSelect} />
+      </HeaderBarWrapper>
+      <Pressable style={{ flex: 1 }} onPress={Keyboard.dismiss}>
+        <View style={styles.container}>
+          <KeyboardAvoidingView behavior="position">
+            <Text h4 style={styles.prompt_mnemonics}>
+              输入助记词（用空格分隔）
+            </Text>
+            <TextInput
+              style={styles.input}
+              placeholder="请注意助记词的顺序"
+              placeholderTextColor={"rgba(0,0,0,0.2)"}
+              value={wordInput}
+              onChangeText={setWordInput}
+            />
+            <MnemonicsChecker
+              valid={valid}
+              onSubmit={handleSubmit}
+              forceDisabled={disableSubmit}
+            />
+          </KeyboardAvoidingView>
+          <View style={{ alignItems: "center" }}>
+            <Text style={styles.prompt_select}>或者...还没有助记词？</Text>
+            <IntoSelectButton onPress={goToSelect} />
+          </View>
         </View>
-      </View>
-    </Pressable>
+      </Pressable>
+    </>
   );
 }
 
@@ -87,6 +119,7 @@ const MnemonicsCorrectnessAwareIcon: React.FC<{ valid: boolean }> = ({
 interface MnemonicsCheckerProps {
   valid: boolean;
   onSubmit?: () => void;
+  forceDisabled?: boolean;
 }
 /**
  * Checked information, button to submit
@@ -94,6 +127,7 @@ interface MnemonicsCheckerProps {
 const MnemonicsChecker: React.FC<MnemonicsCheckerProps> = ({
   valid,
   onSubmit,
+  forceDisabled = false,
 }) => {
   return (
     <>
@@ -107,7 +141,7 @@ const MnemonicsChecker: React.FC<MnemonicsCheckerProps> = ({
       </View>
       <Button
         title={"提交"}
-        disabled={!valid}
+        disabled={forceDisabled || !valid}
         radius={"md"}
         onPress={onSubmit}
       />
@@ -121,7 +155,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "space-evenly",
+    justifyContent: "space-around",
   },
   prompt_mnemonics: {
     marginBottom: 16,

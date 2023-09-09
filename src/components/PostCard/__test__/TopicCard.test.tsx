@@ -27,6 +27,7 @@ describe("TopicCard Test", () => {
     mockPush.mockClear();
   });
   test("TopicCard render test", () => {
+    // FIXME type error
     render(<TopicCard {...exampleTopicProps}></TopicCard>);
     screen.getByText("Genshin Impact, run!");
     screen.getByText("TopicMockText");

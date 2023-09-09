@@ -1,20 +1,30 @@
 import { useNavigation } from "@react-navigation/native";
-import { Button, Dialog, Icon } from "@rneui/themed";
-import { LoginTabScreenPropsGeneric } from "@src/@types/navigation";
+import { Button, Dialog, Icon, Text } from "@rneui/themed";
+import {
+  LoginTabScreenPropsGeneric,
+  StackScreenPropsGeneric,
+} from "@src/@types/navigation";
+import HeaderBarWrapper from "@src/components/HeaderBarWrapper";
+import { User } from "@src/models/User";
 import React, { useCallback, useState } from "react";
-import { Alert, StyleSheet, Text, View } from "react-native";
+import { Alert, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import WordCardList from "./WordCardList";
 import { WordSelectedContext } from "./WordSelectContext";
 import { selectConfig, selectLength } from "./select.config";
 
 export default function WordSelectView() {
+  // The selected words
   const [wordList, setWordList] = useState<string[]>([]);
+  // The current page index
   const [index, setIndex] = useState<number>(0);
+  // The visibility of `CompleteDialog`
   const [isDialogVisible, setIsDialogVisible] = useState(false);
-  // Fake state to trigger re-renders for `WordSelectList`
+  // A Fake state to trigger re-renders for `WordSelectList`
   const [restartTimes, setRestartTimes] = useState<number>(0);
-  const navigation =
+  const rootNavigation =
+    useNavigation<StackScreenPropsGeneric<"Login">["navigation"]>();
+  const loginNavigation =
     useNavigation<LoginTabScreenPropsGeneric<"WordSelect">["navigation"]>();
 
   const selectNext = useCallback(() => {
@@ -38,46 +48,70 @@ export default function WordSelectView() {
 
   const toggleDialog = useCallback(() => setIsDialogVisible((f) => !f), []);
 
-  // TODO select OK callback
-  const handleSelectOK = () => {
-    navigation.navigate("UserLogin");
+  const handleSelectOK = async () => {
+    const [user, mnemonic] = await User.registerFromMnemonic(wordList);
+    await user.login();
+    await user.persist();
+    rootNavigation.navigate("Welcome", { mnemonic, user });
     setIsDialogVisible(false);
   };
 
+  const goBackMnemonicInput = useCallback(() => {
+    loginNavigation.navigate("UserAdd");
+  }, [loginNavigation]);
+
   return (
-    <SafeAreaView style={styles.container}>
-      <View>
-        <View style={styles.title_container}>
-          <Text style={styles.title}>
-            {`选择最喜欢的 ${selectConfig[index].count} 个字，\n` +
-              "作为助记词的一部分。\n选择顺序将被记录。"}
-          </Text>
+    <>
+      <HeaderBarWrapper alignMethod="lc">
+        <Icon
+          name="chevron-back-outline"
+          type={"ionicon"}
+          size={40}
+          onPress={goBackMnemonicInput}
+        />
+        <Text h4 h4Style={{ fontWeight: "700" }}>
+          助记词选择
+        </Text>
+      </HeaderBarWrapper>
+      <SafeAreaView
+        style={styles.container}
+        edges={["left", "right", "bottom"]}
+      >
+        {/* The text and the select blocks */}
+        <View>
+          <View style={styles.title_container}>
+            <Text style={styles.title}>
+              {`选择最喜欢的 ${selectConfig[index].count} 个字，\n` +
+                "作为助记词的一部分。\n选择顺序将被记录。"}
+            </Text>
+          </View>
+          <WordSelectedContext.Provider
+            value={{ wordList, setWordList, index, setIndex }}
+          >
+            <WordCardList restartTimes={restartTimes} />
+          </WordSelectedContext.Provider>
         </View>
-        <WordSelectedContext.Provider
-          value={{ wordList, setWordList, index, setIndex }}
-        >
-          <WordCardList restartTimes={restartTimes} />
-        </WordSelectedContext.Provider>
-      </View>
-      <View style={styles.button_row_container}>
-        <RestartButton onPress={selectRestart} />
-        {index === selectConfig.length - 1 ? (
-          <CompleteButton onPress={selectComplete} />
-        ) : (
-          <NextButton onPress={selectNext} />
-        )}
-      </View>
-      <CompleteDialog
-        isVisible={isDialogVisible}
-        toggleVisible={toggleDialog}
-        onRestart={() => {
-          selectRestart();
-          setIsDialogVisible(false);
-        }}
-        onComplete={handleSelectOK}
-        wordList={wordList}
-      />
-    </SafeAreaView>
+        <View style={styles.button_row_container}>
+          <RestartButton onPress={selectRestart} />
+          {index === selectConfig.length - 1 ? (
+            <CompleteButton onPress={selectComplete} />
+          ) : (
+            <NextButton onPress={selectNext} />
+          )}
+        </View>
+        <CompleteDialog
+          isVisible={isDialogVisible}
+          toggleVisible={toggleDialog}
+          onRestart={() => {
+            selectRestart();
+            setIsDialogVisible(false);
+          }}
+          // FIXME button lock
+          onComplete={handleSelectOK}
+          wordList={wordList}
+        />
+      </SafeAreaView>
+    </>
   );
 }
 
@@ -130,7 +164,6 @@ interface CompleteDialogProps {
   onComplete: () => void;
 }
 
-// TODO more user-friendly notification
 const CompleteDialog: React.FC<CompleteDialogProps> = ({
   isVisible,
   toggleVisible,
@@ -175,7 +208,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-evenly",
   },
   title_container: {
-    marginHorizontal: 20,
     alignItems: "center",
     marginBottom: 32,
   },

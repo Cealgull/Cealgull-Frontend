@@ -7,6 +7,12 @@
 import { type Badge } from "./Badge";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { storageName } from "./config";
+import { login as authLogin, queryCert, restoreCert } from "@src/services/auth";
+import {
+  fixMnemonics,
+  handleMnemonics,
+  isValidMnemonics,
+} from "@src/utils/bip";
 
 /**
  * The canonical response POJO of the user information.
@@ -58,17 +64,32 @@ export class User {
   private _profile: Readonly<_UserInfo> = null;
 
   public constructor(privateKey: string, cert: string);
+  public constructor(privateKey: string, cert: string, profile: _UserInfo);
 
-  public constructor(privateKey: string, cert: string) {
+  public constructor(
+    privateKey: string,
+    cert: string,
+    profile: _UserInfo = null
+  ) {
     this.privateKey = privateKey;
     this.cert = cert;
+    this._profile = profile;
   }
 
-  public set profile(userInfo: _UserInfo) {
-    this._profile = userInfo;
-  }
-  public get profile(): _UserInfo {
+  /**
+   * This getter should only be used inside the forum (after login).
+   *
+   * The user instance obtained from `UserContext` is supposed to have non-null profile.
+   */
+  public get profile(): NonNullable<_UserInfo> {
+    if (this._profile === null) {
+      throw "Critical Error: No profile persisted locally!";
+    }
     return this._profile;
+  }
+
+  public hasProfile(): boolean {
+    return this._profile !== null;
   }
 
   /**
@@ -93,11 +114,44 @@ export class User {
     await Promise.all([
       AsyncStorage.setItem(
         storageName.userId(userCount),
-        JSON.stringify({ privateKey: this.privateKey, cert: this.cert })
+        JSON.stringify({
+          privateKey: this.privateKey,
+          cert: this.cert,
+          profile: this._profile,
+        })
       ),
       AsyncStorage.setItem(storageName.userCount, (userCount + 1).toString()),
     ]);
     this.user_id = userCount;
+  }
+
+  public async detach(): Promise<void> {
+    if (
+      (await AsyncStorage.getItem(storageName.userId(this.user_id))) === null
+    ) {
+      this.user_id = -1;
+      return;
+    }
+    const userCount = await User.getUserCount();
+    if (this.user_id === userCount - 1) {
+      await Promise.all([
+        AsyncStorage.removeItem(storageName.userId(this.user_id)),
+        AsyncStorage.setItem(storageName.userCount, (userCount - 1).toString()),
+      ]);
+      this.user_id = -1;
+      return;
+    }
+    for (let i = this.user_id + 1; i < userCount; ++i) {
+      const value = (await AsyncStorage.getItem(
+        storageName.userId(i)
+      )) as string;
+      await AsyncStorage.setItem(storageName.userId(i - 1), value);
+    }
+    this.user_id = -1;
+    await AsyncStorage.setItem(
+      storageName.userCount,
+      (userCount - 1).toString()
+    );
   }
 
   /**
@@ -109,14 +163,57 @@ export class User {
     if (id >= userCount || id < 0) {
       throw "Invalid id!";
     }
-    const { cert, privateKey } = JSON.parse(
+    const { cert, privateKey, profile } = JSON.parse(
       (await AsyncStorage.getItem(storageName.userId(id))) as string
     ) as {
       cert: string;
       privateKey: string;
+      profile: _UserInfo;
     };
-    const resUser = new User(cert, privateKey);
+    const resUser = new User(privateKey, cert, profile);
     resUser.user_id = id;
     return resUser;
+  }
+
+  /**
+   * Register an user with the word list.
+   * @param wordList must be **incomplete**.
+   * @returns [user, fixedMnemonic]
+   */
+  public static async registerFromMnemonic(
+    wordList: string[]
+  ): Promise<[User, string]> {
+    // If wordList is complete and invalid, the next line throws.
+    if (wordList.length === 12) {
+      throw (
+        "The word list is complete (with length 12), it can't be used for register." +
+        "Do you mean restoreFromMnemonic?"
+      );
+    }
+    const mnemonic = fixMnemonics(wordList.join(" "));
+    const { privateKey, publicKey } = handleMnemonics(mnemonic);
+    const cert = await queryCert(publicKey);
+    return [new User(privateKey, cert), mnemonic];
+  }
+
+  /**
+   * Restore an user with the mnemonic sentence.
+   * @param mnemonic the mnemonic sentence
+   */
+  public static async restoreFromMnemonic(mnemonic: string) {
+    if (!isValidMnemonics(mnemonic)) {
+      throw "Invalid mnemonic sentence!";
+    }
+    const { privateKey } = handleMnemonics(mnemonic);
+    const cert = await restoreCert(privateKey);
+    return new User(privateKey, cert);
+  }
+
+  /**
+   * Login to the forum. Backend will establish a session.
+   */
+  public async login(): Promise<void> {
+    const userInfo = await authLogin(this.privateKey, this.cert);
+    this._profile = userInfo;
   }
 }

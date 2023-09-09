@@ -55,4 +55,12 @@ describe("Test bip utils", () => {
       expect(verify(signature, m)).toBeTruthy();
     });
   });
+
+  test("Violent test: fixMnemonic", () => {
+    const mnemonic = "众 戴 靠 烘 矩 看 丧 良 矛 储";
+    for (let i = 0; i < 100; ++i) {
+      const fixedMnemonic = fixMnemonics(mnemonic);
+      expect(isValidMnemonics(fixedMnemonic)).toBeTruthy();
+    }
+  }, 20000);
 });
