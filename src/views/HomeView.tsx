@@ -38,36 +38,24 @@ export const HomeView: React.FC<HomeViewProps> = ({
   const navigation =
     useNavigation<MainScreenPropsGeneric<"Home">["navigation"]>();
 
-  const getLoginUserWallet = (user: Readonly<User | undefined>) => {
-    if (!user) {
-      console.log("User undefined");
-      return "";
-    }
-    if (!user.profile) {
-      console.log("User profile undefined");
-      return "";
-    }
-    return user.profile.wallet;
-  };
-  const user = useUser();
-  const loginWallet = getLoginUserWallet(user);
+  const loginWallet = useUser().profile.wallet;
 
-  const mirageRequest = async () => {
-    //this will be used when backend is close.
-    const server: Server = startForumServer();
-    const response = await getAllTopics(
-      pageSize,
-      pageNum,
-      category,
-      tags,
-      "",
-      ""
-    );
-    server.shutdown();
-    return response;
-  };
+  // const mirageRequest = async () => {
+  //   //this will be used when backend is close.
+  //   const server: Server = startForumServer();
+  //   const response = await getAllTopics(
+  //     pageSize,
+  //     pageNum,
+  //     category,
+  //     tags,
+  //     "",
+  //     ""
+  //   );
+  //   server.shutdown();
+  //   return response;
+  // };
+
   const normalRequest = async () => {
-    //this will be used in official Version.
     return await getAllTopics(pageSize, pageNum, category, tags, "", "");
   };
 
@@ -87,8 +75,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
     refetch: refetchTopicList,
   } = useQuery<ForumTopic[]>({
     queryKey: ["allTopics", pageSize, pageNum, category, tags],
-    // queryFn: normalRequest
-    queryFn: mirageRequest,
+    queryFn: normalRequest,
   });
 
   const pageTitle = pageTitleGenerator(category, tags);

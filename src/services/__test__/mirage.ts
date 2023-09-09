@@ -35,7 +35,7 @@ export function startForumServer() {
     routes() {
       this.post(APIConfig["user.profile.modify"], () => ({}));
       this.post(APIConfig["user.login"], () => ({}));
-      this.get(APIConfig["user.profile"], () => {
+      this.post(APIConfig["user.profile"], () => {
         return forumTestData["user.profile"];
       });
 

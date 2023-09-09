@@ -55,33 +55,21 @@ export const TopicView: React.FC<TopicViewProps> = ({
   const [count, setCount] = useState<number>(1);
   const pageTitle = `${topTopic.title}`;
   const inputRef = useRef<TextInput>(null);
+  const loginWallet = useUser().profile.wallet;
 
-  const getLoginUserWallet = (user: Readonly<User | undefined>) => {
-    if (!user) {
-      console.log("User undefined");
-      return "";
-    }
-    if (!user.profile) {
-      console.log("User profile undefined");
-      return "";
-    }
-    return user.profile.wallet;
-  };
-  const user = useUser();
-  const loginWallet = getLoginUserWallet(user);
+  // const mirageRequest = async () => {
+  //   //this will be used when backend is close.
+  //   const server: Server = startForumServer();
+  //   const response = await getAllPostsByBelong(
+  //     topTopic.hash,
+  //     topTopic.creator.wallet,
+  //     pageSize,
+  //     1
+  //   );
+  //   server.shutdown();
+  //   return response;
+  // };
 
-  const mirageRequest = async () => {
-    //this will be used when backend is close.
-    const server: Server = startForumServer();
-    const response = await getAllPostsByBelong(
-      topTopic.hash,
-      topTopic.creator.wallet,
-      pageSize,
-      1
-    );
-    server.shutdown();
-    return response;
-  };
   const normalRequest = async () => {
     //this will be used in official Version.
     return await getAllPostsByBelong(
@@ -113,8 +101,7 @@ export const TopicView: React.FC<TopicViewProps> = ({
     refetch: refetchPostList,
   } = useQuery<ForumPost[]>({
     queryKey: ["allPosts", topTopic.id],
-    // queryFn:normalRequest
-    queryFn: mirageRequest,
+    queryFn: normalRequest,
   });
 
   const renderPost: renderDataType[] | undefined = postList?.map(

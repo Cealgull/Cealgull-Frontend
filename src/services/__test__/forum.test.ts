@@ -28,7 +28,7 @@ describe("Test forum service", () => {
   });
 
   test("forum.topic.list Test", async () => {
-    await expect(getAllTopics(10, 1, "", "", "", "")).resolves.toEqual(
+    await expect(getAllTopics(10, 1, "", [], "", "")).resolves.toEqual(
       forumTestData["forum.topic.list"]
     );
   });
@@ -45,7 +45,7 @@ describe("Test forum service", () => {
     );
   });
   test("forum.user.statistics", async () => {
-    await expect(getUserStatistics("Test")).resolves.toEqual(
+    await expect(getUserStatistics()).resolves.toEqual(
       jsonToUserStatistics(forumTestData["forum.user.statistics"])
     );
   });
@@ -64,7 +64,7 @@ describe("Test forum service", () => {
   });
 
   test("Response error", async () => {
-    server.get(APIConfig["user.profile"], () => {
+    server.post(APIConfig["user.profile"], () => {
       return new Response(500);
     });
     server.post(APIConfig["forum.topic.list"], () => {
@@ -85,7 +85,7 @@ describe("Test forum service", () => {
     server.get(APIConfig["forum.user.statistics"], () => {
       return new Response(500);
     });
-    await expect(getAllTopics(10, 1, "", "", "", "")).rejects.toEqual(
+    await expect(getAllTopics(10, 1, "", [], "", "")).rejects.toEqual(
       "getAllTopics error!"
     );
     await expect(createPost("", [], "", "")).rejects.toEqual(
@@ -99,7 +99,7 @@ describe("Test forum service", () => {
       "getAllPosts error!"
     );
     await expect(getUserInfo("Text")).rejects.toEqual("getUserInfo error!");
-    await expect(getUserStatistics("Text")).rejects.toEqual(
+    await expect(getUserStatistics()).rejects.toEqual(
       "getUserStatistics error!"
     );
   });

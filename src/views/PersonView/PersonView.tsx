@@ -23,20 +23,7 @@ import useUser from "@src/hooks/useUser";
 export const PersonView: React.FC = () => {
   const navigation =
     useNavigation<StackScreenPropsGeneric<"Main">["navigation"]>();
-
-  const getLoginUserWallet = (user: Readonly<User | undefined>) => {
-    if (!user) {
-      console.log("User undefined");
-      return "";
-    }
-    if (!user.profile) {
-      console.log("User profile undefined");
-      return "";
-    }
-    return user.profile.wallet;
-  };
   const user = useUser();
-  const loginWallet = getLoginUserWallet(user);
 
   interface UserResponseObject {
     userInfo: UserInfoPOJO;
@@ -45,20 +32,20 @@ export const PersonView: React.FC = () => {
   const userRequest = async (wallet: string) => {
     return {
       userInfo: await getUserInfo(wallet),
-      userStatistics: await getUserStatistics(wallet),
+      userStatistics: await getUserStatistics(),
     };
   };
 
-  const mirageRequest = async () => {
-    //this will be used when backend is close.
-    const server: Server = startForumServer();
-    const response = await userRequest(loginWallet);
-    server.shutdown();
-    return response;
-  };
+  // const mirageRequest = async () => {
+  //   //this will be used when backend is close.
+  //   const server: Server = startForumServer();
+  //   const response = await userRequest(user.profile.wallet);
+  //   server.shutdown();
+  //   return response;
+  // };
   const normalRequest = async () => {
     //this will be used in official Version.
-    return await userRequest(loginWallet);
+    return await userRequest(user.profile.wallet);
   };
 
   const {
@@ -68,9 +55,8 @@ export const PersonView: React.FC = () => {
     data: userReturnData,
     refetch: refetchUser,
   } = useQuery<UserResponseObject>({
-    queryKey: ["userInfo", "userStatistics", loginWallet],
-    // queryFn:normalRequest
-    queryFn: mirageRequest,
+    queryKey: ["userInfo", "userStatistics", user.profile.wallet],
+    queryFn: normalRequest,
   });
 
   const PersonErrorView = () => {
@@ -158,7 +144,7 @@ export const PersonView: React.FC = () => {
         <TouchableOpacity
           onPress={() =>
             navigation.push("Account", {
-              wallet: loginWallet,
+              wallet: user.profile.wallet,
               userName: userReturnData.userInfo.username,
               userSignature: userReturnData.userInfo.signature,
               userAvatar: userReturnData.userInfo.avatar,

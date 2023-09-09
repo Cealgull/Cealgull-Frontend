@@ -144,8 +144,11 @@ export async function getUserInfo(
   wallet: string
 ): Promise<UserProfileResponse> {
   const response = await request({
-    method: "GET",
-    url: `${APIConfig["user.profile"]}?wallet=${wallet}`,
+    method: "POST",
+    url: APIConfig["user.profile"],
+    body: {
+      wallet: wallet,
+    },
   });
   if (!response.ok) {
     throw "getUserInfo error!";
@@ -155,12 +158,10 @@ export async function getUserInfo(
 }
 
 type UserStatisticResponse = UserStatistics;
-export async function getUserStatistics(
-  wallet: string
-): Promise<UserStatisticResponse> {
+export async function getUserStatistics(): Promise<UserStatisticResponse> {
   const response = await request({
     method: "GET",
-    url: `${APIConfig["forum.user.statistics"]}`,
+    url: APIConfig["forum.user.statistics"],
   });
   if (!response.ok) {
     throw "getUserStatistics error!";

@@ -99,7 +99,6 @@ export const AccountView = ({
       setOpenMode("None");
       return;
     }
-    console.log(inputData);
     try {
       if (openMode === "Name") {
         await modifyUserInfo({ username: inputData });
