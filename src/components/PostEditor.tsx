@@ -37,6 +37,11 @@ export const PostEditor: React.FC<PostEditorProps> = ({
     setInputHeight("80%");
   };
 
+  const handleClear = () => {
+    setInput("");
+    inputRef.current?.clear();
+  };
+
   const handleCancleFocus = () => {
     setWholeFlex(1);
     setInputHeight("40%");
@@ -44,7 +49,7 @@ export const PostEditor: React.FC<PostEditorProps> = ({
 
   const handlePublish = () => {
     publish(input);
-    inputRef.current?.clear();
+    handleClear();
     inputRef.current?.blur();
   };
 
@@ -56,6 +61,7 @@ export const PostEditor: React.FC<PostEditorProps> = ({
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={PostEditorStyle.content}>
           <TextInput
+            testID="postEditorInput"
             placeholder={`回复 ${replyTo}:`}
             onFocus={handleFocus}
             onBlur={handleCancleFocus}
@@ -69,11 +75,9 @@ export const PostEditor: React.FC<PostEditorProps> = ({
           <View style={{ height: "80%", justifyContent: "space-around" }}>
             {isFocus() && (
               <Button
+                testID="clearButton"
                 buttonStyle={{ padding: 6, backgroundColor: "red" }}
-                onPress={() => {
-                  setInput("");
-                  inputRef.current?.clear();
-                }}
+                onPress={handleClear}
               >
                 <Icon
                   type="antdesign"
@@ -87,6 +91,7 @@ export const PostEditor: React.FC<PostEditorProps> = ({
               </Button>
             )}
             <Button
+              testID="publishButton"
               onPress={handlePublish}
               buttonStyle={{ padding: 6 }}
               disabled={input.length == 0}
