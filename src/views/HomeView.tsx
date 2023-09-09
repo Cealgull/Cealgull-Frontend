@@ -12,11 +12,8 @@ import {
   View,
 } from "react-native";
 import { Icon, Skeleton } from "@rneui/themed";
-import { Server } from "miragejs";
-import { startForumServer } from "@src/services/__test__/mirage";
 import { useNavigation } from "@react-navigation/native";
 import useUser from "@src/hooks/useUser";
-import { User } from "@src/models/User";
 import { MainScreenPropsGeneric } from "@src/@types/navigation";
 
 const CustomLinearGradient = () => {
@@ -40,23 +37,8 @@ export const HomeView: React.FC<HomeViewProps> = ({
 
   const loginWallet = useUser().profile.wallet;
 
-  // const mirageRequest = async () => {
-  //   //this will be used when backend is close.
-  //   const server: Server = startForumServer();
-  //   const response = await getAllTopics(
-  //     pageSize,
-  //     pageNum,
-  //     category,
-  //     tags,
-  //     "",
-  //     ""
-  //   );
-  //   server.shutdown();
-  //   return response;
-  // };
-
   const normalRequest = async () => {
-    return await getAllTopics(pageSize, pageNum, category, tags, "", "");
+    return await getAllTopics(30, pageNum, category, tags, "", "");
   };
 
   const pageTitleGenerator = (category: string, tag: string[]): string => {
@@ -170,7 +152,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
         </View>
         <View style={HomeViewStyle.content}>
           <FlatList
-            style={{ height: "100%" }}
+            style={{ height: "100%", width: "100%" }}
             data={topicList}
             renderItem={renderTopicCard}
           ></FlatList>

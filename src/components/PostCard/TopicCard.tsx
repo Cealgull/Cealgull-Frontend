@@ -9,19 +9,13 @@ import {
   downvoteColorSelector,
 } from "@src/utils/forumUtils";
 import {} from "@src/utils/forumUtils";
-import {
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { CardContent } from "./CardContent";
 import { TopicTag } from "./TopicTag";
 import { ImageList } from "../ImageList";
 import { useState } from "react";
 import Toast from "react-native-toast-message";
-import { getImageIpfsPath } from "@src/services/forum";
+import { forumVote, getImageIpfsPath } from "@src/services/forum";
 import { ReplyToInfo } from "@src/views/TopicView";
 
 interface TopicCardProps {
@@ -53,7 +47,7 @@ export default function TopicCard({
   );
 
   const tagIconList: JSX.Element[] = topicInfo.tagsAssigned.map((tag) => {
-    return <TopicTag isCategory={false} tagTitle={tag.Name} key={tag.Name} />;
+    return <TopicTag isCategory={false} tagTitle={tag.name} key={tag.name} />;
   });
 
   const topicToastOpen = (
@@ -82,26 +76,46 @@ export default function TopicCard({
 
   const handleLike = () => {
     if (canjump) return;
-    if (isUpVote) {
-      setUpvotesNum(upvotesNum - 1);
-      topicToastOpen(true, true, false);
-    } else {
-      setUpvotesNum(upvotesNum + 1);
-      topicToastOpen(true, false, false);
+    try {
+      forumVote(topicInfo.hash, "up", "Topic");
+      if (isDownVote && !isUpVote) {
+        setDownvotesNum(downvotesNum - 1);
+        setIsDownVote(false);
+      }
+      if (isUpVote) {
+        setUpvotesNum(upvotesNum - 1);
+        topicToastOpen(true, true, false);
+      } else {
+        setUpvotesNum(upvotesNum + 1);
+        topicToastOpen(true, false, false);
+      }
+      setIsUpVote(!isUpVote);
+    } catch (error) {
+      if (isUpVote) topicToastOpen(true, true, true);
+      else topicToastOpen(true, false, true);
     }
-    setIsUpVote(!isUpVote);
   };
 
   const handleDislike = () => {
     if (canjump) return;
-    if (isDownVote) {
-      setDownvotesNum(downvotesNum - 1);
-      topicToastOpen(false, true, false);
-    } else {
-      setDownvotesNum(downvotesNum + 1);
-      topicToastOpen(false, false, false);
+    try {
+      forumVote(topicInfo.hash, "down", "Topic");
+      if (isUpVote && !isDownVote) {
+        setUpvotesNum(upvotesNum - 1);
+        setIsUpVote(false);
+      }
+      if (isDownVote) {
+        setDownvotesNum(downvotesNum - 1);
+        topicToastOpen(false, true, false);
+      } else {
+        setDownvotesNum(downvotesNum + 1);
+        topicToastOpen(false, false, false);
+      }
+      setIsDownVote(!isDownVote);
+    } catch (error) {
+      if (isDownVote) topicToastOpen(false, true, true);
+      else topicToastOpen(false, false, true);
     }
-    setIsDownVote(!isDownVote);
   };
 
   const handleComment = () => {
@@ -129,11 +143,11 @@ export default function TopicCard({
       <View style={TopicCardStyle.topCard}>
         <TopicTag
           isCategory={true}
-          tagTitle={topicInfo.categoryAssigned.Name}
-          color={topicInfo.categoryAssigned.Color}
+          tagTitle={topicInfo.categoryAssigned.name}
+          color={topicInfo.categoryAssigned.color}
         ></TopicTag>
         <Text style={TopicCardStyle.createTime}>
-          {`创建于 ${timeTransfer(topicInfo.createdAt)}`}
+          {`${timeTransfer(topicInfo.createdAt)}`}
         </Text>
       </View>
       <TouchableOpacity
@@ -211,7 +225,7 @@ export default function TopicCard({
                 type="antdesign"
                 name="message1"
               />
-              <Text style={TopicCardStyle.icontext}>{numericCarry(99)}</Text>
+              {/* <Text style={TopicCardStyle.icontext}>{numericCarry(99)}</Text> */}
             </View>
           </TouchableOpacity>
         </View>

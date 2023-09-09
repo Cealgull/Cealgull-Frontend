@@ -1,15 +1,13 @@
-import { useNavigation } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { Icon } from "@rneui/themed";
 import { StackScreenPropsGeneric } from "@src/@types/navigation";
 import HeaderBarWrapper from "@src/components/HeaderBarWrapper";
 import { NavBar } from "@src/components/NavBar";
 import { OptionItem } from "@src/components/OptionItem";
 import { PersonCard } from "@src/components/PersonCard";
-import { User, UserInfoPOJO, UserStatistics } from "@src/models/User";
-import { startForumServer } from "@src/services/__test__/mirage";
+import { UserInfoPOJO, UserStatistics } from "@src/models/User";
 import { getUserInfo, getUserStatistics } from "@src/services/forum";
 import { useQuery } from "@tanstack/react-query";
-import { Server } from "miragejs";
 import {
   Pressable,
   ScrollView,
@@ -19,11 +17,13 @@ import {
   View,
 } from "react-native";
 import useUser from "@src/hooks/useUser";
+import { useEffect } from "react";
 
 export const PersonView: React.FC = () => {
   const navigation =
     useNavigation<StackScreenPropsGeneric<"Main">["navigation"]>();
   const user = useUser();
+  const focus = useIsFocused();
 
   interface UserResponseObject {
     userInfo: UserInfoPOJO;
@@ -32,19 +32,11 @@ export const PersonView: React.FC = () => {
   const userRequest = async (wallet: string) => {
     return {
       userInfo: await getUserInfo(wallet),
-      userStatistics: await getUserStatistics(),
+      userStatistics: await getUserStatistics(user.profile.wallet),
     };
   };
 
-  // const mirageRequest = async () => {
-  //   //this will be used when backend is close.
-  //   const server: Server = startForumServer();
-  //   const response = await userRequest(user.profile.wallet);
-  //   server.shutdown();
-  //   return response;
-  // };
   const normalRequest = async () => {
-    //this will be used in official Version.
     return await userRequest(user.profile.wallet);
   };
 
@@ -63,7 +55,10 @@ export const PersonView: React.FC = () => {
     return (
       <View style={PersonViewStyle.whole}>
         <View style={PersonViewStyle.header}>
-          <HeaderBarWrapper alignMethod="c">
+          <HeaderBarWrapper alignMethod="lc">
+            <TouchableOpacity onPress={() => navigation.pop()}>
+              <Text style={{ color: "blue", fontSize: 16 }}>返回登陆页面</Text>
+            </TouchableOpacity>
             <Text style={PersonViewStyle.pageTitle}>个人</Text>
           </HeaderBarWrapper>
         </View>
@@ -88,12 +83,15 @@ export const PersonView: React.FC = () => {
             </Text>
           </Pressable>
         </View>
-
         <NavBar />
       </View>
     );
   };
   let personCard, settingList;
+
+  useEffect(() => {
+    refetchUser();
+  }, [focus]);
 
   if (isError) {
     return <PersonErrorView />;

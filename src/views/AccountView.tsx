@@ -3,7 +3,11 @@ import { Icon, Dialog, Input } from "@rneui/themed";
 import { StackScreenPropsGeneric } from "@src/@types/navigation";
 import HeaderBarWrapper from "@src/components/HeaderBarWrapper";
 import { OptionItem } from "@src/components/OptionItem";
-import { modifyUserInfo, uploadAvatarWithBase64 } from "@src/services/forum";
+import {
+  getImageIpfsPath,
+  modifyUserInfo,
+  uploadAvatarWithBase64,
+} from "@src/services/forum";
 import React, { useState } from "react";
 import {
   Platform,
@@ -34,7 +38,9 @@ export const AccountView = ({
   const navigation =
     useNavigation<StackScreenPropsGeneric<"Account">["navigation"]>();
   const [openMode, setOpenMode] = useState<ModifyMode>("None");
-  const [imageUriList, setImageUriList] = useState<string[]>(["empty"]);
+  const [imageUriList, setImageUriList] = useState<string[]>([
+    getImageIpfsPath(userAvatar),
+  ]);
   let inputData = "";
   const [avatarBase64, setAvatarBase64] = useState<string>("");
 
@@ -61,7 +67,7 @@ export const AccountView = ({
     );
   };
 
-  const AvatarPicker = (option: { preAvatar: string }) => {
+  const AvatarPicker = () => {
     return (
       <View style={{ alignItems: "center" }}>
         <TouchableOpacity onPress={handleSelectImage}>
@@ -83,7 +89,7 @@ export const AccountView = ({
             placeholder={openMode === "Name" ? userName : userSignature}
           />
         ) : (
-          <AvatarPicker preAvatar={userAvatar} />
+          <AvatarPicker />
         )}
         <View style={{ flexDirection: "row", justifyContent: "space-evenly" }}>
           <Dialog.Button title={"确认"} onPress={handleApply} />

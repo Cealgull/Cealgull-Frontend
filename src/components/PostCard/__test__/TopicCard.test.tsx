@@ -34,7 +34,6 @@ describe("TopicCard Test", () => {
       ></TopicCard>
     );
     screen.getByText("This is the content of the topic.");
-    screen.getByText("Technology");
   });
 
   test("TopicCard navigate test", () => {

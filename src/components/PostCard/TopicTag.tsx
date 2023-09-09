@@ -1,8 +1,8 @@
 import { StyleSheet, Text, View } from "react-native";
 import { tagColorSwitcher } from "@src/utils/forumUtils";
 import { useNavigation } from "@react-navigation/native";
-import { TabScreenPropsGeneric } from "@src/@types/navigation";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { MainScreenPropsGeneric } from "@src/@types/navigation";
 
 interface TopicTagProps {
   tagTitle: string;
@@ -16,7 +16,7 @@ export const TopicTag = ({
   isCategory,
 }: TopicTagProps) => {
   const navigation =
-    useNavigation<TabScreenPropsGeneric<"Home">["navigation"]>();
+    useNavigation<MainScreenPropsGeneric<"Home">["navigation"]>();
   const navigateProps = {
     pageSize: 10,
     ...(isCategory

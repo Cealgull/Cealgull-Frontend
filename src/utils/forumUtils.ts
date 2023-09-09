@@ -6,6 +6,7 @@ export function timeTransfer(timeData: string | Date): string {
 }
 
 export const tagColorSwitcher = (tagText: string) => {
+  if (!tagText) return "grey";
   const length = tagText.length;
   if (length <= 2) {
     return "red";

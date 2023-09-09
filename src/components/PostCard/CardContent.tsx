@@ -22,20 +22,20 @@ export const CardContent = ({
   activeBadge,
   activeRole,
 }: CardContentProps) => {
-  const avatarPath = `${APIConfig["getIpfsSource"]}/${userAvatar}`;
+  const avatarPath = getImageIpfsPath(userAvatar);
 
   return (
     <View>
       <View style={CardContentStyle.personCard}>
         <Avatar rounded size={40} source={{ uri: avatarPath }} />
         <Text style={CardContentStyle.personCardName}>{username}</Text>
-        {activeBadge ? (
+        {activeBadge && activeBadge !== "null" ? (
           <Image
             style={CardContentStyle.badge}
             source={{ uri: getImageIpfsPath(activeBadge) }}
           />
         ) : null}
-        {activeRole ? (
+        {activeRole && activeRole !== "null" ? (
           <Text style={CardContentStyle.role}>{activeRole}</Text>
         ) : null}
       </View>

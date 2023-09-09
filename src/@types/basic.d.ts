@@ -7,12 +7,11 @@
  */
 
 interface Category {
-  Name: string;
-  Color: string;
+  name: string;
+  color: string;
 }
 
 interface Tag {
-  description: string;
   name: string;
 }
 

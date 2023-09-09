@@ -57,27 +57,9 @@ export const TopicView: React.FC<TopicViewProps> = ({
   const inputRef = useRef<TextInput>(null);
   const loginWallet = useUser().profile.wallet;
 
-  // const mirageRequest = async () => {
-  //   //this will be used when backend is close.
-  //   const server: Server = startForumServer();
-  //   const response = await getAllPostsByBelong(
-  //     topTopic.hash,
-  //     topTopic.creator.wallet,
-  //     pageSize,
-  //     1
-  //   );
-  //   server.shutdown();
-  //   return response;
-  // };
-
   const normalRequest = async () => {
     //this will be used in official Version.
-    return await getAllPostsByBelong(
-      topTopic.hash,
-      topTopic.creator.wallet,
-      pageSize,
-      1
-    );
+    return await getAllPostsByBelong(topTopic.hash, "", pageSize, 1);
   };
 
   const PopButton = () => {
@@ -225,7 +207,9 @@ export const TopicView: React.FC<TopicViewProps> = ({
           </HeaderBarWrapper>
         </View>
         <View style={TopicViewStyle.content}>
-          <FlatList data={renderData} renderItem={renderTopicCard} />
+          <View style={{ width: "100%", height: "100%" }}>
+            <FlatList data={renderData} renderItem={renderTopicCard} />
+          </View>
         </View>
         <PostEditor
           replyTo={replyInfo.ReplyUser}
@@ -249,8 +233,6 @@ const TopicViewStyle = StyleSheet.create({
   content: {
     backgroundColor: "rgb(240,240,240)",
     flex: 7,
-    justifyContent: "center",
-    alignItems: "center",
   },
   loadingText: {
     color: "grey",

@@ -6,7 +6,7 @@
 
   "user.login": "/auth/login",
   "user.profile": "/api/user/query/profile",
-  "user.profile.modify": "/api/user/update/profile",
+  "user.profile.modify": "/api/user/invoke/update",
 
   "forum.topic.list": "/api/topic/query/list",
   "forum.post.list": "/api/post/query/list",

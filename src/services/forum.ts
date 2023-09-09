@@ -82,13 +82,13 @@ export async function getAllPostsByBelong(
     belongTo: string;
     creator: string;
     pageSize: number;
-    pagenum: number;
+    pageOrdinal: number;
   }
   const requestBody: getAllPostsByBelongProps = {
     belongTo: belongTo,
     creator: creator,
     pageSize: pageSize,
-    pagenum: pagenum,
+    pageOrdinal: pagenum,
   };
   const response = await requestWithCookie({
     method: "POST",
@@ -112,7 +112,7 @@ export async function getAllTopics(
 ): Promise<ForumTopic[]> {
   interface getAllTopicsProps {
     pageSize: number;
-    pageNum: number;
+    pageOrdinal: number;
     category: string;
     tags: string[];
     creator: string;
@@ -120,7 +120,7 @@ export async function getAllTopics(
   }
   const requestBody: getAllTopicsProps = {
     pageSize: pageSize,
-    pageNum: pageNum,
+    pageOrdinal: pageNum,
     category: category,
     tags: tags,
     creator: creator,
@@ -158,10 +158,15 @@ export async function getUserInfo(
 }
 
 type UserStatisticResponse = UserStatistics;
-export async function getUserStatistics(): Promise<UserStatisticResponse> {
+export async function getUserStatistics(
+  wallet: string
+): Promise<UserStatisticResponse> {
   const response = await request({
-    method: "GET",
+    method: "POST",
     url: APIConfig["forum.user.statistics"],
+    body: {
+      wallet: wallet,
+    },
   });
   if (!response.ok) {
     throw "getUserStatistics error!";
@@ -230,6 +235,7 @@ export async function forumVote(
 
   const requestUrl: string = urlList[`${type}.${option}`];
   const requestBody = { Hash: hash };
+  console.log(requestUrl, requestBody);
   const response = await request({
     method: "POST",
     url: requestUrl,
@@ -241,7 +247,7 @@ export async function forumVote(
 }
 
 export const getImageIpfsPath = (cid: string): string => {
-  return `${APIConfig["getIpfsSource"]}/${cid}`;
+  return `http://123.60.158.219:8000/ipfs/${cid}`;
 };
 
 export async function getAllCategories(): Promise<Category[]> {

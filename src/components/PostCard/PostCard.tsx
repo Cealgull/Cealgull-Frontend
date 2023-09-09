@@ -13,7 +13,7 @@ import {
 } from "@src/utils/forumUtils";
 import { ReplyCard } from "../ReplyCard";
 import Toast from "react-native-toast-message";
-import { getImageIpfsPath } from "@src/services/forum";
+import { forumVote, getImageIpfsPath } from "@src/services/forum";
 import { ReplyToInfo } from "@src/views/TopicView";
 
 interface PostCardProps {
@@ -75,24 +75,44 @@ export default function PostCard({
   };
 
   const handleLike = () => {
-    if (isUpVote) {
-      setUpvotesNum(upvotesNum - 1);
-      postToastOpen(true, true, false);
-    } else {
-      setUpvotesNum(upvotesNum + 1);
-      postToastOpen(true, false, false);
+    try {
+      forumVote(hash, "up", "Post");
+      if (isDownVote && !isUpVote) {
+        setDownvotesNum(downvotesNum - 1);
+        setIsDownVote(false);
+      }
+      if (isUpVote) {
+        setUpvotesNum(upvotesNum - 1);
+        postToastOpen(true, true, false);
+      } else {
+        setUpvotesNum(upvotesNum + 1);
+        postToastOpen(true, false, false);
+      }
+      setIsUpVote(!isUpVote);
+    } catch (error) {
+      if (isUpVote) postToastOpen(true, true, true);
+      else postToastOpen(true, false, true);
     }
-    setIsUpVote(!isUpVote);
   };
   const handleDislike = () => {
-    if (isDownVote) {
-      setDownvotesNum(downvotesNum - 1);
-      postToastOpen(false, true, false);
-    } else {
-      setDownvotesNum(downvotesNum + 1);
-      postToastOpen(false, false, false);
+    try {
+      forumVote(hash, "down", "Post");
+      if (isUpVote && !isDownVote) {
+        setUpvotesNum(upvotesNum - 1);
+        setIsUpVote(false);
+      }
+      if (isDownVote) {
+        setDownvotesNum(downvotesNum - 1);
+        postToastOpen(false, true, false);
+      } else {
+        setDownvotesNum(downvotesNum + 1);
+        postToastOpen(false, false, false);
+      }
+      setIsDownVote(!isDownVote);
+    } catch (error) {
+      if (isDownVote) postToastOpen(false, true, true);
+      else postToastOpen(false, false, true);
     }
-    setIsDownVote(!isDownVote);
   };
   const handleComment = () => {
     setReplyInfo({ ReplyUser: creator.username, Replyhash: hash });
@@ -140,7 +160,8 @@ export default function PostCard({
       );
   };
 
-  const getImageList = (assetList: Asset[]): string[] => {
+  const getImageList = (assetList: Asset[] | undefined): string[] => {
+    if (!assetList) return [];
     const response: string[] = [];
     const regular = /image/;
     for (const item of assetList) {
@@ -209,7 +230,7 @@ export default function PostCard({
         <TouchableOpacity onPress={handleComment}>
           <View testID="commentButton" style={PostCardStyle.iconview}>
             <Icon size={24} color="#8B8989" type="antdesign" name="message1" />
-            <Text style={PostCardStyle.icontext}>{numericCarry(3)}</Text>
+            {/* <Text style={PostCardStyle.icontext}>{numericCarry(3)}</Text> */}
           </View>
         </TouchableOpacity>
       </View>
