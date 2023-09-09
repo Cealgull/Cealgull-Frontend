@@ -5,7 +5,7 @@ export function timeTransfer(timeData: string | Date): string {
   return ISOTime.format("YYYY-MM-DD HH:mm:ss");
 }
 
-export const tagColorSwitcher = (tagText: string) => {
+export const tagColorSwitcher = (tagText: string | undefined) => {
   if (!tagText) return "grey";
   const length = tagText.length;
   if (length <= 2) {
