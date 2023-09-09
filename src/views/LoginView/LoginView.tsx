@@ -27,7 +27,6 @@ export default function LoginView() {
 
   const handleLogin = async () => {
     setDisableLogin(true);
-    // FIXME the type declaration
     const user = (userList as User[])[selected as number];
     try {
       await user.login();
@@ -41,7 +40,6 @@ export default function LoginView() {
     }
   };
   const handleDeleteUser = async () => {
-    // FIXME the type declaration
     await (userList as User[])[selected as number].detach();
     // After one user is detached, the other users' id are changed.
     // Therefore, we reset the state `userList`.
