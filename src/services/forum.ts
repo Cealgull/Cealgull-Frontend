@@ -235,7 +235,7 @@ export async function forumVote(
 
   const requestUrl: string = urlList[`${type}.${option}`];
   const requestBody = { Hash: hash };
-  console.log(requestUrl, requestBody);
+
   const response = await request({
     method: "POST",
     url: requestUrl,

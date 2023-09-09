@@ -5,7 +5,7 @@ import HeaderBarWrapper from "@src/components/HeaderBarWrapper";
 import { NavBar } from "@src/components/NavBar";
 import { OptionItem } from "@src/components/OptionItem";
 import { PersonCard } from "@src/components/PersonCard";
-import { UserInfoPOJO, UserStatistics } from "@src/models/User";
+import { User, UserInfoPOJO, UserStatistics } from "@src/models/User";
 import { getUserInfo, getUserStatistics } from "@src/services/forum";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -22,8 +22,18 @@ import { useEffect } from "react";
 export const PersonView: React.FC = () => {
   const navigation =
     useNavigation<StackScreenPropsGeneric<"Main">["navigation"]>();
-  const user = useUser();
   const focus = useIsFocused();
+  const user = useUser();
+
+  // User.getUser(0).then((user)=>{
+  //   return(user.cert);
+  // }).then(console.log)
+
+  // User.getUser(1).then((user)=>{
+  //   return(user.cert);
+  // }).then(console.log)
+
+  // console.log(user.user_id);
 
   interface UserResponseObject {
     userInfo: UserInfoPOJO;

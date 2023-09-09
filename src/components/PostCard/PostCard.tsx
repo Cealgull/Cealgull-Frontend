@@ -19,7 +19,7 @@ import { ReplyToInfo } from "@src/views/TopicView";
 interface PostCardProps {
   postInfo: ForumPost;
   level: number;
-  loginWallet?: string;
+  loginWallet: string;
   setReplyInfo: React.Dispatch<React.SetStateAction<ReplyToInfo>>;
 }
 
@@ -37,7 +37,7 @@ export default function PostCard({
     belongTo,
   },
   level,
-  loginWallet = "",
+  loginWallet,
   setReplyInfo,
 }: PostCardProps) {
   const [isDisplayReply, setIsDisplyReply] = useState<boolean>(false);

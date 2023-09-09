@@ -262,6 +262,7 @@ export class User {
    */
   public async login(): Promise<void> {
     const userInfo = await authLogin(this.privateKey, this.cert);
+    console.log(userInfo);
     this._profile = userInfo;
   }
 

@@ -113,6 +113,7 @@ export const TopicView: React.FC<TopicViewProps> = ({
           setReplyInfo={setReplyInfo}
           postInfo={cardProp}
           level={item.level}
+          loginWallet={loginWallet}
         />
       );
     }

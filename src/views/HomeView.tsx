@@ -12,9 +12,10 @@ import {
   View,
 } from "react-native";
 import { Icon, Skeleton } from "@rneui/themed";
-import { useNavigation } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import useUser from "@src/hooks/useUser";
 import { MainScreenPropsGeneric } from "@src/@types/navigation";
+import { useEffect } from "react";
 
 const CustomLinearGradient = () => {
   return <Text style={HomeViewStyle.loadingText}>{"Loading...."}</Text>;
@@ -34,7 +35,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
   const pageNum = 1;
   const navigation =
     useNavigation<MainScreenPropsGeneric<"Home">["navigation"]>();
-
+  const focus = useIsFocused();
   const loginWallet = useUser().profile.wallet;
 
   const normalRequest = async () => {
@@ -163,6 +164,12 @@ export const HomeView: React.FC<HomeViewProps> = ({
       </View>
     );
   };
+
+  useEffect(() => {
+    if (focus) {
+      refetchTopicList();
+    }
+  }, [focus]);
 
   if (isLoading) {
     return <HomeLoadingView />;
