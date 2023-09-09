@@ -35,7 +35,7 @@ describe("Test LoginView", () => {
       jsonToUserInfoPOJO(SAMPLE_USERINFO)
     ).persist();
     render(<LoginView />);
-    await screen.findByText(SAMPLE_USERINFO.username, { timeout: 5000 });
+    await screen.findByText(SAMPLE_USERINFO.username, {}, { timeout: 5000 });
     expect(screen.getAllByText("添加用户")).toHaveLength(2);
     expect(screen).toMatchSnapshot();
   }, 20000);
@@ -58,7 +58,11 @@ describe("Test LoginView", () => {
       expect(checkIcon?.props.style.at(-1).opacity).toBe(value);
     }
 
-    const userCards = await screen.findAllByRole("checkbox", { timeout: 5000 });
+    const userCards = await screen.findAllByRole(
+      "checkbox",
+      {},
+      { timeout: 5000 }
+    );
     testOpacityToBe(0, 0);
     testOpacityToBe(1, 0);
     testOpacityToBe(2, 0);
