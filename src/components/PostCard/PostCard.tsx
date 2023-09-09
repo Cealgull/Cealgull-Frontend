@@ -20,7 +20,7 @@ interface PostCardProps {
   postInfo: ForumPost;
   level: number;
   loginWallet: string;
-  setReplyInfo: React.Dispatch<React.SetStateAction<ReplyToInfo>>;
+  setReplyInfo?: React.Dispatch<React.SetStateAction<ReplyToInfo>>;
 }
 
 export default function PostCard({
@@ -115,7 +115,8 @@ export default function PostCard({
     }
   };
   const handleComment = () => {
-    setReplyInfo({ ReplyUser: creator.username, Replyhash: hash });
+    if (setReplyInfo != null)
+      setReplyInfo({ ReplyUser: creator.username, Replyhash: hash });
   };
   const handleDisplayReply = () => {
     setIsDisplyReply(!isDisplayReply);
@@ -124,7 +125,7 @@ export default function PostCard({
   const SimpleReply = () => {
     if (replyTo === null) return null;
     return (
-      <TouchableOpacity onPress={handleDisplayReply}>
+      <TouchableOpacity testID="replyButton" onPress={handleDisplayReply}>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <Text
             style={PostCardStyle.simpleReply}
@@ -160,8 +161,7 @@ export default function PostCard({
       );
   };
 
-  const getImageList = (assetList: Asset[] | undefined): string[] => {
-    if (!assetList) return [];
+  const getImageList = (assetList: Asset[]): string[] => {
     const response: string[] = [];
     const regular = /image/;
     for (const item of assetList) {
@@ -191,8 +191,8 @@ export default function PostCard({
       <ImageList imageUri={imageList} />
       <TimeInfoCard />
       <View style={PostCardStyle.bottomCard}>
-        <TouchableOpacity onPress={handleLike}>
-          <View testID="goodButton" style={PostCardStyle.iconview}>
+        <TouchableOpacity testID="goodButton" onPress={handleLike}>
+          <View style={PostCardStyle.iconview}>
             <Icon
               size={24}
               color={upvoteColorSelector(isUpVote)}
@@ -209,8 +209,8 @@ export default function PostCard({
             </Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity onPress={handleDislike}>
-          <View testID="badButton" style={PostCardStyle.iconview}>
+        <TouchableOpacity testID="badButton" onPress={handleDislike}>
+          <View style={PostCardStyle.iconview}>
             <Icon
               size={24}
               color={downvoteColorSelector(isDownVote)}
@@ -227,10 +227,9 @@ export default function PostCard({
             </Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity onPress={handleComment}>
-          <View testID="commentButton" style={PostCardStyle.iconview}>
+        <TouchableOpacity testID="commentButton" onPress={handleComment}>
+          <View style={PostCardStyle.iconview}>
             <Icon size={24} color="#8B8989" type="antdesign" name="message1" />
-            {/* <Text style={PostCardStyle.icontext}>{numericCarry(3)}</Text> */}
           </View>
         </TouchableOpacity>
       </View>

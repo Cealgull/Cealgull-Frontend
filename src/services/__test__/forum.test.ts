@@ -22,7 +22,6 @@ import {
 } from "../forum";
 import * as forumTestData from "./forumTestData.json";
 import { jsonToUserInfoPOJO, jsonToUserStatistics } from "@src/models/User";
-import { waitFor } from "@testing-library/react-native";
 
 describe("Test forum service", () => {
   let server: Server;
