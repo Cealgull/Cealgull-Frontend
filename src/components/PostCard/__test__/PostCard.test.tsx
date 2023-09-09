@@ -3,10 +3,9 @@ import PostCard from "../PostCard";
 import { View } from "react-native";
 import { useState } from "react";
 import { ReplyToInfo } from "@src/views/TopicView";
-import { Server } from "miragejs";
+import { Response, Server } from "miragejs";
 import { startForumServer } from "@src/services/__test__/mirage";
 import APIConfig from "@src/services/api.config";
-import { Response } from "miragejs";
 
 const PostCardTestData1: ForumPost = {
   hash: "Test",
@@ -22,8 +21,8 @@ const PostCardTestData1: ForumPost = {
   replyTo: null,
   upvotes: [],
   downvotes: [],
-  createAt: "Test",
-  updateAt: "Test",
+  createAt: "2023-08-20T08:15:30Z",
+  updateAt: "2023-08-20T08:15:30Z",
   assets: [],
 };
 
@@ -52,20 +51,20 @@ const PostCardTestData2: ForumPost = {
     replyTo: null,
     upvotes: [],
     downvotes: [],
-    createAt: "Test",
-    updateAt: "Test",
+    createAt: "2023-08-20T08:15:30Z",
+    updateAt: "2023-08-20T08:15:30Z",
     assets: [],
   },
   upvotes: [],
   downvotes: [],
-  createAt: "Test1",
-  updateAt: "Test2",
+  createAt: "2023-08-20T08:15:30Z",
+  updateAt: "2022-08-20T08:15:31Z",
   assets: [
     {
       creator: "",
       contentType: "image",
-      createdAt: "",
-      updatedAt: "",
+      createdAt: "2023-08-20T08:15:30Z",
+      updatedAt: "2023-08-20T08:15:30Z",
       cid: "",
     },
   ],
@@ -127,18 +126,18 @@ describe("PostCard error test", () => {
   let server: Server;
   beforeEach(() => {
     server = startForumServer();
+    server.post(APIConfig["forum.post.upvote"], () => {
+      return new Response(500);
+    });
+    server.post(APIConfig["forum.post.downvote"], () => {
+      return new Response(500);
+    });
   });
   afterEach(() => {
     server.shutdown();
     jest.clearAllMocks();
   });
   test("error test", () => {
-    server.post(APIConfig["forum.post.upvote"], () => {
-      throw "error";
-    });
-    server.post(APIConfig["forum.post.downvote"], () => {
-      throw "error";
-    });
     render(<PostCardWrapper postInfo={PostCardTestData2} />);
     const goodButton = screen.getByTestId("goodButton");
     const badButton = screen.getByTestId("badButton");

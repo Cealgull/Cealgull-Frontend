@@ -3,7 +3,6 @@ import { OptionItem } from "../OptionItem";
 import { Icon } from "@rneui/base";
 import { PersonCard } from "../PersonCard";
 import { UserInfoPOJO } from "@src/models/User";
-import { create } from "react-test-renderer";
 import { useRef } from "react";
 import { TextInput } from "react-native";
 import { PostEditor } from "../PostEditor";

@@ -27,7 +27,7 @@ interface TopicCardProps {
 
 export default function TopicCard({
   topicInfo,
-  canjump = true,
+  canjump,
   loginWallet = "",
   setReplyInfo = () => ({}),
 }: TopicCardProps) {
@@ -181,7 +181,7 @@ export default function TopicCard({
       <View style={TopicCardStyle.bottomCard}>
         <View style={TopicCardStyle.bottomTags}>{tagIconList}</View>
         <View style={TopicCardStyle.bottomOptions}>
-          <TouchableOpacity onPress={handleLike}>
+          <TouchableOpacity testID="likeButton" onPress={handleLike}>
             <View style={TopicCardStyle.iconview}>
               <Icon
                 size={22}
@@ -199,7 +199,7 @@ export default function TopicCard({
               </Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity onPress={handleDislike}>
+          <TouchableOpacity testID="dislikeButton" onPress={handleDislike}>
             <View style={TopicCardStyle.iconview}>
               <Icon
                 color={downvoteColorSelector(isDownVote)}
@@ -217,7 +217,7 @@ export default function TopicCard({
               </Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity onPress={handleComment}>
+          <TouchableOpacity testID="commentButton" onPress={handleComment}>
             <View style={TopicCardStyle.iconview}>
               <Icon
                 size={22}
@@ -225,7 +225,6 @@ export default function TopicCard({
                 type="antdesign"
                 name="message1"
               />
-              {/* <Text style={TopicCardStyle.icontext}>{numericCarry(99)}</Text> */}
             </View>
           </TouchableOpacity>
         </View>

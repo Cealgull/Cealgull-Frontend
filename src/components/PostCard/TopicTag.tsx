@@ -27,7 +27,7 @@ export const TopicTag = ({
     navigation.navigate("Home", navigateProps);
   };
   return (
-    <TouchableOpacity onPress={handleFilter}>
+    <TouchableOpacity testID="tagFilter" onPress={handleFilter}>
       <View
         style={[
           TopicTabCardStyle.whole,
