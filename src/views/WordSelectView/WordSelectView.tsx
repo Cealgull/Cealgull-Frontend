@@ -22,6 +22,7 @@ export default function WordSelectView() {
   const [isDialogVisible, setIsDialogVisible] = useState(false);
   // A Fake state to trigger re-renders for `WordSelectList`
   const [restartTimes, setRestartTimes] = useState<number>(0);
+  const [disableRegister, setDisableRegister] = useState(false);
   const rootNavigation =
     useNavigation<StackScreenPropsGeneric<"Login">["navigation"]>();
   const loginNavigation =
@@ -49,11 +50,18 @@ export default function WordSelectView() {
   const toggleDialog = useCallback(() => setIsDialogVisible((f) => !f), []);
 
   const handleSelectOK = async () => {
-    const [user, mnemonic] = await User.registerFromMnemonic(wordList);
-    await user.login();
-    await user.persist();
-    rootNavigation.navigate("Welcome", { mnemonic, user });
-    setIsDialogVisible(false);
+    setDisableRegister(true);
+    try {
+      const [user, mnemonic] = await User.registerFromMnemonic(wordList);
+      await user.login();
+      await user.persist();
+      rootNavigation.navigate("Welcome", { mnemonic, user });
+      setIsDialogVisible(false);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setDisableRegister(false);
+    }
   };
 
   const goBackMnemonicInput = useCallback(() => {
@@ -106,7 +114,7 @@ export default function WordSelectView() {
             selectRestart();
             setIsDialogVisible(false);
           }}
-          // FIXME button lock
+          forceDisableRegister={disableRegister}
           onComplete={handleSelectOK}
           wordList={wordList}
         />
@@ -158,6 +166,7 @@ const CompleteButton: React.FC<ButtonProps> = ({ onPress }) => {
 
 interface CompleteDialogProps {
   isVisible: boolean;
+  forceDisableRegister?: boolean;
   toggleVisible: () => void;
   wordList: string[];
   onRestart: () => void;
@@ -170,6 +179,7 @@ const CompleteDialog: React.FC<CompleteDialogProps> = ({
   wordList,
   onRestart,
   onComplete,
+  forceDisableRegister = false,
 }) => {
   return (
     <Dialog
@@ -195,6 +205,7 @@ const CompleteDialog: React.FC<CompleteDialogProps> = ({
           title={"下一步"}
           onPress={onComplete}
           titleStyle={{ fontSize: 18 }}
+          disabled={forceDisableRegister}
         />
       </Dialog.Actions>
     </Dialog>

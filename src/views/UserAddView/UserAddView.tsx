@@ -33,11 +33,17 @@ export default function UserAddScreen() {
 
   const handleSubmit = async () => {
     setDisableSubmit(true);
-    const user = await User.restoreFromMnemonic(wordInput);
-    // TODO repeat user?
-    await user.login();
-    user.persist().then(() => setDisableSubmit(false));
-    rootNavigation.navigate("Welcome", { mnemonic: wordInput, user });
+    try {
+      const user = await User.restoreFromMnemonic(wordInput);
+      // TODO repeat user?
+      await user.login();
+      user.persist().finally(() => setDisableSubmit(false));
+      rootNavigation.navigate("Welcome", { mnemonic: wordInput, user });
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setDisableSubmit(false);
+    }
   };
 
   const goToSelect = () => {

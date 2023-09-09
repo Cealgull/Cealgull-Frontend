@@ -22,15 +22,24 @@ export default function LoginView() {
   const loginNavigation =
     useNavigation<LoginTabScreenPropsGeneric<"UserLogin">["navigation"]>();
   const [userList, setUserList] = useState<User[] | undefined>(undefined);
+  const [disableLogin, setDisableLogin] = useState(false);
   const setUser = useSetUser();
 
-  const handleLogin = () => {
-    // FIXME the type declaration
-    setUser((userList as User[])[selected as number]);
-    rootNavigation.navigate("Main");
+  const handleLogin = async () => {
+    setDisableLogin(true);
+    const user = (userList as User[])[selected as number];
+    try {
+      await user.login();
+      await user.persist();
+      setUser(user);
+      rootNavigation.navigate("Main");
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setDisableLogin(false);
+    }
   };
   const handleDeleteUser = async () => {
-    // FIXME the type declaration
     await (userList as User[])[selected as number].detach();
     // After one user is detached, the other users' id are changed.
     // Therefore, we reset the state `userList`.
@@ -104,7 +113,10 @@ export default function LoginView() {
         />
       </View>
       <View>
-        <LoginButton onPress={handleLogin} disabled={selected === undefined} />
+        <LoginButton
+          onPress={handleLogin}
+          disabled={disableLogin || selected === undefined}
+        />
         <DelUserButton
           onPress={handleDeleteUser}
           disabled={selected === undefined}
