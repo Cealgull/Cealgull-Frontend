@@ -4,15 +4,16 @@
  * @data 2023/08/28
  */
 
-import { type Badge } from "./Badge";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { storageName } from "./config";
 import { login as authLogin, queryCert, restoreCert } from "@src/services/auth";
 import {
   fixMnemonics,
   handleMnemonics,
   isValidMnemonics,
 } from "@src/utils/bip";
+import { type Badge } from "./Badge";
+import { storageName } from "./config";
+import { modifyUserInfo } from "@src/services/forum";
 
 /**
  * The canonical response POJO of the user information.
@@ -227,5 +228,19 @@ export class User {
   public async login(): Promise<void> {
     const userInfo = await authLogin(this.privateKey, this.cert);
     this._profile = userInfo;
+  }
+
+  public async updateProfile(
+    form: Parameters<typeof modifyUserInfo>[0]
+  ): Promise<boolean> {
+    try {
+      await modifyUserInfo(form);
+      Object.assign(this.profile, form);
+      await this.persist();
+      return true;
+    } catch (err) {
+      console.error(err);
+      return false;
+    }
   }
 }

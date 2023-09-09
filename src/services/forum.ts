@@ -150,13 +150,20 @@ export async function getUserInfo(
   return data;
 }
 
-export async function modifyUserInfo(options: {
-  username?: string;
-  avatar?: string;
-  signature?: string;
-  activeRole?: number;
-  activeBadge?: number;
-}): Promise<void> {
+type _UserInfoChangeableProperty =
+  | "username"
+  | "avatar"
+  | "signature"
+  | "activeBadge"
+  | "activeRole";
+export type UserInfoChangeable = Pick<
+  UserInfoPOJO,
+  _UserInfoChangeableProperty
+>;
+
+export async function modifyUserInfo(
+  options: Partial<UserInfoChangeable>
+): Promise<void> {
   const response = await request({
     method: "POST",
     url: APIConfig["user.profile.modify"],
