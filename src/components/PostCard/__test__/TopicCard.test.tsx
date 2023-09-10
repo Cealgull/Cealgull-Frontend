@@ -184,5 +184,6 @@ describe("TopicCard Test", () => {
     );
     const deleteButton = screen.getByTestId("TopicDeleteButton");
     fireEvent.press(deleteButton);
+    expect(mockPop.call.length).toBe(1);
   });
 });

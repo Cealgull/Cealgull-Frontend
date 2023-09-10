@@ -13,7 +13,10 @@ export const ProductionInfoView: React.FC = () => {
     <View style={{ flex: 1 }}>
       <View style={ProductionInfoViewStyle.header}>
         <HeaderBarWrapper alignMethod="lc">
-          <TouchableOpacity onPress={() => navigation.pop()}>
+          <TouchableOpacity
+            testID="ProductionInfoReturnButton"
+            onPress={() => navigation.pop()}
+          >
             <Icon type="antdesign" name="left" size={24} />
           </TouchableOpacity>
           <Text style={ProductionInfoViewStyle.title}>产品信息</Text>
