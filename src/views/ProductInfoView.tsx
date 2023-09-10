@@ -22,7 +22,7 @@ export const ProductionInfoView: React.FC = () => {
       <View style={ProductionInfoViewStyle.content}>
         <View style={ProductionInfoViewStyle.imageWrapper}>
           <Image
-            source={require("../Cealgull.jpeg")}
+            source={require("../Cealgull.png")}
             style={ProductionInfoViewStyle.image}
           />
         </View>
