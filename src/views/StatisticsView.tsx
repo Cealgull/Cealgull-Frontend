@@ -143,6 +143,7 @@ export const StatisticsView: React.FC<StatisticsViewProps> = ({
       <View style={StatisticsViewStyle.header}>
         <HeaderBarWrapper alignMethod="lc">
           <TouchableOpacity
+            testID="statisticsPop"
             onPress={() => {
               navigation.pop();
             }}

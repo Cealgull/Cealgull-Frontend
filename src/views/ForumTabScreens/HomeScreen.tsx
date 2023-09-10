@@ -7,5 +7,5 @@ export type HomeScreenProps = HomeViewProps;
 export default function HomeScreen({
   route: { params },
 }: MainScreenPropsGeneric<"Home">) {
-  return <HomeView {...(params ?? {})} />;
+  return <HomeView {...params} />;
 }

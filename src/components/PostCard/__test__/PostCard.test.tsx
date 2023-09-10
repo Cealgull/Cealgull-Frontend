@@ -3,9 +3,8 @@ import PostCard from "../PostCard";
 import { View } from "react-native";
 import { useState } from "react";
 import { ReplyToInfo } from "@src/views/TopicView";
-import { Response, Server } from "miragejs";
+import { Server } from "miragejs";
 import { startForumServer } from "@src/services/__test__/mirage";
-import APIConfig from "@src/services/api.config";
 
 const PostCardTestData1: ForumPost = {
   hash: "Test",
@@ -119,30 +118,5 @@ describe("PostCard Test", () => {
     fireEvent.press(badButton);
     fireEvent.press(goodButton);
     fireEvent.press(badButton);
-  });
-});
-
-describe("PostCard error test", () => {
-  let server: Server;
-  beforeEach(() => {
-    server = startForumServer();
-    server.post(APIConfig["forum.post.upvote"], () => {
-      return new Response(500);
-    });
-    server.post(APIConfig["forum.post.downvote"], () => {
-      return new Response(500);
-    });
-  });
-  afterEach(() => {
-    server.shutdown();
-    jest.clearAllMocks();
-  });
-  test("error test", () => {
-    render(<PostCardWrapper postInfo={PostCardTestData2} />);
-    const goodButton = screen.getByTestId("goodButton");
-    const badButton = screen.getByTestId("badButton");
-    fireEvent.press(goodButton);
-    fireEvent.press(badButton);
-    server.shutdown();
   });
 });

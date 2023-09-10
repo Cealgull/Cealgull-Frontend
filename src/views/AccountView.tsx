@@ -70,7 +70,7 @@ export const AccountView = ({
   const AvatarPicker = () => {
     return (
       <View style={{ alignItems: "center" }}>
-        <TouchableOpacity onPress={handleSelectImage}>
+        <TouchableOpacity testID="avatarPicker" onPress={handleSelectImage}>
           <ImageList uris={imageUriList} />
         </TouchableOpacity>
       </View>
@@ -83,6 +83,7 @@ export const AccountView = ({
         <Dialog.Title title={`Modify User ${openMode}`} />
         {openMode !== "Avatar" ? (
           <Input
+            testID="dialogInput"
             onChangeText={(value) => {
               inputData = value;
             }}
@@ -92,8 +93,16 @@ export const AccountView = ({
           <AvatarPicker />
         )}
         <View style={{ flexDirection: "row", justifyContent: "space-evenly" }}>
-          <Dialog.Button title={"确认"} onPress={handleApply} />
-          <Dialog.Button title={"取消"} onPress={handleCancel} />
+          <Dialog.Button
+            testID="dialogOk"
+            title={"确认"}
+            onPress={handleApply}
+          />
+          <Dialog.Button
+            testID="dialogCancel"
+            title={"取消"}
+            onPress={handleCancel}
+          />
         </View>
       </Dialog>
     );
@@ -148,6 +157,7 @@ export const AccountView = ({
       <View style={AccountViewStyle.header}>
         <HeaderBarWrapper alignMethod="lc">
           <Icon
+            testID="accountViewPop"
             size={24}
             type="antdesign"
             name="left"
@@ -160,7 +170,7 @@ export const AccountView = ({
       <View style={AccountViewStyle.content}>
         <ScrollView>
           <Text style={{ padding: 10, color: "#8B8989" }}>账户信息修改</Text>
-          <TouchableOpacity onPress={handleModifyName}>
+          <TouchableOpacity testID="nameModify" onPress={handleModifyName}>
             <OptionItem
               title="修改用户名"
               icon={<Icon type="feather" name="edit" />}
@@ -168,7 +178,10 @@ export const AccountView = ({
             />
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={handleModifySignature}>
+          <TouchableOpacity
+            testID="signatureModify"
+            onPress={handleModifySignature}
+          >
             <OptionItem
               title="修改个性签名"
               icon={<Icon type="feather" name="edit" />}
@@ -176,7 +189,7 @@ export const AccountView = ({
             />
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={handleModifyAvatar}>
+          <TouchableOpacity testID="avatarModify" onPress={handleModifyAvatar}>
             <OptionItem
               title="上传头像"
               icon={<Icon type="feather" name="upload-cloud" />}
@@ -186,6 +199,7 @@ export const AccountView = ({
 
           <Text style={{ padding: 10, color: "#8B8989" }}>账户切换</Text>
           <TouchableOpacity
+            testID="logout"
             onPress={() => {
               navigation.navigate("Login");
             }}
