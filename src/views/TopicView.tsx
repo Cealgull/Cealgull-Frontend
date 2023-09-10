@@ -79,12 +79,23 @@ export const TopicView: React.FC<TopicViewProps> = ({
 
   const handlePageUp = () => {
     if (postList) {
-      if (postList.length < pageSize) return;
+      if (postList.length < pageSize) {
+        Toast.show({
+          type: "info",
+          text1: "It's end 😢",
+        });
+        return;
+      }
       setPageNum(pageNum + 1);
     }
   };
   const handlePageDown = () => {
     if (pageNum > 1) setPageNum(pageNum - 1);
+    else
+      Toast.show({
+        type: "info",
+        text1: "It's top 😢",
+      });
   };
 
   const PageButton = () => {

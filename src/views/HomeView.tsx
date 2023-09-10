@@ -16,6 +16,7 @@ import { useIsFocused, useNavigation } from "@react-navigation/native";
 import useUser from "@src/hooks/useUser";
 import { MainScreenPropsGeneric } from "@src/@types/navigation";
 import { useEffect, useState } from "react";
+import Toast from "react-native-toast-message";
 
 const CustomLinearGradient = () => {
   return <Text style={HomeViewStyle.loadingText}>{"Loading...."}</Text>;
@@ -83,12 +84,23 @@ export const HomeView: React.FC<HomeViewProps> = ({
 
   const handlePageUp = () => {
     if (topicList) {
-      if (topicList.length < pageSize) return;
+      if (topicList.length < pageSize) {
+        Toast.show({
+          type: "info",
+          text1: "It's end 😢",
+        });
+        return;
+      }
       setPageNum(pageNum + 1);
     }
   };
   const handlePageDown = () => {
     if (pageNum > 1) setPageNum(pageNum - 1);
+    else
+      Toast.show({
+        type: "info",
+        text1: "It's top 😢",
+      });
   };
 
   const PageButton = () => {
