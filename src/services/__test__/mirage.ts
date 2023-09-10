@@ -69,6 +69,8 @@ export function startForumServer() {
       this.post(APIConfig["forum.post.upvote"], () => ({}));
       this.post(APIConfig["forum.topic.downvote"], () => ({}));
       this.post(APIConfig["forum.topic.upvote"], () => ({}));
+      this.post(APIConfig["forum.post.delete"], () => ({}));
+      this.post(APIConfig["forum.topic.delete"], () => ({}));
     },
   });
 }

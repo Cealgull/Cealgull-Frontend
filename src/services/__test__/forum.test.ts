@@ -8,6 +8,8 @@ import { startForumServer } from "./mirage";
 import {
   createPost,
   createTopic,
+  deletePost,
+  deleteTopic,
   forumVote,
   getAllCategories,
   getAllPostsByBelong,
@@ -93,6 +95,12 @@ describe("Test forum service", () => {
   test("forum.topic.tags", async () => {
     await expect(getAllTags());
   });
+  test("forum.topic.delete", async () => {
+    await expect(deleteTopic(""));
+  });
+  test("forum.post.delete", async () => {
+    await expect(deletePost(""));
+  });
 
   test("Response error", async () => {
     server.post(APIConfig["user.profile.modify"], () => new Response(500));
@@ -113,6 +121,8 @@ describe("Test forum service", () => {
     server.get(APIConfig["forum.user.statistics"], () => new Response(500));
     server.get(APIConfig["forum.topic.categories"], () => new Response(500));
     server.get(APIConfig["forum.topic.tags"], () => new Response(500));
+    server.post(APIConfig["forum.post.delete"], () => new Response(500));
+    server.post(APIConfig["forum.topic.delete"], () => new Response(500));
 
     await expect(getAllTopics(10, 1, "", [], "", "")).rejects.toEqual(
       "getAllTopics error!"
@@ -140,5 +150,7 @@ describe("Test forum service", () => {
     );
     await expect(getAllCategories()).rejects.toEqual("getAllCategories error!");
     await expect(getAllTags()).rejects.toEqual("getAllTags error!");
+    await expect(deletePost("")).rejects.toEqual("deletePost error!");
+    await expect(deleteTopic("")).rejects.toEqual("deleteTopic error!");
   });
 });
