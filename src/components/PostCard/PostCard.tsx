@@ -74,9 +74,9 @@ export default function PostCard({
     });
   };
 
-  const handleLike = () => {
+  const handleLike = async () => {
     try {
-      forumVote(hash, "up", "Post");
+      await forumVote(hash, "up", "Post");
       if (isDownVote && !isUpVote) {
         setDownvotesNum(downvotesNum - 1);
         setIsDownVote(false);
@@ -94,9 +94,9 @@ export default function PostCard({
       else postToastOpen(true, false, true);
     }
   };
-  const handleDislike = () => {
+  const handleDislike = async () => {
     try {
-      forumVote(hash, "down", "Post");
+      await forumVote(hash, "down", "Post");
       if (isUpVote && !isDownVote) {
         setUpvotesNum(upvotesNum - 1);
         setIsUpVote(false);

@@ -15,7 +15,7 @@ import { Icon, Skeleton } from "@rneui/themed";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import useUser from "@src/hooks/useUser";
 import { MainScreenPropsGeneric } from "@src/@types/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const CustomLinearGradient = () => {
   return <Text style={HomeViewStyle.loadingText}>{"Loading...."}</Text>;
@@ -32,14 +32,14 @@ export const HomeView: React.FC<HomeViewProps> = ({
   category = "",
   tags = [],
 }: HomeViewProps) => {
-  const pageNum = 1;
+  const [pageNum, setPageNum] = useState<number>(1);
   const navigation =
     useNavigation<MainScreenPropsGeneric<"Home">["navigation"]>();
   const focus = useIsFocused();
   const loginWallet = useUser().profile.wallet;
 
   const normalRequest = async () => {
-    return await getAllTopics(30, pageNum, category, tags, "", "");
+    return await getAllTopics(pageSize, pageNum, category, tags, "", "");
   };
 
   const pageTitleGenerator = (category: string, tag: string[]): string => {
@@ -81,15 +81,42 @@ export const HomeView: React.FC<HomeViewProps> = ({
     );
   };
 
+  const handlePageUp = () => {
+    if (topicList) {
+      if (topicList.length < pageSize) return;
+      setPageNum(pageNum + 1);
+    }
+  };
+  const handlePageDown = () => {
+    if (pageNum > 1) setPageNum(pageNum - 1);
+  };
+
+  const PageButton = () => {
+    return (
+      <View style={{ flexDirection: "row", alignItems: "center" }}>
+        <TouchableOpacity onPress={handlePageDown}>
+          <Icon name="left" type="antdesign" />
+        </TouchableOpacity>
+        <Text style={{ paddingHorizontal: 4 }}>{`第${pageNum}页`}</Text>
+
+        <TouchableOpacity onPress={handlePageUp}>
+          <Icon name="right" type="antdesign" />
+        </TouchableOpacity>
+      </View>
+    );
+  };
+
   const HeaderContent =
     category === "" && tags.length == 0 ? (
-      <HeaderBarWrapper alignMethod="c">
+      <HeaderBarWrapper alignMethod="cr">
         <Text style={HomeViewStyle.pageTitle}>{pageTitle}</Text>
+        <PageButton />
       </HeaderBarWrapper>
     ) : (
-      <HeaderBarWrapper alignMethod="lc">
+      <HeaderBarWrapper alignMethod="lcr">
         <PopButton />
         <Text style={HomeViewStyle.pageTitle}>{pageTitle}</Text>
+        <PageButton />
       </HeaderBarWrapper>
     );
 

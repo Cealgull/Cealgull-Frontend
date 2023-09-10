@@ -56,10 +56,11 @@ export const TopicView: React.FC<TopicViewProps> = ({
   const pageTitle = `${topTopic.title}`;
   const inputRef = useRef<TextInput>(null);
   const loginWallet = useUser().profile.wallet;
+  const [pageNum, setPageNum] = useState<number>(1);
 
   const normalRequest = async () => {
     //this will be used in official Version.
-    return await getAllPostsByBelong(topTopic.hash, "", pageSize, 1);
+    return await getAllPostsByBelong(topTopic.hash, "", pageSize, pageNum);
   };
 
   const PopButton = () => {
@@ -76,19 +77,48 @@ export const TopicView: React.FC<TopicViewProps> = ({
     );
   };
 
+  const handlePageUp = () => {
+    if (postList) {
+      if (postList.length < pageSize) return;
+      setPageNum(pageNum + 1);
+    }
+  };
+  const handlePageDown = () => {
+    if (pageNum > 1) setPageNum(pageNum - 1);
+  };
+
+  const PageButton = () => {
+    return (
+      <View style={{ flexDirection: "row", alignItems: "center" }}>
+        <TouchableOpacity onPress={handlePageDown}>
+          <Icon name="left" type="antdesign" />
+        </TouchableOpacity>
+        <Text style={{ paddingHorizontal: 4 }}>{`第${pageNum}页`}</Text>
+
+        <TouchableOpacity onPress={handlePageUp}>
+          <Icon name="right" type="antdesign" />
+        </TouchableOpacity>
+      </View>
+    );
+  };
+
   const {
     isLoading,
     isError,
     data: postList,
     refetch: refetchPostList,
   } = useQuery<ForumPost[]>({
-    queryKey: ["allPosts", topTopic.id],
+    queryKey: ["allPosts", topTopic.id, pageNum, pageSize],
     queryFn: normalRequest,
   });
 
   const renderPost: renderDataType[] | undefined = postList?.map(
     (post, index: number) => {
-      return { isTop: false, obj: post, level: index + 1 };
+      return {
+        isTop: false,
+        obj: post,
+        level: pageSize * (pageNum - 1) + index + 1,
+      };
     }
   );
   const renderData: renderDataType[] = [
@@ -202,9 +232,10 @@ export const TopicView: React.FC<TopicViewProps> = ({
     return (
       <View style={TopicViewStyle.whole}>
         <View style={TopicViewStyle.header}>
-          <HeaderBarWrapper alignMethod="lc">
+          <HeaderBarWrapper alignMethod="lcr">
             <PopButton />
             <Text style={TopicViewStyle.pageTitle}>{pageTitle}</Text>
+            <PageButton />
           </HeaderBarWrapper>
         </View>
         <View style={TopicViewStyle.content}>

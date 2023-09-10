@@ -74,10 +74,10 @@ export default function TopicCard({
     });
   };
 
-  const handleLike = () => {
+  const handleLike = async () => {
     if (canjump) return;
     try {
-      forumVote(topicInfo.hash, "up", "Topic");
+      await forumVote(topicInfo.hash, "up", "Topic");
       if (isDownVote && !isUpVote) {
         setDownvotesNum(downvotesNum - 1);
         setIsDownVote(false);
@@ -96,10 +96,10 @@ export default function TopicCard({
     }
   };
 
-  const handleDislike = () => {
+  const handleDislike = async () => {
     if (canjump) return;
     try {
-      forumVote(topicInfo.hash, "down", "Topic");
+      await forumVote(topicInfo.hash, "down", "Topic");
       if (isUpVote && !isDownVote) {
         setUpvotesNum(upvotesNum - 1);
         setIsUpVote(false);
