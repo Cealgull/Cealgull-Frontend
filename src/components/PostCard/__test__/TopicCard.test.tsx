@@ -5,14 +5,17 @@ import { useState } from "react";
 import { ReplyToInfo } from "@src/views/TopicView";
 import { Server } from "miragejs";
 import { startForumServer } from "@src/services/__test__/mirage";
+import Toast from "react-native-toast-message";
 
 const mockPush = jest.fn();
+const mockPop = jest.fn();
 jest.mock("@react-navigation/native", () => {
   const actualNav = jest.requireActual("@react-navigation/native");
   return {
     ...actualNav,
     useNavigation: () => ({
       push: mockPush,
+      pop: mockPop,
     }),
   };
 });
@@ -25,6 +28,11 @@ jest.mock("@tanstack/react-query", () => {
     },
   };
 });
+
+jest.mock("react-native-toast-message", () => ({
+  show: jest.fn(),
+  hide: jest.fn(),
+}));
 
 const topicTestData1: ForumTopic = {
   id: 123,
@@ -91,6 +99,7 @@ const topicTestData2: ForumTopic = {
 const TopicCardTestWrapper = (props: {
   canjump: boolean;
   topicInfo: ForumTopic;
+  loginWallet?: string;
 }) => {
   const [reply, setReply] = useState<ReplyToInfo>({
     ReplyUser: "",
@@ -101,7 +110,7 @@ const TopicCardTestWrapper = (props: {
       <TopicCard
         topicInfo={props.topicInfo}
         canjump={props.canjump}
-        loginWallet="Test"
+        loginWallet={props.loginWallet ? props.loginWallet : ""}
         setReplyInfo={setReply}
       ></TopicCard>
     </View>
@@ -111,7 +120,6 @@ const TopicCardTestWrapper = (props: {
 describe("TopicCard Test", () => {
   let server: Server;
   beforeEach(() => {
-    mockPush.mockClear();
     server = startForumServer();
   });
   afterEach(() => {
@@ -164,5 +172,17 @@ describe("TopicCard Test", () => {
     fireEvent.press(dislikeButton);
     fireEvent.press(dislikeButton);
     fireEvent.press(likeButton);
+  });
+
+  test("TopicCard delete test", () => {
+    render(
+      <TopicCardTestWrapper
+        topicInfo={topicTestData2}
+        loginWallet="Test"
+        canjump={false}
+      />
+    );
+    const deleteButton = screen.getByTestId("TopicDeleteButton");
+    fireEvent.press(deleteButton);
   });
 });

@@ -250,7 +250,7 @@ export default function TopicCard({
             </View>
           </TouchableOpacity>
           {!canjump && loginWallet === topicInfo.creator.wallet && (
-            <TouchableOpacity onPress={handleDelete}>
+            <TouchableOpacity testID="TopicDeleteButton" onPress={handleDelete}>
               <Icon name="delete" type="antdesign" color="#8B8989" size={22} />
             </TouchableOpacity>
           )}

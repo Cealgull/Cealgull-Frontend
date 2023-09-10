@@ -251,7 +251,7 @@ export default function PostCard({
           </View>
         </TouchableOpacity>
         {loginWallet === creator.wallet && (
-          <TouchableOpacity onPress={handleDelete}>
+          <TouchableOpacity testID="deleteButton" onPress={handleDelete}>
             <Icon name="delete" type="antdesign" color="#8B8989" size={24} />
           </TouchableOpacity>
         )}

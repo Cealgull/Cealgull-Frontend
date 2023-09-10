@@ -3,8 +3,9 @@ import PostCard from "../PostCard";
 import { View } from "react-native";
 import { useState } from "react";
 import { ReplyToInfo } from "@src/views/TopicView";
-import { Server } from "miragejs";
+import { Response, Server } from "miragejs";
 import { startForumServer } from "@src/services/__test__/mirage";
+import APIConfig from "@src/services/api.config";
 
 const PostCardTestData1: ForumPost = {
   hash: "Test",
@@ -69,7 +70,11 @@ const PostCardTestData2: ForumPost = {
   ],
 };
 
-const PostCardWrapper = (props: { postInfo: ForumPost }) => {
+const PostCardWrapper = (props: {
+  reFetch?: any;
+  postInfo: ForumPost;
+  loginWallet?: string;
+}) => {
   const [reply, setReply] = useState<ReplyToInfo>({
     ReplyUser: "",
     Replyhash: "",
@@ -77,10 +82,11 @@ const PostCardWrapper = (props: { postInfo: ForumPost }) => {
   return (
     <View>
       <PostCard
+        reFetch={props.reFetch}
         postInfo={props.postInfo}
         setReplyInfo={setReply}
         level={1}
-        loginWallet="Test"
+        loginWallet={props.loginWallet ? props.loginWallet : ""}
       />
     </View>
   );
@@ -97,6 +103,7 @@ describe("PostCard Test", () => {
   });
   test("PostCard render test", () => {
     render(<PostCardWrapper postInfo={PostCardTestData1} />);
+    render(<PostCardWrapper postInfo={PostCardTestData2} loginWallet="Test" />);
     screen.getAllByText("Test");
   });
 
@@ -109,13 +116,51 @@ describe("PostCard Test", () => {
     render(<PostCardWrapper postInfo={PostCardTestData2} />);
     const goodButton = screen.getByTestId("goodButton");
     const badButton = screen.getByTestId("badButton");
+    fireEvent.press(goodButton);
+    fireEvent.press(goodButton);
+    fireEvent.press(badButton);
+    fireEvent.press(badButton);
+    fireEvent.press(badButton);
+    fireEvent.press(goodButton);
+    fireEvent.press(goodButton);
+    fireEvent.press(badButton);
+
     const commentButton = screen.getByTestId("commentButton");
     fireEvent.press(commentButton);
+  });
+
+  test("PostCard press test 3", () => {
+    render(<PostCardWrapper postInfo={PostCardTestData2} loginWallet="Test" />);
+    const deleteButton = screen.getByTestId("deleteButton");
+    fireEvent.press(deleteButton);
+  });
+
+  test("PostCard press test 4", () => {
+    render(
+      <PostCardWrapper
+        postInfo={PostCardTestData2}
+        reFetch={() => {
+          return "Test";
+        }}
+        loginWallet="Test"
+      />
+    );
+    const deleteButton = screen.getByTestId("deleteButton");
+    fireEvent.press(deleteButton);
+  });
+
+  test("error test", () => {
+    server.post(APIConfig["forum.post.delete"], () => new Response(500));
+    server.post(APIConfig["forum.topic.delete"], () => new Response(500));
+    render(<PostCardWrapper postInfo={PostCardTestData2} />);
+    const goodButton = screen.getByTestId("goodButton");
+    const badButton = screen.getByTestId("badButton");
     fireEvent.press(goodButton);
     fireEvent.press(goodButton);
     fireEvent.press(badButton);
     fireEvent.press(badButton);
     fireEvent.press(badButton);
+    fireEvent.press(goodButton);
     fireEvent.press(goodButton);
     fireEvent.press(badButton);
   });
