@@ -151,6 +151,7 @@ export const TopicView: React.FC<TopicViewProps> = ({
       const cardProp = item.obj as ForumPost;
       return (
         <PostCard
+          reFetch={refetchPostList}
           setReplyInfo={setReplyInfo}
           postInfo={cardProp}
           level={item.level}

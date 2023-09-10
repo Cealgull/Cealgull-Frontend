@@ -15,7 +15,12 @@ import { TopicTag } from "./TopicTag";
 import { ImageList } from "../ImageList";
 import { useState } from "react";
 import Toast from "react-native-toast-message";
-import { forumVote, getImageIpfsPath } from "@src/services/forum";
+import {
+  deletePost,
+  deleteTopic,
+  forumVote,
+  getImageIpfsPath,
+} from "@src/services/forum";
 import { ReplyToInfo } from "@src/views/TopicView";
 
 interface TopicCardProps {
@@ -121,7 +126,7 @@ export default function TopicCard({
   const handleComment = () => {
     if (canjump) return;
     setReplyInfo({
-      Replyhash: topicInfo.hash,
+      Replyhash: "",
       ReplyUser: topicInfo.creator.username,
     });
   };
@@ -136,6 +141,23 @@ export default function TopicCard({
     }
     return response;
   };
+
+  const handleDelete = async () => {
+    try {
+      await deleteTopic(topicInfo.hash);
+      navigation.pop();
+      Toast.show({
+        type: "success",
+        text1: "Delete Topic Success 🥰",
+      });
+    } catch (error) {
+      Toast.show({
+        type: "error",
+        text1: "Delete Topic Error 🙁",
+      });
+    }
+  };
+
   const imageList: string[] = getImageList(topicInfo.assets);
 
   return (
@@ -227,6 +249,11 @@ export default function TopicCard({
               />
             </View>
           </TouchableOpacity>
+          {!canjump && loginWallet === topicInfo.creator.wallet && (
+            <TouchableOpacity onPress={handleDelete}>
+              <Icon name="delete" type="antdesign" color="#8B8989" size={22} />
+            </TouchableOpacity>
+          )}
         </View>
       </View>
     </View>

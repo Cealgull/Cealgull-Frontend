@@ -273,3 +273,29 @@ export async function getAllTags(): Promise<Tag[]> {
   const data = (await response.json()) as Tag[];
   return data;
 }
+
+export async function deletePost(hash: string): Promise<void> {
+  const response = await request({
+    method: "POST",
+    url: APIConfig["forum.post.delete"],
+    body: {
+      Hash: hash,
+    },
+  });
+  if (!response.ok) {
+    throw "deletePost error!";
+  }
+}
+
+export async function deleteTopic(hash: string): Promise<void> {
+  const response = await request({
+    method: "POST",
+    url: APIConfig["forum.topic.delete"],
+    body: {
+      Hash: hash,
+    },
+  });
+  if (!response.ok) {
+    throw "deleteTopic error!";
+  }
+}

@@ -19,6 +19,8 @@
   "forum.topic.downvote": "/api/topic/invoke/downvote",
   "forum.topic.categories":"/api/topic/query/categories",
   "forum.topic.tags":"/api/topic/query/tags",
+  "forum.post.delete":"/api/post/invoke/delete",
+  "forum.topic.delete":"/api/topic/invoke/delete",
 
   "getIpfsSource": "/ipfs",
   "upload.avatar": "/api/upload"

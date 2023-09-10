@@ -13,7 +13,7 @@ import {
 } from "@src/utils/forumUtils";
 import { ReplyCard } from "../ReplyCard";
 import Toast from "react-native-toast-message";
-import { forumVote, getImageIpfsPath } from "@src/services/forum";
+import { deletePost, forumVote, getImageIpfsPath } from "@src/services/forum";
 import { ReplyToInfo } from "@src/views/TopicView";
 
 interface PostCardProps {
@@ -21,6 +21,7 @@ interface PostCardProps {
   level: number;
   loginWallet: string;
   setReplyInfo?: React.Dispatch<React.SetStateAction<ReplyToInfo>>;
+  reFetch?: any;
 }
 
 export default function PostCard({
@@ -39,6 +40,7 @@ export default function PostCard({
   level,
   loginWallet,
   setReplyInfo,
+  reFetch,
 }: PostCardProps) {
   const [isDisplayReply, setIsDisplyReply] = useState<boolean>(false);
   const [isUpVote, setIsUpVote] = useState<boolean>(
@@ -120,6 +122,22 @@ export default function PostCard({
   };
   const handleDisplayReply = () => {
     setIsDisplyReply(!isDisplayReply);
+  };
+
+  const handleDelete = async () => {
+    try {
+      await deletePost(hash);
+      Toast.show({
+        type: "success",
+        text1: "Delete Post Success 🥰",
+      });
+      if (reFetch) reFetch();
+    } catch (error) {
+      Toast.show({
+        type: "error",
+        text1: "Delete Post Error 🙁",
+      });
+    }
   };
 
   const SimpleReply = () => {
@@ -232,6 +250,11 @@ export default function PostCard({
             <Icon size={24} color="#8B8989" type="antdesign" name="message1" />
           </View>
         </TouchableOpacity>
+        {loginWallet === creator.wallet && (
+          <TouchableOpacity onPress={handleDelete}>
+            <Icon name="delete" type="antdesign" color="#8B8989" size={24} />
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );
@@ -242,6 +265,7 @@ const PostCardStyle = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     justifyContent: "space-around",
+    alignItems: "center",
     marginBottom: 5,
     marginLeft: "5%",
     width: "45%",
