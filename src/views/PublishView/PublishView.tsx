@@ -56,6 +56,7 @@ const PublishButton: React.FC<PublishButtonProps> = ({ enabled, onPress }) => {
 interface PublishMedia {
   imageBase64List: string[];
 }
+
 export type PublishHandler = (
   title: string,
   content: string,

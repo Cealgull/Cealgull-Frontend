@@ -18,7 +18,7 @@ import {
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import Toast from "react-native-toast-message";
-import ImageList from "./PublishView/ImageList";
+import { ImageList } from "@src/components/ImageList";
 import useImagePicker from "@src/hooks/useImagePicker";
 
 export interface AccountViewProps {
@@ -71,7 +71,9 @@ export const AccountView = ({
     return (
       <View style={{ alignItems: "center" }}>
         <TouchableOpacity testID="avatarPicker" onPress={handleSelectImage}>
-          <ImageList uris={imageUriList} />
+          <View style={{ width: 120, height: 120 }}>
+            <ImageList imageUri={imageUriList} />
+          </View>
         </TouchableOpacity>
       </View>
     );

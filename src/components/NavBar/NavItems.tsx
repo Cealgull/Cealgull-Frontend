@@ -32,7 +32,7 @@ export const NavMyIcon = ({ focused }: NavMyIconProps) => {
   return (
     <TouchableOpacity
       /*FIX ME:we need wallet in auth login service */
-      onPress={() => navigation.navigate("Person", { wallet: "" })}
+      onPress={() => navigation.navigate("Person")}
       style={NavbarIconStyle.wrapper}
     >
       {content}
