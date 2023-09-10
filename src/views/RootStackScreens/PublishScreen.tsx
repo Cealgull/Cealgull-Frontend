@@ -7,11 +7,10 @@ export default function PublishScreen({
   route: { params },
   navigation,
 }: StackScreenPropsGeneric<"Publish">) {
-  const onClose = () => {
-    navigation.pop();
-  };
-
-  const props = { ...(params ?? {}), onClose };
-
-  return <PublishView {...props} />;
+  return (
+    <PublishView
+      onClose={() => navigation.pop()}
+      onPublish={params.onPublish}
+    />
+  );
 }

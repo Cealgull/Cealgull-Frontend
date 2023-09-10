@@ -1,9 +1,12 @@
 import { useNavigation } from "@react-navigation/native";
 import { Icon } from "@rneui/themed";
 import {
-  StackScreenPropsGeneric,
   MainScreenPropsGeneric,
+  StackScreenPropsGeneric,
 } from "@src/@types/navigation";
+import { createTopic, uploadAvatarWithBase64 } from "@src/services/forum";
+import { PublishViewProps } from "@src/views/PublishView/PublishView";
+import { useCallback } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export const NavMyIcon = () => {
@@ -25,9 +28,34 @@ export const NavMyIcon = () => {
 export const NavPublishIcon = () => {
   const navigation =
     useNavigation<StackScreenPropsGeneric<"Main">["navigation"]>();
+
+  const onPublish = useCallback<PublishViewProps["onPublish"]>(
+    async (title, content, tagList, category, { imageBase64List }) => {
+      const cidList: string[] = [];
+      for (const imageBase64 of imageBase64List) {
+        const cid = await uploadAvatarWithBase64(imageBase64);
+        console.log("🚀 ~ file: NavItems.tsx:41 ~ cid:", cid);
+        cidList.push(cid);
+      }
+      await createTopic(
+        content,
+        cidList,
+        title,
+        category.name,
+        tagList.map((tag) => tag.name)
+      );
+      console.log("post success!");
+    },
+    []
+  );
+
   return (
     <View style={NavbarIcon.wrapper}>
-      <TouchableOpacity onPress={() => navigation.push("Publish")}>
+      <TouchableOpacity
+        onPress={() =>
+          navigation.push("Publish", { onPublish } as PublishViewProps)
+        }
+      >
         <Icon
           size={26}
           reverse

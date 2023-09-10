@@ -4,9 +4,9 @@
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { HomeScreenProps, PersonScreenProps } from "@src/views/ForumTabScreens";
+import { PublishViewProps } from "@src/views/PublishView/PublishView";
 import {
   AccountScreenProps,
-  PublishScreenProps,
   SettingScreenProps,
   TopicScreenProps,
 } from "@src/views/RootStackScreens";
@@ -19,7 +19,7 @@ export type RootStackParamList = {
   Login: undefined;
   Main: undefined;
   Welcome: WelcomeViewProps;
-  Publish: PublishScreenProps;
+  Publish: PublishViewProps;
   Topic: TopicScreenProps;
   Account: AccountScreenProps;
   Setting: SettingScreenProps;

@@ -2,12 +2,14 @@
  * @author Bojun Ren
  * @data 2023/07/06
  */
+import { useNavigation } from "@react-navigation/native";
 import { Button, ButtonGroup, Icon } from "@rneui/themed";
+import { StackScreenPropsGeneric } from "@src/@types/navigation";
 import HeaderBarWrapper from "@src/components/HeaderBarWrapper";
 import { Loadable } from "@src/components/Loadable";
 import useImagePicker from "@src/hooks/useImagePicker";
 import useTextInput from "@src/hooks/useTextInput";
-import { getAllTags } from "@src/services/forum";
+import { getAllCategories, getAllTags } from "@src/services/forum";
 import { useQuery } from "@tanstack/react-query";
 import React, { useCallback, useMemo, useState } from "react";
 import {
@@ -58,10 +60,11 @@ type PublishHandler = (
   title: string,
   content: string,
   tagList: Tag[],
+  category: Category,
   media: PublishMedia
 ) => Promise<void>;
 
-interface PublishViewProps {
+export interface PublishViewProps {
   onClose: () => void;
   onPublish: PublishHandler;
 }
@@ -89,7 +92,10 @@ export default function PublishView({ onClose, onPublish }: PublishViewProps) {
     };
   });
   const { bottom } = useSafeAreaInsets();
+  const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
   const [selectedTagIndexes, setSelectedTagIndexes] = useState<number[]>([]);
+  const navigation =
+    useNavigation<StackScreenPropsGeneric<"Publish">["navigation"]>();
 
   const handleSelectImage = async () => {
     const assets = await imagePicker();
@@ -97,17 +103,6 @@ export default function PublishView({ onClose, onPublish }: PublishViewProps) {
       return;
     }
     setImageBase64List(assets.map((asset) => asset.base64 as string));
-  };
-
-  const handlePublish = async () => {
-    await onPublish(
-      title,
-      content,
-      (tagList as Tag[]).filter(
-        (_tag, i) => selectedTagIndexes.find((index) => index === i) !== null
-      ),
-      { imageBase64List }
-    );
   };
 
   const publishBtnEnabled = useMemo<boolean>(() => {
@@ -121,9 +116,53 @@ export default function PublishView({ onClose, onPublish }: PublishViewProps) {
   const { data: tagList } = useQuery<Tag[]>({
     queryKey: ["publish", "tag list"],
     queryFn: async () => {
-      return await getAllTags();
+      return (await getAllTags()).slice(0, 5);
     },
   });
+
+  const { data: categoryList } = useQuery<Category[]>({
+    queryKey: ["publish", "category list"],
+    queryFn: async () => {
+      return (await getAllCategories()).slice(0, 5);
+    },
+  });
+
+  const handlePublish = async () => {
+    await onPublish(
+      title,
+      content,
+      (tagList as Tag[]).filter(
+        (_tag, i) => selectedTagIndexes.find((index) => index === i) !== null
+      ),
+      (categoryList as Category[]).find(
+        (_cat, i) => i === selectedCategoryIndex
+      ) as Category,
+      { imageBase64List }
+    );
+    navigation.pop();
+  };
+
+  const createCategoryList = useCallback(
+    (categoryList: Category[]) => {
+      return (
+        <ButtonGroup
+          buttons={categoryList.map((cat) => cat.name)}
+          selectedIndex={selectedCategoryIndex}
+          onPress={(value) => {
+            setSelectedCategoryIndex(value);
+          }}
+          containerStyle={{ margin: 6, borderWidth: 0 }}
+          innerBorderStyle={{ width: 10, color: "rgba(0,0,0,0.05)" }}
+          buttonStyle={{
+            borderWidth: 1,
+            borderColor: "#ddd",
+            borderRadius: 4,
+          }}
+        />
+      );
+    },
+    [selectedCategoryIndex]
+  );
 
   const createTagList = useCallback(
     (tagList: Tag[]) => {
@@ -154,13 +193,21 @@ export default function PublishView({ onClose, onPublish }: PublishViewProps) {
         <View style={styles.container}>
           {/* HeaderBar is inflexible */}
           <HeaderBarWrapper alignMethod="lcr">
-            <Icon name="close" type="antdesign" size={30} onPress={onClose} />
+            <Icon
+              name="close"
+              type="antdesign"
+              size={30}
+              onPress={() => navigation.pop()}
+            />
             <Text style={styles.header}>创建新话题</Text>
             <PublishButton
               enabled={publishBtnEnabled}
               onPress={handlePublish}
             />
           </HeaderBarWrapper>
+          <Text style={{ margin: 10 }}>选择话题：</Text>
+          <Loadable maybeProp={categoryList} generator={createCategoryList} />
+          <Text style={{ margin: 10 }}>选择标签：</Text>
           <Loadable maybeProp={tagList} generator={createTagList} />
           {/* flex: 1 */}
           <View style={styles.container}>
