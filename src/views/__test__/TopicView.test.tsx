@@ -1,4 +1,4 @@
-import { render } from "@testing-library/react-native";
+import { fireEvent, render, screen } from "@testing-library/react-native";
 import { TopicView } from "../TopicView";
 import { User, UserInfoPOJO } from "@src/models/User";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";

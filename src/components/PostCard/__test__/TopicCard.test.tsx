@@ -162,7 +162,7 @@ describe("TopicCard Test", () => {
     fireEvent.press(commentButton);
   });
 
-  test("TopicCard vote test", () => {
+  test("TopicCard vote test", async () => {
     render(<TopicCardTestWrapper topicInfo={topicTestData1} canjump={false} />);
     const likeButton = screen.getByTestId("likeButton");
     const dislikeButton = screen.getByTestId("dislikeButton");

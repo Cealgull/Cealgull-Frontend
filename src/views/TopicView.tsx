@@ -67,6 +67,7 @@ export const TopicView: React.FC<TopicViewProps> = ({
     return (
       <View>
         <TouchableOpacity
+          testID="TOpicViewPop"
           onPress={() => {
             navigation.pop();
           }}
@@ -101,12 +102,12 @@ export const TopicView: React.FC<TopicViewProps> = ({
   const PageButton = () => {
     return (
       <View style={{ flexDirection: "row", alignItems: "center" }}>
-        <TouchableOpacity onPress={handlePageDown}>
+        <TouchableOpacity testID="PostViewDown" onPress={handlePageDown}>
           <Icon name="left" type="antdesign" />
         </TouchableOpacity>
         <Text style={{ paddingHorizontal: 4 }}>{`第${pageNum}页`}</Text>
 
-        <TouchableOpacity onPress={handlePageUp}>
+        <TouchableOpacity testID="PostViewUp" onPress={handlePageUp}>
           <Icon name="right" type="antdesign" />
         </TouchableOpacity>
       </View>

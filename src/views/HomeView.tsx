@@ -30,8 +30,8 @@ export interface HomeViewProps {
 
 export const HomeView: React.FC<HomeViewProps> = ({
   pageSize,
-  category = "",
-  tags = [],
+  category,
+  tags,
 }: HomeViewProps) => {
   const [pageNum, setPageNum] = useState<number>(1);
   const navigation =
@@ -68,6 +68,7 @@ export const HomeView: React.FC<HomeViewProps> = ({
     return (
       <View>
         <TouchableOpacity
+          testID="HomeViewPop"
           onPress={() => {
             navigation.navigate("Home", {
               pageSize: 10,
@@ -106,12 +107,12 @@ export const HomeView: React.FC<HomeViewProps> = ({
   const PageButton = () => {
     return (
       <View style={{ flexDirection: "row", alignItems: "center" }}>
-        <TouchableOpacity onPress={handlePageDown}>
+        <TouchableOpacity testID="HomeViewDown" onPress={handlePageDown}>
           <Icon name="left" type="antdesign" />
         </TouchableOpacity>
         <Text style={{ paddingHorizontal: 4 }}>{`第${pageNum}页`}</Text>
 
-        <TouchableOpacity onPress={handlePageUp}>
+        <TouchableOpacity testID="HomeViewUp" onPress={handlePageUp}>
           <Icon name="right" type="antdesign" />
         </TouchableOpacity>
       </View>

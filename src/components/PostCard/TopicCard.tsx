@@ -87,7 +87,7 @@ export default function TopicCard({
         setDownvotesNum(downvotesNum - 1);
         setIsDownVote(false);
       }
-      if (isUpVote) {
+      if (isUpVote || isUpVote) {
         setUpvotesNum(upvotesNum - 1);
         topicToastOpen(true, true, false);
       } else {

@@ -1,10 +1,11 @@
-import { render } from "@testing-library/react-native";
+import { fireEvent, render, screen } from "@testing-library/react-native";
 import { TopicView } from "../TopicView";
 import { User, UserInfoPOJO } from "@src/models/User";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Server } from "miragejs";
+import { Response, Server } from "miragejs";
 import { startForumServer } from "@src/services/__test__/mirage";
 import { HomeView } from "../HomeView";
+import APIConfig from "@src/services/api.config";
 
 const mockUserTestData: UserInfoPOJO = {
   username: "Test",
@@ -110,6 +111,51 @@ describe("TopicView test", () => {
 
   test("render test", () => {
     const queryClient = new QueryClient();
+
+    render(
+      <QueryClientProvider client={queryClient}>
+        <HomeView pageSize={10} category="" tags={[]} />
+        <HomeView pageSize={10} category="Test" tags={[]} />
+        <HomeView pageSize={10} category="" tags={["Test"]} />
+      </QueryClientProvider>
+    );
+  });
+
+  test("pop  test", () => {
+    const queryClient = new QueryClient();
+
+    render(
+      <QueryClientProvider client={queryClient}>
+        <HomeView pageSize={10} category="Test" tags={[]} />
+      </QueryClientProvider>
+    );
+
+    const homeViewPop = screen.getByTestId("HomeViewPop");
+    const HomeViewUp = screen.getByTestId("HomeViewUp");
+    const HomeViewDown = screen.getByTestId("HomeViewDown");
+    fireEvent.press(homeViewPop);
+    fireEvent.press(HomeViewUp);
+    fireEvent.press(HomeViewDown);
+    expect(mockedNavigate.call.length).toBe(1);
+  });
+
+  test("pop  test", () => {
+    const queryClient = new QueryClient();
+
+    render(
+      <QueryClientProvider client={queryClient}>
+        <HomeView pageSize={10} category="Test" tags={[]} />
+      </QueryClientProvider>
+    );
+
+    const homeViewPop = screen.getByTestId("HomeViewPop");
+    fireEvent.press(homeViewPop);
+    expect(mockedNavigate.call.length).toBe(1);
+  });
+
+  test("error test", () => {
+    const queryClient = new QueryClient();
+    server.post(APIConfig["forum.topic.list"], () => new Response(500));
 
     render(
       <QueryClientProvider client={queryClient}>
